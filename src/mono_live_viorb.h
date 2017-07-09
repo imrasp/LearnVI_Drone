@@ -51,6 +51,7 @@ private:
     double ttrack;
     positiondata posdata;
     positiondata posdatac;
+    positiondata posdatalastest;
 
     ORB_SLAM2::System *SLAM;
     ORB_SLAM2::ConfigParam *config;
@@ -62,6 +63,10 @@ private:
     int camFrame;
 
     double frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious);
+
+    void getIMUdata();
+    std::vector<ORB_SLAM2::IMUData> vimuData;
+    void resetvIMUdata();
 
     void calAvgProcessingTime(double time);
     bool startCalprocessingTime;

@@ -43,5 +43,5 @@ cmake-build-debug
 
 #File
 /VIORB/Vocabulary/
-
+Vocabulary
 *.eps
