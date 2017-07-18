@@ -9,6 +9,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <boost/thread.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/filesystem.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -48,6 +49,7 @@ public:
     void loopCamera();
     void getPoseData();
     void getFrameData(Mat &cameraFrame_, positiondata posdata_);
+    void getIMUdata();
 
     boost::mutex *mu;
     boost::thread *threadCamera;
@@ -58,6 +60,19 @@ public:
     positiondata posdata;
     double tframe;
     int frameno;
+
+    string foldername;
+    ofstream imulog, tframelog;
+
+    positiondata posdatac;
+    positiondata posdatalastest;
+
+    double rollc,pitchc,yawc;
+    const double ms2Tog = 0.101972;
+    const double g3dm = 9.80665;
+    double ax, ay, az;
+
+    bool bAccMultiply98 =true;
 
 };
 

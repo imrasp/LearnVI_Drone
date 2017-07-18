@@ -418,8 +418,8 @@ IMUPreintegrator Tracking::GetIMUPreIntSinceLastKF(Frame* pCurF, KeyFrame* pLast
         // Test log
         if(dt < 0)
         {
-            cerr<<std::fixed<<std::setprecision(3)<<"dt = "<<dt<<", this KF vs last imu time: "<<pLastKF->mTimeStamp<<" vs "<<imu._t<<endl;
-            std::cerr.unsetf ( std::ios::showbase );                // deactivate showbase
+//            cerr<<std::fixed<<std::setprecision(3)<<"dt = "<<dt<<", this KF vs last imu time: "<<pLastKF->mTimeStamp<<" vs "<<imu._t<<endl;
+//            std::cerr.unsetf ( std::ios::showbase );                // deactivate showbase
         }
     }
     // integrate each imu
@@ -439,11 +439,11 @@ IMUPreintegrator Tracking::GetIMUPreIntSinceLastKF(Frame* pCurF, KeyFrame* pLast
 
 
         // Test log
-        if(dt <= 0)
-        {
-            cerr<<std::fixed<<std::setprecision(3)<<"dt = "<<dt<<", this vs next time: "<<imu._t<<" vs "<<nextt<<endl;
-            std::cerr.unsetf ( std::ios::showbase );                // deactivate showbase
-        }
+//        if(dt <= 0)
+//        {
+//            cerr<<std::fixed<<std::setprecision(3)<<"dt = "<<dt<<", this vs next time: "<<imu._t<<" vs "<<nextt<<endl;
+//            std::cerr.unsetf ( std::ios::showbase );                // deactivate showbase
+//        }
     }
 
     return IMUPreInt;
@@ -813,6 +813,7 @@ void Tracking::Track()
             }
             else
             {
+                cout <<"calling relocalization" << endl;
                 bOK = Relocalization();
                 if(bOK) cout<<"Relocalized. id: "<<mCurrentFrame.mnId<<endl;
             }
@@ -1905,6 +1906,7 @@ void Tracking::UpdateLocalKeyFrames()
 
 bool Tracking::Relocalization()
 {
+    cout << "calling relocalization()..." << endl;
     // Compute Bag of Words Vector
     mCurrentFrame.ComputeBoW();
 

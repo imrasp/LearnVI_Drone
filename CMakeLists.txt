@@ -4,6 +4,8 @@ project(LearnVI_Drone)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 add_definitions(-DCOMPILEDWITHC11)
+add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+add_definitions(-DBOOST_ALL_DYN_LINK)
 
 find_package(OpenCV 2.4.3 REQUIRED)
 find_package(Pangolin REQUIRED)
@@ -72,6 +74,7 @@ set (VIORB_SOURCE_FILE
         ${VIORB_SLAM_DIR}/src/IMU/g2otypes.h
         ${VIORB_SLAM_DIR}/src/IMU/g2otypes.cpp
         src/mono_live_viorb.cpp src/mono_live_viorb.h
+        src/mono_offline_viorb.h src/mono_offline_viorb.cpp
         )
 add_subdirectory(
         ${CMAKE_CURRENT_SOURCE_DIR}/VIORB
@@ -101,6 +104,7 @@ target_link_libraries(
         boost_chrono
         boost_system
         boost_thread
+        boost_filesystem
         GL
         cholmod
         profiler

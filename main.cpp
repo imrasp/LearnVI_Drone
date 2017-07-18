@@ -5,8 +5,11 @@
 #include "src/mavlink_control.h"
 #include "src/cameraCapture.h"
 #include "src/mono_live_viorb.h"
+#include "src/mono_offline_viorb.h"
 //#include "src/live_slam.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "CannotResolve"
 using namespace std;
 
 int main(int argc, char **argv);
@@ -30,26 +33,59 @@ int main(int argc, char **argv)
         parse_commandline(argc, argv, uart_name, baudrate, vocabulary, setting);
 
         cout << "start main..." << endl;
-        Mavlink_Control mavconn(baudrate, uart_name);
         boost::mutex mutex;
-        Camera_Capture camera_capture(&mutex, &mavconn);
-        Mono_Live_VIORB mono_live_viorb(&mutex, &camera_capture, &mavconn);
 
-        //cout << "Start Camera thread,..." << endl;
-        //camera_capture.start();
+//        Mavlink_Control mavconn(baudrate, uart_name);
+//        Camera_Capture camera_capture(&mutex, &mavconn);
+//        Mono_Live_VIORB mono_live_viorb(&mutex, &camera_capture, &mavconn);
+//        Mono_Offline_VIORB mono_offline_viorb(&mutex);
 
-        cout << "Start SLAM thread,..." << endl;
-        mono_live_viorb.start(vocabulary, setting);
+        int option = 3;
 
-        cout << "Start Mavlink thread,..." << endl;
-        mavconn.start();
 
-        //stop all thread in order
+        if (option == 1)
+        {
+            Mavlink_Control mavconn(baudrate, uart_name);
+            Camera_Capture camera_capture(&mutex, &mavconn);
+            Mono_Live_VIORB mono_live_viorb(&mutex, &camera_capture, &mavconn);
 
-        mono_live_viorb.stop();
-        //camera_capture.stop();
-        mavconn.stop();
+            cout << "Start SLAM thread,..." << endl;
+            mono_live_viorb.start(vocabulary, setting);
 
+            cout << "Start Mavlink thread,..." << endl;
+            mavconn.start();
+
+            //stop all thread in order
+
+            mono_live_viorb.stop();
+            //camera_capture.stop();
+            mavconn.stop();
+        }
+        else if (option == 2)
+        {
+            Mavlink_Control mavconn(baudrate, uart_name);
+            Camera_Capture camera_capture(&mutex, &mavconn);
+
+            cout << "Start Camera thread,..." << endl;
+            camera_capture.start();
+            cout << "Start Mavlink thread,..." << endl;
+            mavconn.start();
+            //stop all thread in order
+
+            camera_capture.stop();
+            //camera_capture.stop();
+            mavconn.stop();
+        }
+        else if (option == 3)
+        {
+            Mono_Offline_VIORB mono_offline_viorb(&mutex);
+
+            cout << "Start SLAM thread,..." << endl;
+            mono_offline_viorb.start(vocabulary, setting);
+
+           // mono_offline_viorb.stop();
+
+        }
         return 0;
     }
     catch ( int error )
@@ -123,3 +159,5 @@ void parse_commandline(int argc, char **argv, char *&uart_name, int &baudrate, c
 
     return;
 }
+
+#pragma clang diagnostic pop

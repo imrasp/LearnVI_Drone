@@ -20,16 +20,35 @@ Camera_Capture::~Camera_Capture()
 
 void Camera_Capture::start()
 {
-    mu->lock();
-    cout << "Starting camera connection" << endl;
-    mu->unlock();
+    printf("Initialize IMU file (txt) \n");
+
+    cout << "please enter folder name ::" <<endl;
+    cin >> foldername;
+
+    boost::filesystem::path dir("./sample_data/"+foldername);
+    if(!(boost::filesystem::exists (dir))){
+        std::cout<<"Doesn't Exists"<<std::endl;
+
+        if (boost::filesystem::create_directory(dir))
+            std::cout << "....Successfully Created !" << std::endl;
+    }
+
+
+    imulog.open("./sample_data/"+foldername+"/imulog.txt");
+    tframelog.open("./sample_data/"+foldername+"/tframe.txt");
+
+    frameno = 1;
+    cout << "Starting IMU thread..." << endl;
+    boost::thread threadIMUdata = boost::thread(&Camera_Capture::getIMUdata, this);
+
+    cout << "Starting camera thread..." << endl;
     threadCamera = new boost::thread(&Camera_Capture::loopCamera, this);
-    //threadCamera.join();
 }
 
 void Camera_Capture::stop()
 {
     time_to_exit = true;
+    imulog.close();
 }
 
 int Camera_Capture::findCamera()
@@ -88,38 +107,65 @@ void Camera_Capture::loopCamera()
 
     VideoCapture stream1  = VideoCapture(i);
 
-    frameno = 0;
+
+    string filename;
+
 
     while (!time_to_exit)
     {
-        mu->lock();
+
         //milliseconds_since_epoch
         tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-        getPoseData();
+        tframelog << string("Frame,") + to_string(frameno) + "," + to_string(tframe) + "\n";
+
         stream1.read(currentFrame);
         imshow("cam", currentFrame);
-        //cout << "Frame" << ++frameno << " @ " << timestamp1 <<" @@ " << milliseconds_since_epoch << endl;
-        mu->unlock();
+
+        filename = "./sample_data/"+foldername+"/"+to_string(frameno)+".jpg";
+        imwrite(filename,currentFrame);
+
+        usleep(100000); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
 
         if (waitKey(30) >= 0)
             break;
-        usleep(100000); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
+        frameno++;
     }
 }
 
-void Camera_Capture::getPoseData()
-{
-    posdata = mavlinkControl->getCurrentPose();
-   // cout << "current z is " << posdata.z <<endl;
-   // printf("current z is %lf \n",posdata.z);
-}
+void Camera_Capture::getIMUdata() {
+    posdatalastest.roll = 0;
+    cout << "start getting imu data ... " << endl;
+    while (!time_to_exit) {
+        posdatac = mavlinkControl->getCurrentPose();
 
-void Camera_Capture::getFrameData(Mat &cameraFrame_, positiondata posdata_ )
-{
-    cameraFrame_ = currentFrame;
-    posdata_ = posdata;
-}
+        double timestamp = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
 
+        rollc = posdatac.roll;
+
+        if(rollc == posdatalastest.roll) continue;
+        pitchc = posdatac.pitch;
+        yawc = posdatac.yaw;
+
+        // multiply * ms2Tog to convert m/s2 to g and devided to 1000 converted it to mg
+        ax = posdatac.xacc * ms2Tog;
+        ay = posdatac.yacc * ms2Tog;
+        az = posdatac.zacc * ms2Tog;
+        if (bAccMultiply98) {
+            ax *= g3dm;
+            ay *= g3dm;
+            az *= g3dm;
+        }
+        // angular_velocity.x, angular_velocity.y, angular_velocity.z, linear_acceleration ax, ay, az, timestamp
+        // ORB_SLAM2::IMUData imudata(rollc, pitchc, yawc, ax, ay, az, timestamp );
+        imulog << string("IMU,")  + to_string(frameno)
+                  + "," + to_string(rollc) + "," + to_string(pitchc) + "," + to_string(yawc)
+                  + "," + to_string(ax) + "," + to_string(ay) + "," + to_string(az)
+                  + "," + to_string(timestamp) + "," + "\n";
+        posdatac = posdatalastest;
+
+        usleep(200);
+    }
+}
 
 
 

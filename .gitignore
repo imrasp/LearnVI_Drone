@@ -40,8 +40,13 @@ VIORB/Thirdparty/DBoW2/build
 VIORB/Thirdparty/g2o/build
 cmake-build-debug
 .idea
+callgrind.out.*
+output.callg
+profile.prof
 
 #File
 /VIORB/Vocabulary/
+sample_data
 Vocabulary
 *.eps
+LearnVI_Drone

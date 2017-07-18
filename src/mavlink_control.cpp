@@ -146,7 +146,7 @@ void Mavlink_Control::commands()
 //    land(sp);
 
 //    autopilot_interface->disarm_control(); usleep(100);
-sleep(240);
+sleep(60);
     autopilot_interface->disable_offboard_control(); usleep(100);
 
     printf("end offboard command \n");
