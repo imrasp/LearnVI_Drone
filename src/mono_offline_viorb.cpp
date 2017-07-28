@@ -14,6 +14,7 @@ Mono_Offline_VIORB::Mono_Offline_VIORB(boost::mutex *pMu)
     startCalprocessingTime = true;
     avgTime = 0;
     frameNo = 0;
+    firstTimestamp = 0;
 }
 
 Mono_Offline_VIORB::~Mono_Offline_VIORB()
@@ -21,6 +22,15 @@ Mono_Offline_VIORB::~Mono_Offline_VIORB()
 
 void Mono_Offline_VIORB::start(char *&vocabulary, char *&setting) {
     cout << "Starting SLAM..." << endl;
+
+    cout << "please enter folder name ::" <<endl;
+    cin >> foldername;
+
+    boost::filesystem::path dir("./sample_data/"+foldername);
+    if(!(boost::filesystem::exists (dir))) {
+        std::cout << "Doesn't Exists" << std::endl;
+    }
+    else cout << dir << " is exist" << endl;
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
     SLAM = new ORB_SLAM2::System(vocabulary, setting, ORB_SLAM2::System::MONOCULAR, true);
@@ -67,17 +77,9 @@ void Mono_Offline_VIORB::grabFrameData()
     int fno = 1, countimu;
     Mat matFrameForward;
     double roll,pitch,yaw,ax,ay,az,timestamp, ftimestamp, previousroll;
-    string foldername, filename;
     std::vector<ORB_SLAM2::IMUData> vimuData;
 
-    cout << "please enter folder name ::" <<endl;
-    cin >> foldername;
 
-    boost::filesystem::path dir("../"+foldername);
-    if(!(boost::filesystem::exists (dir))) {
-        std::cout << "Doesn't Exists" << std::endl;
-    }
-    else cout << dir << " is exist" << endl;
 
     ifstream imufile ("./sample_data/"+foldername+"/imulog.txt");
     ifstream framefile ("./sample_data/"+foldername+"/tframe.txt");
@@ -89,7 +91,7 @@ void Mono_Offline_VIORB::grabFrameData()
             calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
 
             getline (framefile,line);
-            cout << line << endl;
+            //cout << line << endl;
             while ((pos = line.find(delimiter)) != std::string::npos) {
                 token = line.substr(0, pos);
                 if(token == "Frame") splitframepos = 0;
@@ -97,11 +99,14 @@ void Mono_Offline_VIORB::grabFrameData()
                     splitframepos++;
                     if(splitframepos == 1) frameno = atof(token.c_str());
                     else if(splitframepos == 2) {
-                        ftimestamp = atof(token.c_str());
-                        cout << "ft is " << ftimestamp << endl;
+                        {
+                            if (firstTimestamp == 0) firstTimestamp = atof(token.c_str());
+                            ftimestamp = (atof(token.c_str()) - firstTimestamp )/1000;
+                        }
+                        //cout << "ft is " << ftimestamp << endl;
                     }
                 }
-                std::cout << token << std::endl;
+                //std::cout << token << std::endl;
                 line.erase(0, pos + delimiter.length());
             }
 
@@ -138,7 +143,11 @@ void Mono_Offline_VIORB::grabFrameData()
                                 else if (splitpos == 5) ax = atof(token.c_str());
                                 else if (splitpos == 6) ay = atof(token.c_str());
                                 else if (splitpos == 7) az = atof(token.c_str());
-                                else if (splitpos == 8) timestamp = atof(token.c_str());
+                                else if (splitpos == 8)
+                                {
+                                    if (firstTimestamp == 0) firstTimestamp = atof(token.c_str());
+                                    timestamp = (atof(token.c_str()) - firstTimestamp )/1000;
+                                }
                             }
                             else break;
                         }
@@ -159,7 +168,7 @@ void Mono_Offline_VIORB::grabFrameData()
             SLAM->TrackMonoVI(matFrameForward, vimuData, ftimestamp);
             vimuData.clear();
 
-            cout << "total imus for this frame  = " << countimu <<endl;
+            //cout << "total imus for this frame  = " << countimu <<endl;
             calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
         }
         framefile.close();

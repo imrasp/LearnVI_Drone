@@ -41,7 +41,8 @@ int main(int argc, char **argv)
 //        Mono_Offline_VIORB mono_offline_viorb(&mutex);
 
         int option = 3;
-
+        cout << "Select an option (1:Live SLAM 2:Record Dataset 3:Offline SLAM)" << endl;
+        cin >> option;
 
         if (option == 1)
         {

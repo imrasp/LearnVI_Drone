@@ -43,15 +43,20 @@ imagetopic: "/cam0/image_raw"
 Camera.delaytoimu: 0
 
 # acc=acc*9.8, if below is 1
-IMU.multiplyG: 0
+IMU.multiplyG: 1
 
 # camera-imu frame transformation, Pi = Tic * Pc
 #
 Camera.Tbc:
- [-0.028138531, 0.99822032, -0.052577067, 0.056792397,
-   0.024918856, 0.053282037, 0.99826854, -0.15064347,
-   0.99929339, 0.02677965, -0.026373787, -0.11770736,
-   0.0, 0.0, 0.0, 1.0]
+ [-0.448074, -0.400576, 0.79923, 4,
+  -0.893997, 0.20077, -0.400576, 0,
+   0, -0.893997, -0.448074, -5,
+   0, 0, 0, 1]
+#Mat
+# [-0.028138531, 0.99822032, -0.052577067, 0.056792397,
+#   0.024918856, 0.053282037, 0.99826854, -0.15064347,
+#   0.99929339, 0.02677965, -0.026373787, -0.11770736,
+#   0.0, 0.0, 0.0, 1.0]
  #[-0.024682356, 0.99087548, -0.13250136, 0.041862302,
  # -0.084068544, 0.13001493, 0.98794162, -0.15906197,
  # 0.99615425, 0.035523925, 0.080092385, -0.15419175,
@@ -67,16 +72,17 @@ OutputFolder: "./SLAM_result/"
 #--------------------------------------------------------------------------------------------
 
 # Camera calibration and distortion parameters (OpenCV) 
-Camera.fx: 936.758781
-Camera.fy: 1052.69145
-Camera.cx: 653.400544
-Camera.cy: 389.313597
+Camera.fx: 595.0863
+Camera.fy: 671.7171
+Camera.cx: 660.1657
+Camera.cy: 388.9364
 
-Camera.k1: -0.425454
-Camera.k2: 0.2303888
-Camera.p1: 0.002123
-Camera.p2: -0.000594
-Camera.k3: -0.053535
+Camera.k1: -0.3737
+Camera.k2: 0.1869
+Camera.k3: -0.0541
+Camera.p1: -0.0029
+Camera.p2: -0.0029
+
 
 Camera.width: 1280
 Camera.height: 720
@@ -113,8 +119,8 @@ ORBextractor.nLevels: 8
 # Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
 # Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
 # You can lower these values if your images have low contrast   
-ORBextractor.iniThFAST: 20
-ORBextractor.minThFAST: 7
+ORBextractor.iniThFAST: 20 #20
+ORBextractor.minThFAST: 7 #7
 
 #--------------------------------------------------------------------------------------------
 # Viewer Parameters

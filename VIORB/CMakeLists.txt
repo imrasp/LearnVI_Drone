@@ -123,7 +123,10 @@ ${LAPACK_LIBRARIES}
 #target_link_libraries(stereo_euroc ${PROJECT_NAME})
 
 
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
+
+add_executable(euro_imu Examples/Monocular/euro_imu.cc)
+target_link_libraries(euro_imu ${PROJECT_NAME})
 
 #add_executable(mono_tum
 #Examples/Monocular/mono_tum.cc)

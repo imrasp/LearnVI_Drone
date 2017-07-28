@@ -116,7 +116,7 @@ void Camera_Capture::loopCamera()
 
         //milliseconds_since_epoch
         tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-        tframelog << string("Frame,") + to_string(frameno) + "," + to_string(tframe) + "\n";
+        tframelog << string("Frame,") + to_string(frameno) + "," + to_string(tframe) + "," + "\n";
 
         stream1.read(currentFrame);
         imshow("cam", currentFrame);
@@ -124,7 +124,7 @@ void Camera_Capture::loopCamera()
         filename = "./sample_data/"+foldername+"/"+to_string(frameno)+".jpg";
         imwrite(filename,currentFrame);
 
-        usleep(100000); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
+        usleep(50000); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
 
         if (waitKey(30) >= 0)
             break;

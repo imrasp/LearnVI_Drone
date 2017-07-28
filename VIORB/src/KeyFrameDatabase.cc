@@ -198,23 +198,26 @@ vector<KeyFrame*> KeyFrameDatabase::DetectLoopCandidates(KeyFrame* pKF, float mi
 
 vector<KeyFrame*> KeyFrameDatabase::DetectRelocalizationCandidates(Frame *F)
 {
+    cout << "(KFD:201)inside DetectRelocalizationCandidates"  << endl;
     list<KeyFrame*> lKFsSharingWords;
 
     // Search all keyframes that share a word with current frame
     {
         unique_lock<mutex> lock(mMutex);
-
+        cout << "(KFD:206) F->mBowVec size is " << F->mBowVec.size() << endl;
         for(DBoW2::BowVector::const_iterator vit=F->mBowVec.begin(), vend=F->mBowVec.end(); vit != vend; vit++)
         {
-            list<KeyFrame*> &lKFs =   mvInvertedFile[vit->first];
-
+            list<KeyFrame*> &lKFs = mvInvertedFile[vit->first];
+            //cout << "(KFD:210) lKFs size is " << lKFs.size() << endl;
             for(list<KeyFrame*>::iterator lit=lKFs.begin(), lend= lKFs.end(); lit!=lend; lit++)
             {
                 KeyFrame* pKFi=*lit;
+                cout << "(KFD:215) pKFi->mnRelocQuery: " << pKFi->mnRelocQuery << " F->mnId : " << F->mnId << endl;
                 if(pKFi->mnRelocQuery!=F->mnId)
                 {
                     pKFi->mnRelocWords=0;
                     pKFi->mnRelocQuery=F->mnId;
+                    cout << "(KFD:219) lKFsSharingWords size is " << lKFsSharingWords.size() << endl;
                     lKFsSharingWords.push_back(pKFi);
                 }
                 pKFi->mnRelocWords++;

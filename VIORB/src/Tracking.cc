@@ -759,12 +759,13 @@ void Tracking::Track()
             MonocularInitialization();
 
         mpFrameDrawer->Update(this);
-
+        //cout << "(T:762 - after monocularinitialization()) mState is " << mState <<endl;
         if(mState!=OK)
             return;
     }
     else
     {
+        //cout << "(T:768) mState is " << mState <<endl;
         // System is initialized. Track Frame.
         bool bOK;
 
@@ -813,7 +814,7 @@ void Tracking::Track()
             }
             else
             {
-                cout <<"calling relocalization" << endl;
+                cout <<"(T:817) calling relocalization" << endl;
                 bOK = Relocalization();
                 if(bOK) cout<<"Relocalized. id: "<<mCurrentFrame.mnId<<endl;
             }
@@ -895,6 +896,7 @@ void Tracking::Track()
         }
         else
         {
+            //cout << "(T:899) set mState = LOST" <<endl;
             mState=LOST;
 
             // Clear Frame vectors for reloc bias computation
@@ -1599,6 +1601,7 @@ void Tracking::CreateNewKeyFrame()
     if(!mpLocalMapper->SetNotStop(true))
         return;
 
+    cout << "(T:1604) mCurrentFrame timestamp is " << mCurrentFrame.mTimeStamp << endl;
     //TODO: is it necessary to clear IMU buffers if this is the first KeyFrame after relocalization (also no prevKF)?
     KeyFrame* pKF = new KeyFrame(mCurrentFrame,mpMap,mpKeyFrameDB,mvIMUSinceLastKF,mpLastKeyFrame);
     // Set initial NavState for KeyFrame
@@ -1673,7 +1676,7 @@ void Tracking::CreateNewKeyFrame()
             }
         }
     }
-
+    cout << "(T:1678) mpLocalMapper->InsertKeyFrame(pKF) with KF.timestamp is " << pKF->mTimeStamp << endl;
     mpLocalMapper->InsertKeyFrame(pKF);
 
     mpLocalMapper->SetNotStop(false);
@@ -1906,14 +1909,14 @@ void Tracking::UpdateLocalKeyFrames()
 
 bool Tracking::Relocalization()
 {
-    cout << "calling relocalization()..." << endl;
+    cout << "inside relocalization()..." << endl;
     // Compute Bag of Words Vector
     mCurrentFrame.ComputeBoW();
 
     // Relocalization is performed when tracking is lost
     // Track Lost: Query KeyFrame Database for keyframe candidates for relocalisation
     vector<KeyFrame*> vpCandidateKFs = mpKeyFrameDB->DetectRelocalizationCandidates(&mCurrentFrame);
-
+    cout << "(T:1919) if(vpCandidateKFs.empty()) is " << vpCandidateKFs.size() << endl;
     if(vpCandidateKFs.empty())
         return false;
 

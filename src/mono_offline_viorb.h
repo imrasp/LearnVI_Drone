@@ -39,7 +39,7 @@ public:
     cv::Mat matFrame, matFrameForward, matFrameForwardLast;
     double xc,yc,zc;
     double rollc,pitchc,yawc;
-    double timestampc,timestamp;
+    double timestampc,timestamp, firstTimestamp;
     double ax, ay, az;
 
 private:

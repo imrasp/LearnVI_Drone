@@ -17,6 +17,7 @@ Mono_Live_VIORB::Mono_Live_VIORB(boost::mutex *pMu, Camera_Capture *cameraCaptur
     startCalprocessingTime = true;
     avgTime = 0;
     frameNo = 0;
+    firstTimestamp = 0;
 
 }
 
@@ -86,7 +87,10 @@ void Mono_Live_VIORB::grabFrameData()
         //cout << "after get frame : " <<std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1) <<endl;
         //posdatac = posdata;
         //cout << "after get position data : " <<std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1) <<endl;
+
         timestampc = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+        if (firstTimestamp == 0) firstTimestamp = timestampc;
+        timestampc = (timestampc - firstTimestamp)/1000;
 
         frameDiff = 0;
         if (isFirstFrame)
@@ -253,6 +257,8 @@ void Mono_Live_VIORB::getIMUdata() {
         posdatac = mavlinkControl->getCurrentPose();
 
         double timestamp = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+        if (firstTimestamp == 0) firstTimestamp = timestamp;
+        timestamp = (timestamp - firstTimestamp)/1000;
 
         rollc = posdatac.roll;
 

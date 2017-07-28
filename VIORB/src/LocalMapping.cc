@@ -172,6 +172,7 @@ void LocalMapping::VINSInitThread()
                 initedid = mpCurrentKeyFrame->mnId;
 
                 bool tmpbool = TryInitVIO();
+                //cout << "(LM:175) tmpbool in VINSInitThreadis " << tmpbool <<endl;
                 if(tmpbool)
                 {
                     //SetFirstVINSInited(true);
@@ -187,6 +188,7 @@ void LocalMapping::VINSInitThread()
 
 bool LocalMapping::TryInitVIO(void)
 {
+    std::cout << "(LM:190) inside LocalMapping::TryInitVIO(void)... ::  mpMap->KeyFramesInMap() is " << mpMap->KeyFramesInMap() << " and mnLocalWindowSize is " << mnLocalWindowSize <<  std::endl;
     if(mpMap->KeyFramesInMap()<=mnLocalWindowSize)
         return false;
 
@@ -217,7 +219,7 @@ bool LocalMapping::TryInitVIO(void)
         ftime<<std::fixed<<std::setprecision(6);
         fbiasg<<std::fixed<<std::setprecision(6);
     }
-
+    //cout << "(LM:222) Optimizer::GlobalBundleAdjustemnt" << endl;
     Optimizer::GlobalBundleAdjustemnt(mpMap, 10);
 
     // Extrinsics
@@ -229,6 +231,7 @@ bool LocalMapping::TryInitVIO(void)
 
     if(ConfigParam::GetRealTimeFlag())
     {
+        //cout << "(LM:234) if(ConfigParam::GetRealTimeFlag())" << endl;
         // Wait KeyFrame Culling.
         // 1. if KeyFrame Culling is running, wait until finished.
         // 2. if KFs are being copied, then don't run KeyFrame Culling (in KeyFrameCulling function)
@@ -236,6 +239,7 @@ bool LocalMapping::TryInitVIO(void)
         {
             usleep(1000);
         }
+         //cout << "(LM:242) after  while(GetFlagCopyInitKFs())" << endl;
     }
     SetFlagCopyInitKFs(true);
 
@@ -509,16 +513,19 @@ bool LocalMapping::TryInitVIO(void)
     // Todo:
     // Add some logic or strategy to confirm init status
     bool bVIOInited = false;
+    //cout << "(LM:516:1) if(mbFirstTry) is " <<  mbFirstTry <<endl;
     if(mbFirstTry)
     {
+        //cout << "(LM:516:2) if(mbFirstTry) is " <<  mbFirstTry <<endl;
         mbFirstTry = false;
         mnStartTime = mpCurrentKeyFrame->mTimeStamp;
     }
+    cout << "(LM:522) pNewestKF->mTimeStamp : " << pNewestKF->mTimeStamp << " , mnStartTime : " << mnStartTime << " (1-2) = " << pNewestKF->mTimeStamp - mnStartTime << " , ConfigParam::GetVINSInitTime() : " << ConfigParam::GetVINSInitTime() <<endl;
     if(pNewestKF->mTimeStamp - mnStartTime >= ConfigParam::GetVINSInitTime())
     {
         bVIOInited = true;
     }
-
+    cout << "(LM:512) bVIOInited is " << bVIOInited << endl;
     if(bVIOInited)
     {
         // Set NavState , scale and bias for all KeyFrames
@@ -632,7 +639,7 @@ bool LocalMapping::TryInitVIO(void)
                 //pMP->SetWorldPos(pMP->GetWorldPos()*scale);
                 pMP->UpdateScale(scale);
             }
-            std::cout<<std::endl<<"... Map scale updated ..."<<std::endl<<std::endl;
+            std::cout <<std::endl<<"... Map scale updated ..." <<std::endl <<std::endl;
 
             // Update NavStates
             if(pNewestKF!=mpCurrentKeyFrame)
@@ -840,6 +847,7 @@ bool LocalMapping::TryInitVIO(void)
             }
         }
 
+        cout << "(LM:850) SetFlagInitGBAFinish(true)" << endl;
         SetFlagInitGBAFinish(true);
     }
 
@@ -848,7 +856,7 @@ bool LocalMapping::TryInitVIO(void)
         if(vKFInit[i])
             delete vKFInit[i];
     }
-
+    //cout << "(LM:855) return bVIOInited (" << bVIOInited << ")" <<endl;
     return bVIOInited;
 }
 
@@ -975,6 +983,7 @@ void LocalMapping::Run()
                     if(!GetVINSInited())
                     {
                         bool tmpbool = TryInitVIO();
+                        //cout << "(LM:978) tmpbool is " << tmpbool <<endl;
                         SetVINSInited(tmpbool);
                         if(tmpbool)
                         {
@@ -990,7 +999,7 @@ void LocalMapping::Run()
                 // Check redundant local Keyframes
                 KeyFrameCulling();
             }
-
+cout << "(LM:1002) GetFlagInitGBAFinish() is " << GetFlagInitGBAFinish() << endl;
             if(GetFlagInitGBAFinish())
                 mpLoopCloser->InsertKeyFrame(mpCurrentKeyFrame);
         }
@@ -1021,9 +1030,11 @@ void LocalMapping::Run()
 
 void LocalMapping::InsertKeyFrame(KeyFrame *pKF)
 {
+    cout <<"(LM:1030) called LocalMapping::InsertKeyFrame :: size is " << mlNewKeyFrames.size() <<endl;
     unique_lock<mutex> lock(mMutexNewKFs);
     mlNewKeyFrames.push_back(pKF);
     mbAbortBA=true;
+    cout <<"(LM:1030) LocalMapping::InsertKeyFrame :: size is " << mlNewKeyFrames.size() << " then  mbAbortBA=true" <<endl;
 }
 
 

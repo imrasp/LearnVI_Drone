@@ -110,6 +110,7 @@ void LoopClosing::Run()
 
 void LoopClosing::InsertKeyFrame(KeyFrame *pKF)
 {
+    cout <<"(LC:111) called LoopClosing::InsertKeyFrame :: size = " << mlpLoopKeyFrameQueue.size() <<endl;
     unique_lock<mutex> lock(mMutexLoopQueue);
     if(pKF->mnId!=0)
         mlpLoopKeyFrameQueue.push_back(pKF);
@@ -123,6 +124,7 @@ bool LoopClosing::CheckNewKeyFrames()
 
 bool LoopClosing::DetectLoop()
 {
+    cout << "(LC:125) inside DectectLoop" << endl;
     {
         unique_lock<mutex> lock(mMutexLoopQueue);
         mpCurrentKF = mlpLoopKeyFrameQueue.front();
@@ -299,7 +301,7 @@ bool LoopClosing::ComputeSim3()
 
         nCandidates++;
     }
-
+    std::cout << "(LC:302) no. of candidates with enough matches is " << nCandidates << std::endl;
     bool bMatch = false;
 
     // Perform alternatively RANSAC iterations for each candidate
