@@ -34,14 +34,19 @@
 #Folder
 build
 log
-SLAM_result
-VIORB/build
-VIORB/Thirdparty/DBoW2/build
-VIORB/Thirdparty/g2o/build
+Thirdparty/DBoW2/build
+Thirdparty/g2o/build
 cmake-build-debug
 .idea
+callgrind.out.*
+output.callg
+profile.prof
+Performance_output_result
 
 #File
-/VIORB/Vocabulary/
-Vocabulary
+Vocabulary/
 *.eps
+LearnVI_Drone
+datasets
+sample_data
+VIORB/Examples/Monocular/euro_imu

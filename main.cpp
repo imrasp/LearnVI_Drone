@@ -1,19 +1,17 @@
 #include <iostream>
-#include <thread>
-#include <boost/thread.hpp>
 
-#include "src/mavlink_control.h"
-#include "src/cameraCapture.h"
-#include "src/mono_live_viorb.h"
-//#include "src/live_slam.h"
+#include "MAVControl/mavlink_control.h"
+#include "SLAMInterface/mono_live_viorb.h"
+#include "SLAMInterface/mono_offline_viorb.h"
+//#include "SLAMInterface/mono_record_viorb.h"
 
 using namespace std;
 
 int main(int argc, char **argv);
-void parse_commandline(int argc, char **argv, char *&uart_name, int &baudrate, char *&vocabulary, char *&setting);
 
-int main(int argc, char **argv)
-{
+void parse_commandline(int argc, char **argv, char *&uart_name, int &baudrate, char *&vocabulary, char *&setting, char *&mode, char* &gui, char* &filename, int &timespace);
+
+int main(int argc, char **argv) {
     try {
         // Default input arguments
 #ifdef __APPLE__
@@ -22,46 +20,91 @@ int main(int argc, char **argv)
         char *uart_name = (char *) "/dev/ttyUSB0";
 
 #endif
-        int baudrate = 57600;
-        char *vocabulary = (char *) "./Vocabulary/ORBvoc.txt";
-        char *setting = (char *) "./camera_calib/mobius.yaml";
-
+        int baudrate = 921600; // 57600 or 921600 px4 companion link buadrate
+        char *vocabulary = (char *) "../Vocabulary/ORBvoc.txt";
+        char *setting = (char *) "../config/mobius.yaml";
+        char *mode = (char *) "LIVE";
+        char *gui = (char *) "ENABLE";
+        char *filename = (char *) "Sample_data";
+        int timespace = 1000000;
         // do the parse, will throw an int if it fails
-        parse_commandline(argc, argv, uart_name, baudrate, vocabulary, setting);
+        parse_commandline(argc, argv, uart_name, baudrate, vocabulary, setting, mode, gui, filename, timespace);
 
-        cout << "start main..." << endl;
-        Mavlink_Control mavconn(baudrate, uart_name);
-        boost::mutex mutex;
-        Camera_Capture camera_capture(&mutex, &mavconn);
-        Mono_Live_VIORB mono_live_viorb(&mutex, &camera_capture, &mavconn);
+        System_Log system_log(1);
 
-        //cout << "Start Camera thread,..." << endl;
-        //camera_capture.start();
+        cout << "Starting main in " << mode << " mode " << endl;
+        if (string(mode) == "LIVE")
+        {
+            // if (std::string(getResult) == "something") to compare char need to make one to be string
+            Mono_Live_VIORB mono_live_viorb(&system_log, string(gui)!="DISABLE");
+            Location_Manager location_manager(&system_log,&mono_live_viorb,nullptr);
+            Mavlink_Control mavlink_control(baudrate, uart_name, &system_log, &location_manager);
 
-        cout << "Start SLAM thread,..." << endl;
-        mono_live_viorb.start(vocabulary, setting);
+            cout << "Start SLAM thread,..." << endl;
+            mono_live_viorb.start(vocabulary, setting);
+            location_manager.activateSLAM();
+            cout << "Start Mavlink thread,..." << endl;
+            mavlink_control.start();
 
-        cout << "Start Mavlink thread,..." << endl;
-        mavconn.start();
+            //stop all thread in order
+            mono_live_viorb.stop();
+            mavlink_control.stop();
+        }
+        else if (string(mode) == "RECORD")
+        {
+            Mono_Record_VIORB mono_record_viorb(&system_log, true, nullptr, timespace);
+            Location_Manager location_manager(&system_log,nullptr,&mono_record_viorb);
+            Mavlink_Control mavlink_control(baudrate, uart_name, &system_log, &location_manager);
 
-        //stop all thread in order
+            cout << "Start Record SLAM thread,..." << endl;
+            mono_record_viorb.start(filename);
+            location_manager.activateSLAM();
+            cout << "Start Mavlink thread,..." << endl;
+            mavlink_control.start();
 
-        mono_live_viorb.stop();
-        //camera_capture.stop();
-        mavconn.stop();
+            //stop all thread in order
+            mono_record_viorb.stop();
+            mavlink_control.stop();
 
+        }
+        else if (string(mode) == "LIVERECORD")
+        {
+            // if (std::string(getResult) == "something") to compare char need to make one to be string
+            Mono_Live_VIORB mono_live_viorb(&system_log, string(gui)!="DISABLE");
+            Mono_Record_VIORB mono_record_viorb(&system_log, false, &mono_live_viorb, timespace);
+            Location_Manager location_manager(&system_log,&mono_live_viorb,&mono_record_viorb);
+            Mavlink_Control mavlink_control(baudrate, uart_name, &system_log, &location_manager);
+
+            cout << "Start SLAM thread,..." << endl;
+            mono_live_viorb.start(vocabulary, setting);
+            mono_record_viorb.start(filename);
+            location_manager.activateSLAM();
+            cout << "Start Mavlink thread,..." << endl;
+            mavlink_control.start();
+
+            //stop all thread in order
+            mono_live_viorb.stop();
+            mono_record_viorb.stop();
+            mavlink_control.stop();
+        }
+        else if (string(mode) == "OFFLINE")
+        {
+            Mono_Offline_VIORB mono_live_viorb(&system_log);
+
+            cout << "Start SLAM thread,..." << endl;
+            mono_live_viorb.start(vocabulary, setting, filename);
+        }
+        else cout << "This mode is not implemented yet" << endl;
         return 0;
     }
-    catch ( int error )
-    {
-        fprintf(stderr,"threw exception %i \n" , error);
+    catch (int error) {
+        fprintf(stderr, "threw exception %i \n", error);
         return error;
     }
 }
 
 //   Parse Command Line
-void parse_commandline(int argc, char **argv, char *&uart_name, int &baudrate, char *&vocabulary, char *&setting)
-{
+void parse_commandline(int argc, char **argv, char *&uart_name, int &baudrate, char *&vocabulary, char *&setting, char *&mode, char* &gui, char* &filename, int &timespace) {
     // string for command line usage
     const char *commandline_usage = "usage: mavlink_serial -d <devicename> -b <baudrate> -v <path_to_vocabulary> -s <path_to_setting>";
 
@@ -70,7 +113,7 @@ void parse_commandline(int argc, char **argv, char *&uart_name, int &baudrate, c
 
         // Help
         if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-            printf("%s\n",commandline_usage);
+            printf("%s\n", commandline_usage);
             throw EXIT_FAILURE;
         }
 
@@ -80,7 +123,7 @@ void parse_commandline(int argc, char **argv, char *&uart_name, int &baudrate, c
                 uart_name = argv[i + 1];
 
             } else {
-                printf("%s\n",commandline_usage);
+                printf("%s\n", commandline_usage);
                 throw EXIT_FAILURE;
             }
         }
@@ -91,7 +134,7 @@ void parse_commandline(int argc, char **argv, char *&uart_name, int &baudrate, c
                 baudrate = atoi(argv[i + 1]);
 
             } else {
-                printf("%s\n",commandline_usage);
+                printf("%s\n", commandline_usage);
                 throw EXIT_FAILURE;
             }
         }
@@ -102,7 +145,7 @@ void parse_commandline(int argc, char **argv, char *&uart_name, int &baudrate, c
                 vocabulary = argv[i + 1];
 
             } else {
-                printf("%s\n",commandline_usage);
+                printf("%s\n", commandline_usage);
                 throw EXIT_FAILURE;
             }
         }
@@ -113,11 +156,53 @@ void parse_commandline(int argc, char **argv, char *&uart_name, int &baudrate, c
                 setting = argv[i + 1];
 
             } else {
-                printf("%s\n",commandline_usage);
+                printf("%s\n", commandline_usage);
                 throw EXIT_FAILURE;
             }
         }
 
+        // Mode
+        if (strcmp(argv[i], "-m") == 0 || strcmp(argv[i], "--mode") == 0) {
+            if (argc > i + 1) {
+                mode = argv[i + 1];
+
+            } else {
+                printf("%s\n", commandline_usage);
+                throw EXIT_FAILURE;
+            }
+        }
+
+        // Mode
+        if (strcmp(argv[i], "-g") == 0 || strcmp(argv[i], "--gui") == 0) {
+            if (argc > i + 1) {
+                gui = argv[i + 1];
+
+            } else {
+                printf("%s\n", commandline_usage);
+                throw EXIT_FAILURE;
+            }
+        }
+        // Filename
+        if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--foldername") == 0) {
+            if (argc > i + 1) {
+                filename = argv[i + 1];
+
+            } else {
+                printf("%s\n", commandline_usage);
+                throw EXIT_FAILURE;
+            }
+        }
+
+        // Time space between frame
+        if (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--time") == 0) {
+            if (argc > i + 1) {
+                timespace = atoi(argv[i + 1]);
+
+            } else {
+                printf("%s\n", commandline_usage);
+                throw EXIT_FAILURE;
+            }
+        }
     }
     // end: for each input argument
 
