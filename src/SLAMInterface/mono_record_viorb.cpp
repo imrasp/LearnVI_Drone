@@ -31,7 +31,7 @@ void Mono_Record_VIORB::start(char *filename) {
     csvposelog.open("../sample_data/" + string(filename) + "/posedata.csv");
 
     csvposelog
-            << string("Pose") + to_string(frameno) + "timestamp" + "," + "," + "xgyro" + "," + "xyyro" + "," + "zgyro" +
+            << string("Pose") + "," + to_string(frameno) + "timestamp"  + "," + "xgyro" + "," + "xyyro" + "," + "zgyro" +
                "," + "xacc" + "," + "yacc" + "," + "zacc" + "," + "x" + "," + "y" + "," + "z" + "," + "roll" + "," +
                "pitch" + "," + "yaw" + "," + "zacc" + "," + "lat" + "," + "lon" + "," + "alt" + "," +
                "satellites_visible" + "," + "hdop" + "," + "\n";
@@ -57,6 +57,7 @@ void Mono_Record_VIORB::cameraRecorder() {
         cout << "++++++++++++++++++++ copy frame ++++++++++++++++++++" <<endl;
         cout << "matFrame " << mono_live_viorb->matFrame.size() << endl;
         mono_live_viorb->matFrame.copyTo(currentFrame);
+	tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
 //        currentFrame = mono_live_viorb->matFrame.clone();
         cout << "current Frame : " << currentFrame.size() <<endl;
         imgname = "../sample_data/"+foldername+"/"+to_string(frameno)+".jpg";
@@ -105,6 +106,7 @@ void Mono_Record_VIORB::loopCamera() {
     while (!time_to_exit) {
         //milliseconds_since_epoch
         tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
+        cout << "time for frame " << frameno << " is " << tframe << endl;
         tframelog << string("Frame,") + to_string(frameno) + "," + to_string(tframe) + "," + "\n";
 
         stream1.read(currentFrame);
