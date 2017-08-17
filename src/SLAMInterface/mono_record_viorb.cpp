@@ -104,7 +104,7 @@ void Mono_Record_VIORB::loopCamera() {
 
     while (!time_to_exit) {
         //milliseconds_since_epoch
-        tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+        tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
         tframelog << string("Frame,") + to_string(frameno) + "," + to_string(tframe) + "," + "\n";
 
         stream1.read(currentFrame);
@@ -123,7 +123,7 @@ void Mono_Record_VIORB::loopCamera() {
 
 void Mono_Record_VIORB::getPoseData(posedata current_pose) {
 
-    double timestamp = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+    double timestamp = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
 
     imulog << string("IMU,") + to_string(frameno)
               + "," + to_string(current_pose.xgyro) + "," + to_string(current_pose.ygyro) + "," + to_string(current_pose.zgyro)

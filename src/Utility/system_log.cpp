@@ -24,8 +24,8 @@ void System_Log::initialize_defaults()
     printf("Initialize Log file (csv/txt) \n");
     time_t t = time(0);   // get time now
     struct tm * now = localtime( & t );
-    strftime(txtfilename,80,"./log/%Y-%m-%d_%H:%M:%S.txt",now);
-    strftime(csvfilename,80,"./log/%Y-%m-%d_%H:%M:%S.csv",now);
+    strftime(txtfilename,80,"../log/%Y-%m-%d_%H:%M:%S.txt",now);
+    strftime(csvfilename,80,"../log/%Y-%m-%d_%H:%M:%S.csv",now);
     txtlog = fopen(txtfilename, "w");
     csvlog.open(csvfilename);
 }
@@ -53,19 +53,21 @@ void System_Log::write2txt(string text)
 // write log to csv file
 void System_Log::write2csv(string text, mavlink_global_position_int_t global_position)
 {
-    csvlog << text + string("(int)") + "," + to_string(global_position.lat) + "," + to_string(global_position.lon) + "," + to_string(global_position.alt) + "," + "\n";
+    csvlog << text + string("(int)") + "," + to_string(global_position.lat) + "," + to_string(global_position.lon) + "," + to_string(global_position.alt) +  "," + string("(VELOCITY)") + ","
+              + to_string(global_position.vx) + "," + to_string(global_position.vy) + "," + to_string(global_position.vz)
+              + "," + "\n";
 }
 void System_Log::write2csv(string text, mavlink_local_position_ned_t local_position)
 {
-    csvlog << text + string("(ned)") + "," + to_string(local_position.x) + "," + to_string(local_position.y) + "," + to_string(local_position.z) + "," + "\n";
+    csvlog << text + string("(ned_normal)") + "," + to_string(local_position.x) + "," + to_string(local_position.y) + "," + to_string(local_position.z) + "," + "\n";
 }
 void System_Log::write2csv(string text, mavlink_highres_imu_t highres_imu)
 {
-    csvlog << text + string("(ned)") + "," + to_string(highres_imu.xacc) + "," + to_string(highres_imu.yacc) + "," + to_string(highres_imu.zacc) + "," + "\n";
+    csvlog << text + string("(ned_hires)") + "," + to_string(highres_imu.xacc) + "," + to_string(highres_imu.yacc) + "," + to_string(highres_imu.zacc) + "," + "\n";
 }
 void System_Log::write2csv(string text, mavlink_raw_imu_t raw_imu)
 {
-    csvlog << text + string("(ned)") + "," + to_string(raw_imu.xacc) + "," + to_string(raw_imu.yacc) + "," + to_string(raw_imu.zacc) + "," + "\n";
+    csvlog << text + string("(ned_raw)") + "," + to_string(raw_imu.xacc) + "," + to_string(raw_imu.yacc) + "," + to_string(raw_imu.zacc) + "," + "\n";
 }
 void System_Log::write2csv(string text, mavlink_gps_raw_int_t gps_raw)
 {

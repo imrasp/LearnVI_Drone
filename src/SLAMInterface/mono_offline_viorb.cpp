@@ -88,7 +88,7 @@ void Mono_Offline_VIORB::grabFrameData()
                     else if(splitframepos == 2) {
                         {
                             if (firstTimestamp == 0) firstTimestamp = atof(token.c_str());
-                            ftimestamp = (atof(token.c_str()) - firstTimestamp )/1000;
+                            ftimestamp = (atof(token.c_str()) - firstTimestamp ); // /1000
                         }
                         //cout << "ft is " << ftimestamp << endl;
                     }
@@ -133,7 +133,7 @@ void Mono_Offline_VIORB::grabFrameData()
                                 else if (splitpos == 8)
                                 {
                                     if (firstTimestamp == 0) firstTimestamp = atof(token.c_str());
-                                    timestamp = (atof(token.c_str()) - firstTimestamp )/1000;
+                                    timestamp = (atof(token.c_str()) - firstTimestamp );
                                 }
                             }
                             else break;
