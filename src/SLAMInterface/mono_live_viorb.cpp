@@ -1,8 +1,8 @@
-//
-// Created by rasp on 6/17/17.
-//
 
+#undef NDEBUG
+#include <assert.h>   // reinclude the header to update the definition of assert()
 #include "SLAMInterface/mono_live_viorb.h"
+#include "Utility/location_manager.h"
 
 Mono_Live_VIORB::Mono_Live_VIORB(System_Log *system_log_, bool bUseView_) : system_log(system_log_), bUseView(bUseView_)  {
     time_to_exit = false;
@@ -13,8 +13,11 @@ Mono_Live_VIORB::Mono_Live_VIORB(System_Log *system_log_, bool bUseView_) : syst
     frameNo = 0;
     firstTimestamp = 0;
 }
-
 Mono_Live_VIORB::~Mono_Live_VIORB() {}
+
+void Mono_Live_VIORB::setLocationManager(Location_Manager *location_manager_) {
+    location_manager = location_manager_;
+}
 
 void Mono_Live_VIORB::start(char *&vocabulary, char *&setting) {
     cout << "Starting SLAM..." << endl;
@@ -28,11 +31,10 @@ void Mono_Live_VIORB::start(char *&vocabulary, char *&setting) {
     bAccMultiply98 = config->GetAccMultiply9p8();
 
     findCamera();
-
+    cout << "Start Camera thread..." << endl;
     boost::thread threadCamera = boost::thread(&Mono_Live_VIORB::cameraLoop, this);
 
-    while (!getFirstFrame) isFirstFrame = true;
-    cout << "Start Camera thread..." << endl;
+    cout << "Start SLAM thread..." << endl;
     boost::thread threadSLAM = boost::thread(&Mono_Live_VIORB::grabFrameData, this);
 
 }
@@ -57,7 +59,9 @@ void Mono_Live_VIORB::grabFrameData() {
     cout << "grab Frame data for SLAM..." << endl;
 
     int ni = 1;
+
     while (!time_to_exit) {
+
         calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
 
         matFrameForwardLast = matFrameForward.clone();
@@ -68,39 +72,52 @@ void Mono_Live_VIORB::grabFrameData() {
         timestampc = (timestampc - firstTimestamp) / 1000;
 
         frameDiff = 0;
-        if (isFirstFrame)
-            isFirstFrame = false;
+
+        if (!getFirstFrame)
+            continue;
         else
             frameDiff = frameDifference(matFrameForward, matFrameForwardLast);
 
         if (frameDiff == 0) {
-            cout << "SKIPPING DUPLICATE FRAME" << endl;
+            //cout << "SKIPPING DUPLICATE FRAME" << endl;
             continue;
         } else {
-            if (vimuData.size() == 0) {
-                //cout<<"Hit blank IMU slot ###############################" << endl;
-                cout << "Skipping this frame (Specially if before initializing)!" << endl;
-                continue;
-            }
 
 
-            // Pass the image to the SLAM system
-            SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
-
-            cout << "imu data size before clear = " << vimuData.size() << endl;
-            vimuData.clear();
-            cout << "imu data size after clear = " << vimuData.size() << endl;
-            //while(!SLAM->bLocalMapAcceptKF()) {
-            //}
+        if (vimuData.size() < 5) {
+            //cout << "Skipping this frame (Specially if before initializing)!" << endl;
+            continue;
         }
-        calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
+
+        // Pass the image to the SLAM system
+        //SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
+        //cout << camFrame << " :: vimuData size : " << vimuData.size() << endl;
+        vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
+        system_log->write2txt("Estimated_Position (SLAM) ",vision_estimated_pose);
+       // cout << " vision_estimated_pose = " << vision_estimated_pose << endl;
+
+        location_manager->getEstimatedVisionPose(vision_estimated_pose);
+
+//            if(!lastest_vision_estimated_pose.empty()){
+//                accumulate_vision_estimated_pose = vision_estimated_pose * lastest_vision_estimated_pose;
+//                lastest_vision_estimated_pose = accumulate_vision_estimated_pose.clone();
+//            }
+//            else lastest_vision_estimated_pose = vision_estimated_pose;
+//
+//            system_log->write2txt("Accumulate Estimated_Position (SLAM) ",lastest_vision_estimated_pose);
+
+        vimuData.clear();
+        //while(!SLAM->bLocalMapAcceptKF()) {
+        //}
+        }
+        calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)); // stop
     }
 
 }
 
 double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious) {
     double diff = 0.0;
-    //cout << "matFrameCurrent size : " << matFrameCurrent.size() <<  " matFramePrevious : " << matFramePrevious.size() << endl;
+   // cout << "matFrameCurrent size : " << matFrameCurrent.size() <<  " matFramePrevious : " << matFramePrevious.size() << endl;
     assert(matFrameCurrent.rows > 0 && matFrameCurrent.cols > 0);
     assert(
             matFrameCurrent.rows == matFramePrevious.rows
@@ -155,12 +172,15 @@ void Mono_Live_VIORB::cameraLoop() {
 
     while (!time_to_exit) {
         stream->read(matFrame);
-        cout << "Grab Frame no. " << camFrame << " = " << matFrame.size() << endl;
+        //cout << "matFrame size : " << matFrame.size();
 //        imshow( "Display window", matFrame );
 //        if (waitKey(30) >= 0)
 //            break;
-        if (camFrame == 1)
+        if (camFrame == 2){
             getFirstFrame = true;
+            isFirstFrame = true;
+        }
+
         camFrame++;
 
     }
@@ -184,7 +204,6 @@ void Mono_Live_VIORB::calAvgProcessingTime(double time) {
 }
 
 void Mono_Live_VIORB::getIMUdata(posedata current_pose) {
-    cout << "Mono_Live_VIORB::getIMUdata was called" << endl;
     double timestamp = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
     if (firstTimestamp == 0) firstTimestamp = timestamp;
     timestamp = (timestamp - firstTimestamp) / 1000;
@@ -203,7 +222,6 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose) {
     }
     // angular_velocity.x, angular_velocity.y, angular_velocity.z, linear_acceleration ax, ay, az, timestamp
     ORB_SLAM2::IMUData imudata(rollc, pitchc, yawc, ax, ay, az, timestamp);
-    cout << "vimudata size is " << vimuData.size() << endl;
     vimuData.push_back(imudata);
 }
 

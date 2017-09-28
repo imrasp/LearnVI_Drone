@@ -15,13 +15,19 @@
 #include "VIORB/IMU/imudata.h"
 #include "VIORB/IMU/configparam.h"
 
+class Location_Manager;
+
 typedef struct posedata {
     float timestampms, timestampns;
-
+    float gpstime, nedtime;
     float x, y, z;
+    double gpsx, gpsy, gpsz;
     float xacc, yacc, zacc;
     float xgyro, ygyro, zgyro;
     float roll, pitch, yaw;
+    float vx,vy,vz;
+    float gpsxacc, gpsyacc, gpszacc;
+    float timebootms;
 
     uint8_t satellites_visible;
     uint16_t hdop;
@@ -40,7 +46,9 @@ public:
     void cameraLoop();
     void getIMUdata(posedata current_pose);
     int getTrackingStage();
+    void setLocationManager(Location_Manager *location_manager_);
 
+    cv::Mat vision_estimated_pose, lastest_vision_estimated_pose, accumulate_vision_estimated_pose;
     cv::Mat matFrame, matFrameForward, matFrameForwardLast;
     double xc,yc,zc;
     double rollc,pitchc,yawc;
@@ -51,6 +59,7 @@ private:
 
     System_Log *system_log;
     VideoCapture *stream;
+    Location_Manager *location_manager;
 
     bool bUseView;
 

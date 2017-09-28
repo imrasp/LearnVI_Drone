@@ -389,7 +389,16 @@ void Autopilot_Interface::read_messages()
                     }
                     else if(init_coord_conversion == true)
                     {
-                        update_geodetic2local(current_messages.global_position_int);
+//                        update_geodetic2local(current_messages.global_position_int);
+                        if(bUpdatePosition){
+                            mavlink_vision_position_estimate_t vpe;
+                            vpe.x = location_manager->current_pose.gpsx;
+                            vpe.y = location_manager->current_pose.gpsy;
+                            vpe.z = location_manager->current_pose.gpsz;
+                            vpe.yaw = ( ((float)current_messages.global_position_int.hdg/100) * M_PI ) / 180;
+
+                            write_vision_position(vpe);
+                        }
                     }
 
                     break;
@@ -402,19 +411,8 @@ void Autopilot_Interface::read_messages()
                     current_messages.time_stamps.gps_raw_int = get_time_usec();
                     this_timestamps.gps_raw_int = current_messages.time_stamps.gps_raw_int;
 
+                    location_manager->poseToSLAM(current_messages.gps_raw_int);
                     system_log->write2csv("raw", current_messages.gps_raw_int);
-                    // set initial params for coordinate conversion
-//				if(init_coord_conversion == false && imu_status == INITIAL_IMU )
-//				{
-//					//printf("SET INITIAL COORDINATE CONVERSION... \n");
-//					system_log->write2csv("initial coordinate conversion");
-//					init_coord_conversion = true;
-//					location_manager->initialize_coordinate(current_messages.gps_raw_int, current_messages.local_position_ned);
-//				}
-//				else if(init_coord_conversion == true)
-//				{
-//					update_geodetic2local(current_messages.gps_raw_int);
-//				}
 
                     break;
                 }
@@ -466,7 +464,7 @@ void Autopilot_Interface::read_messages()
 
                 case MAVLINK_MSG_ID_HIGHRES_IMU:
                 {
-                    printf("MAVLINK_MSG_ID_HIGHRES_IMU\n");
+                    //printf("MAVLINK_MSG_ID_HIGHRES_IMU\n");
                     mavlink_msg_highres_imu_decode(&message, &(current_messages.highres_imu));
                     current_messages.time_stamps.highres_imu = get_time_usec();
                     this_timestamps.highres_imu = current_messages.time_stamps.highres_imu;
@@ -506,6 +504,9 @@ void Autopilot_Interface::read_messages()
                     mavlink_msg_attitude_decode(&message, &(current_messages.attitude));
                     current_messages.time_stamps.attitude = get_time_usec();
                     this_timestamps.attitude = current_messages.time_stamps.attitude;
+
+                    system_log->write2csv("Attitude", current_messages.attitude);
+
                     break;
                 }
 
@@ -635,6 +636,7 @@ void Autopilot_Interface::write_setpoint()
 
 void Autopilot_Interface::switchUpdatePosition(bool input)
 {
+    //default is false
     bUpdatePosition = input;
 }
 void Autopilot_Interface::update_geodetic2local(mavlink_gps_raw_int_t raw_pos)
@@ -689,6 +691,8 @@ void Autopilot_Interface::write_vision_position(mavlink_vision_position_estimate
         //printf("cannot write to VISION_POSITION_ESTIMATE");
         system_log->write2txt("cannot write to VISION_POSITION_ESTIMATE");
     }
+    else
+        system_log->write2txt("write to VISION_POSITION_ESTIMATE");
 }
 
 //   Start Off-Board Mode

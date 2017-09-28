@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
         // do the parse, will throw an int if it fails
         parse_commandline(argc, argv, uart_name, baudrate, vocabulary, setting, mode, gui, filename, timespace);
 
-        System_Log system_log(1);
+        System_Log system_log(filename);
 
         cout << "Starting main in " << mode << " mode " << endl;
         if (string(mode) == "LIVE")
@@ -38,6 +38,7 @@ int main(int argc, char **argv) {
             // if (std::string(getResult) == "something") to compare char need to make one to be string
             Mono_Live_VIORB mono_live_viorb(&system_log, string(gui)!="DISABLE");
             Location_Manager location_manager(&system_log,&mono_live_viorb,nullptr);
+            mono_live_viorb.setLocationManager(&location_manager);
             Mavlink_Control mavlink_control(baudrate, uart_name, &system_log, &location_manager);
 
             cout << "Start SLAM thread,..." << endl;
@@ -73,6 +74,7 @@ int main(int argc, char **argv) {
             Mono_Live_VIORB mono_live_viorb(&system_log, string(gui)!="DISABLE");
             Mono_Record_VIORB mono_record_viorb(&system_log, false, &mono_live_viorb, timespace);
             Location_Manager location_manager(&system_log,&mono_live_viorb,&mono_record_viorb);
+            mono_live_viorb.setLocationManager(&location_manager);
             Mavlink_Control mavlink_control(baudrate, uart_name, &system_log, &location_manager);
 
             cout << "Start SLAM thread,..." << endl;
@@ -81,8 +83,8 @@ int main(int argc, char **argv) {
             location_manager.activateSLAM();
             cout << "Start Mavlink thread,..." << endl;
             mavlink_control.start();
-
-            //stop all thread in order
+//
+//            //stop all thread in order
             mono_live_viorb.stop();
             mono_record_viorb.stop();
             mavlink_control.stop();

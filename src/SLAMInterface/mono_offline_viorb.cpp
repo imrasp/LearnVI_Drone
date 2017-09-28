@@ -16,13 +16,21 @@ Mono_Offline_VIORB::~Mono_Offline_VIORB()
 {}
 
 void Mono_Offline_VIORB::start(char *&vocabulary, char *&setting, string foldername_) {
-    cout << "Starting SLAM..." << endl;
-    foldername = foldername_;
-    boost::filesystem::path dir("../sample_data/"+foldername);
+        
+cout << "Starting Offline SLAM..." << endl;
+    foldername = "../sample_data/"+foldername_; //foldername_;
+
+    //Checking for a file
+    boost::filesystem::path dir(foldername);
     if(!(boost::filesystem::exists (dir))) {
         std::cout << "Doesn't Exists" << std::endl;
     }
     else cout << dir << " is exist" << endl;
+
+    ifstream frame(foldername+"/tframe.txt");
+    if(!frame.is_open()) std::cout << "ERROR: Cannot Open Frame File" << '\n';
+    ifstream imu(foldername+"/posedata.csv");
+    if(!imu.is_open()) std::cout << "ERROR: Cannot Open IMU File" << '\n';
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
     SLAM = new ORB_SLAM2::System(vocabulary, setting, ORB_SLAM2::System::MONOCULAR, true);
@@ -32,8 +40,112 @@ void Mono_Offline_VIORB::start(char *&vocabulary, char *&setting, string foldern
     // ORBVIO::MsgSynchronizer msgsync(imageMsgDelaySec);
     bAccMultiply98 = config->GetAccMultiply9p8();
 
-    grabFrameData();
 
+    int frameno, imuframeno;
+    float timestamp, frametimestamp, firsttimestamp;
+    float xgyro, ygyro, zgyro;
+    float xacc, yacc, zacc;
+    float x, y, z;
+    float roll, pitch, yaw;
+    float lat, lon, alt;
+    float satellites_visible, hdop;
+    string getval;
+
+    string line;
+    string delimiter = ",";
+    size_t pos = 0;
+    string token;
+    int splitpos, splitframepos;
+    std::vector<ORB_SLAM2::IMUData> vimuData;
+
+    while ( frame.good() ) {
+        //calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
+
+        getline (frame,line);
+        cout << line << endl;
+        while ((pos = line.find(delimiter)) != std::string::npos) {
+            token = line.substr(0, pos);
+            if(token == "Frame") splitframepos = 0;
+            else {
+                splitframepos++;
+                if(splitframepos == 1) frameno = atof(token.c_str());
+                else if(splitframepos == 2) {
+                    {
+                        if (firstTimestamp == 0) firstTimestamp = atof(token.c_str());
+                        frametimestamp = (atof(token.c_str()) - firstTimestamp ); // /1000
+                    }
+                    //cout << "ft is " << ftimestamp << endl;
+                }
+            }
+            //std::cout << token << std::endl;
+            line.erase(0, pos + delimiter.length());
+        }
+
+        //get frame
+        filename = foldername+"/"+to_string(frameno)+".jpg";
+        matFrameForward = imread(filename, CV_LOAD_IMAGE_COLOR);
+
+        //get imu data
+        while (imu.good()) {
+            getline(imu, getval, ','); // "Pose" header
+            getline(imu, getval, ','); imuframeno = stof(getval, NULL);
+            getline(imu, getval, ','); timestamp = stof(getval, NULL);
+            getline(imu, getval, ','); xgyro = stof(getval, NULL);
+            getline(imu, getval, ','); ygyro = stof(getval, NULL);
+            getline(imu, getval, ','); zgyro = stof(getval, NULL);
+            getline(imu, getval, ','); xacc = stof(getval, NULL);
+            getline(imu, getval, ','); yacc = stof(getval, NULL);
+            getline(imu, getval, ','); zacc = stof(getval, NULL);
+            getline(imu, getval, ','); x = stof(getval, NULL);
+            getline(imu, getval, ','); y = stof(getval, NULL);
+            getline(imu, getval, ','); z = stof(getval, NULL);
+            getline(imu, getval, ','); roll = stof(getval, NULL);
+            getline(imu, getval, ','); pitch = stof(getval, NULL);
+            getline(imu, getval, ','); yaw = stof(getval, NULL);
+            getline(imu, getval, ','); lat = stof(getval, NULL);
+            getline(imu, getval, ','); lon = stof(getval, NULL);
+            getline(imu, getval, ','); alt = stof(getval, NULL);
+            getline(imu, getval, ','); satellites_visible = stof(getval, NULL);
+            getline(imu, getval, '\n'); hdop = stof(getval, NULL);
+
+            if (frameno != imuframeno) {
+                std::cout << "Frame No: " << frameno << '\n';
+                std::cout << "Total Number of IMU: " << vimuData.size() << '\n';
+                std::cout << "-------------------" << '\n';
+
+                if (bAccMultiply98) {
+                    ax *= g3dm;
+                    ay *= g3dm;
+                    az *= g3dm;
+                }
+
+                SLAM->TrackMonoVI(matFrameForward, vimuData, frametimestamp);
+                vimuData.clear();
+
+                // angular_velocity.x, angular_velocity.y, angular_velocity.z, linear_acceleration ax, ay, az, timestamp
+                ORB_SLAM2::IMUData imudata(xgyro, ygyro, zgyro, xacc, yacc, zacc, timestamp );
+                vimuData.push_back(imudata);
+            }
+
+
+        }
+        calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
+    }
+
+    frame.close();
+    imu.close();
+
+    cout << "SLAM shutdown..." << endl;
+    // Stop all threads
+    SLAM->Shutdown();
+
+    cout << "Save camera trajectory..." << endl;
+    // Save camera trajectory
+    SLAM->SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
+
+    cout << "Average Processing time per frame is " << avgTime << " milliseconds = " << avgTime / 1000 << " seconds" <<endl
+         << "Max processing time : " << maxPTime << endl
+         << "Min processing time : " << minPTime << endl;
 }
 
 void Mono_Offline_VIORB::stop()

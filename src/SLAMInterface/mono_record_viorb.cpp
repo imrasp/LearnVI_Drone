@@ -8,8 +8,9 @@ Mono_Record_VIORB::~Mono_Record_VIORB() {
 
 }
 
-Mono_Record_VIORB::Mono_Record_VIORB(System_Log *system_log_, bool gui, Mono_Live_VIORB *mono_live_viorb_, int timespace_)
-        : system_log(system_log_), bUseView(gui), mono_live_viorb(mono_live_viorb_), timespace(timespace_) {
+Mono_Record_VIORB::Mono_Record_VIORB(System_Log *system_log_, bool gui, Mono_Live_VIORB *mono_live_viorb_,
+                                     int timespace_) : system_log(system_log_), bUseView(gui),
+                                     mono_live_viorb(mono_live_viorb_), timespace(timespace_) {
     time_to_exit = false;
 }
 
@@ -31,13 +32,37 @@ void Mono_Record_VIORB::start(char *filename) {
     csvposelog.open("../sample_data/" + string(filename) + "/posedata.csv");
 
     csvposelog
-            << string("Pose") + "," + to_string(frameno) + "timestamp"  + "," + "xgyro" + "," + "xyyro" + "," + "zgyro" +
-               "," + "xacc" + "," + "yacc" + "," + "zacc" + "," + "x" + "," + "y" + "," + "z" + "," + "roll" + "," +
-               "pitch" + "," + "yaw" + "," + "zacc" + "," + "lat" + "," + "lon" + "," + "alt" + "," +
-               "satellites_visible" + "," + "hdop" + "," + "\n";
+            << string("Pose") + ","
+            + "FrameNo" + ","
+               + "timestamp(ns)" + ","
+               + "timeboot(ms)" + ","
+               + "xgyro" + ","
+               + "xyyro" + ","
+               + "zgyro" + ","
+               + "xacc" + ","
+               + "yacc" + ","
+               + "zacc" + ","
+               + "x" + ","
+               + "y" + ","
+               + "z" + ","
+               + "roll" + ","
+               + "pitch" + ","
+               + "yaw" + ","
+               //+ "satellites_visible" + ","
+               + "hdop" + ","
+               + "lat" + ","
+               + "lon" + ","
+               + "alt" + ","
+               + "vx" + ","
+               + "vy" + ","
+               + "vz" + ","
+               + "gpsxacc" + ","
+               + "gpsyacc" + ","
+               + "gpszacc" +
+               "\n";
 
 
-    if (bUseView){
+    if (bUseView) {
         cout << "Starting camera thread in Record mode..." << endl;
         mono_live_viorb = new Mono_Live_VIORB(system_log, false);
         mono_live_viorb->findCamera();
@@ -54,14 +79,10 @@ void Mono_Record_VIORB::stop() {
 
 void Mono_Record_VIORB::cameraRecorder() {
     while (!time_to_exit) {
-        cout << "++++++++++++++++++++ copy frame ++++++++++++++++++++" <<endl;
-        cout << "matFrame " << mono_live_viorb->matFrame.size() << endl;
         mono_live_viorb->matFrame.copyTo(currentFrame);
-	tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
-//        currentFrame = mono_live_viorb->matFrame.clone();
-        cout << "current Frame : " << currentFrame.size() <<endl;
-        imgname = "../sample_data/"+foldername+"/"+to_string(frameno)+".jpg";
-        imwrite(imgname,currentFrame);
+        tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
+        imgname = "../sample_data/" + foldername + "/" + to_string(frameno) + ".jpg";
+        imwrite(imgname, currentFrame);
         tframelog << string("Frame,") + to_string(frameno) + "," + to_string(tframe) + "," + "\n";
         if (bUseView) {
             imshow("Camera Recorder", currentFrame);
@@ -73,70 +94,43 @@ void Mono_Record_VIORB::cameraRecorder() {
     }
 }
 
-void Mono_Record_VIORB::loopCamera() {
-    cout << "Starting camera connection..." << endl;
-    VideoCapture stream;   //0 is the id of video device.0 if you have only one camera.
-
-    int maxTested = 2;
-    int i;
-    for (i = maxTested; i >= 0; i--) {
-        VideoCapture stream(i);
-        bool res = (stream.isOpened());
-        cout << res << endl;
-        if (res) {
-            cout << "Open camera " << i << endl;
-            break;
-        } else {
-            stream.release();
-            cout << "Camera " << i << " is released" << endl;
-        }
-    }
-
-    if (i == -1) {
-        cout << "cannot open camera";
-        //return 0;
-    }
-
-    VideoCapture stream1 = VideoCapture(i);
-
-
-    string filename;
-
-
-    while (!time_to_exit) {
-        //milliseconds_since_epoch
-        tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
-        cout << "time for frame " << frameno << " is " << tframe << endl;
-        tframelog << string("Frame,") + to_string(frameno) + "," + to_string(tframe) + "," + "\n";
-
-        stream1.read(currentFrame);
-        //imshow("cam", currentFrame);
-
-        filename = "./sample_data/" + foldername + "/" + to_string(frameno) + ".jpg";
-        imwrite(filename, currentFrame);
-
-        usleep(1000000); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
-
-        if (waitKey(30) >= 0)
-            break;
-        frameno++;
-    }
-}
-
-void Mono_Record_VIORB::getPoseData(posedata current_pose) {
+void Mono_Record_VIORB::getPoseData(string msg_name, posedata current_pose) {
 
     double timestamp = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
 
     imulog << string("IMU,") + to_string(frameno)
-              + "," + to_string(current_pose.xgyro) + "," + to_string(current_pose.ygyro) + "," + to_string(current_pose.zgyro)
-              + "," + to_string(current_pose.xacc) + "," + to_string(current_pose.yacc) + "," + to_string(current_pose.zacc)
+              + "," + to_string(current_pose.xgyro) + "," + to_string(current_pose.ygyro) + "," +
+              to_string(current_pose.zgyro)
+              + "," + to_string(current_pose.xacc) + "," + to_string(current_pose.yacc) + "," +
+              to_string(current_pose.zacc)
               + "," + to_string(timestamp) + "," + "\n";
 
-    csvposelog << string("Pose") + "," + to_string(frameno) + "," + to_string(timestamp) + ","
-                  + to_string(current_pose.xgyro) + "," + to_string(current_pose.ygyro) + "," + to_string(current_pose.zgyro) + ","
-                  + to_string(current_pose.xacc) + "," + to_string(current_pose.yacc) + "," + to_string(current_pose.zacc) + ","
-                  + to_string(current_pose.x) + "," + to_string(current_pose.y) + "," + to_string(current_pose.z) + ","
-                  + to_string(current_pose.roll) + "," + to_string(current_pose.pitch) + "," + to_string(current_pose.yaw) + ","
-                  + to_string(current_pose.lat) + "," + to_string(current_pose.lon) + "," + to_string(current_pose.alt) + ","
-                  + to_string(current_pose.satellites_visible) + "," + to_string(current_pose.hdop) + "," + "\n";
+    csvposelog << msg_name + ","
+                  + to_string(frameno) + ","
+                  + to_string(timestamp) + ","
+                  + to_string(current_pose.timebootms) + ","
+                  + to_string(current_pose.xgyro) + ","
+                  + to_string(current_pose.ygyro) + ","
+                  + to_string(current_pose.zgyro) + ","
+                  + to_string(current_pose.xacc) + ","
+                  + to_string(current_pose.yacc) + ","
+                  + to_string(current_pose.zacc) + ","
+                  + to_string(current_pose.x) + ","
+                  + to_string(current_pose.y) + ","
+                  + to_string(current_pose.z) + ","
+                  + to_string(current_pose.roll) + ","
+                  + to_string(current_pose.pitch) + ","
+                  + to_string(current_pose.yaw) + ","
+                  //+ to_string(current_pose.satellites_visible) + ","
+                  + to_string(current_pose.hdop) + ","
+                  + to_string(current_pose.lat) + ","
+                  + to_string(current_pose.lon) + ","
+                  + to_string(current_pose.alt) + ","
+                  + to_string(current_pose.vx) + ","
+                  + to_string(current_pose.vy) + ","
+                  + to_string(current_pose.vz) + ","
+                  + to_string(current_pose.gpsxacc) + ","
+                  + to_string(current_pose.gpsyacc) + ","
+                  + to_string(current_pose.gpszacc)
+                  + "\n";
 }

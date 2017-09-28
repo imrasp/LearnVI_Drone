@@ -30,7 +30,7 @@ public:
     int findCamera();
     void loopCamera();
     void cameraRecorder();
-    void getPoseData(posedata current_pose);
+    void getPoseData(string msg_name, posedata current_pose);
 
 
 private:
