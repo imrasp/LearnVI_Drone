@@ -506,7 +506,7 @@ void Autopilot_Interface::read_messages()
                     this_timestamps.attitude = current_messages.time_stamps.attitude;
 
                     system_log->write2csv("Attitude", current_messages.attitude);
-
+                    location_manager->poseToSLAM(current_messages.attitude);
                     break;
                 }
 

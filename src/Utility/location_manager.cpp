@@ -239,7 +239,6 @@ Location_Manager::Location_Manager(System_Log *system_log_, Mono_Live_VIORB *mon
 
     initializePosedata();
 //    estimate_vision_pose = Mat::zeros(3, 3, CV_64F);
-//    estimate_vision_pose = Mat::zeros(3, 3, CV_64F);
     bStartSLAM = false;
    geodeticConverter = new GeodeticConverter();
 }
@@ -279,13 +278,21 @@ void Location_Manager::initializePosedata(){
     current_pose.gpsyacc = 0;
     current_pose.gpszacc = 0;
 
+    current_estimate_vision_pose = Mat::zeros(4,4,CV_32F);
     bisInitialized = false;
+    bNotFirstEstimatedPose = false;
 }
-
-void Location_Manager::getEstimatedVisionPose(Mat pose){
-//    current_estimate_vision_pose = pose * estimate_vision_pose;
-//    estimate_vision_pose = current_estimate_vision_pose.clone();
+void Location_Manager::setInitialEstimateVisionPose(posedata pose){
+    pEstimatedVisionPose = pose;
+}
+void Location_Manager::setEstimatedVisionPose(Mat pose){
+    if(bNotFirstEstimatedPose) {
+        current_estimate_vision_pose = pose.mul(estimate_vision_pose);
+    }
+    estimate_vision_pose = current_estimate_vision_pose.clone();
 //    system_log->write2txt("Accumulate Estimated_Position (SLAM) ",estimate_vision_pose);
+//    system_log->write2csv("Accumulate Estimated_Position (SLAM) ",pose);
+
 
 }
 
@@ -298,6 +305,10 @@ void Location_Manager::poseToSLAM(mavlink_highres_imu_t highres_imu) {
     current_pose.yacc = highres_imu.ygyro;
     current_pose.zacc = highres_imu.zgyro;
 
+    current_pose.highres_imu_time = highres_imu.time_usec;
+
+//    cout << "HIGHRES_IMU (gyro): " << highres_imu.xgyro << ", " << highres_imu.ygyro << ", " << highres_imu.zgyro << endl;
+//    cout << "HIGHRES_IMU (gyro2): " << current_pose.xgyro << ", " << current_pose.ygyro << ", " << current_pose.zgyro << endl;
     if(bStartSLAM)
     {
         if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
@@ -310,6 +321,7 @@ void Location_Manager::poseToSLAM(mavlink_attitude_t attitude) {
     current_pose.roll = attitude.roll;
     current_pose.pitch = attitude.pitch;
     current_pose.yaw = attitude.yaw;
+    current_pose.attitude_time = attitude.time_boot_ms;
 
     if(bStartSLAM)
     {
@@ -323,9 +335,10 @@ void Location_Manager::poseToSLAM(mavlink_global_position_int_t global_pos) {
     current_pose.lat = global_pos.lat;
     current_pose.lon = global_pos.lon;
     current_pose.alt = global_pos.alt;
-    current_pose.vx = global_pos.vx;
-    current_pose.vy = global_pos.vy;
-    current_pose.vz = global_pos.vz;
+    current_pose.gpsvx = global_pos.vx;
+    current_pose.gpsvy = global_pos.vy;
+    current_pose.gpsvz = global_pos.vz;
+    current_pose.gpstime = global_pos.time_boot_ms;
 
     // initialize 1st gps position with ned
     if(!geodeticConverter->isInitialised()){
@@ -362,6 +375,8 @@ void Location_Manager::poseToSLAM(mavlink_global_position_int_t global_pos) {
 
         system_log->write2gps(current_pose.nedtime, current_pose.x, current_pose.y, current_pose.z, current_pose.gpstime, current_pose.lat, current_pose.lon, current_pose.alt, current_pose.gpsx, current_pose.gpsy, current_pose.gpsz, sqrt(dx*dx + dy*dy + dz*dz), 1.122*( dx + dy + dz ));
 
+        system_log->write2gpsaccsample(current_pose.nedtime, current_pose.x, current_pose.y, current_pose.z, current_pose.vx, current_pose.vy, current_pose.vz, current_pose.gpstime, current_pose.lat, current_pose.lon, current_pose.alt, current_pose.gpsvx, current_pose.gpsvy, current_pose.gpsvz, current_pose.highres_imu_time, current_pose.xacc, current_pose.yacc, current_pose.zacc, current_pose.xgyro, current_pose.ygyro, current_pose.zgyro, current_pose.attitude_time, current_pose.roll, current_pose.pitch, current_pose.yaw);
+
     }
 
     if (lastest_pose.vx != 0 ){
@@ -385,6 +400,10 @@ void Location_Manager::poseToSLAM(mavlink_local_position_ned_t local_pos) {
     current_pose.x = local_pos.x;
     current_pose.y = local_pos.y;
     current_pose.z = local_pos.z;
+    current_pose.vx = local_pos.vx;
+    current_pose.vy = local_pos.vy;
+    current_pose.vz = local_pos.vz;
+    current_pose.nedtime = local_pos.time_boot_ms;
 
     if(bStartSLAM)
     {
@@ -407,6 +426,7 @@ void Location_Manager::poseToSLAM(mavlink_gps_raw_int_t gps_raw) {
 bool Location_Manager::isInitialized(){
     return bisInitialized;
 }
+
 void Location_Manager::initialize_coordinate(mavlink_global_position_int_t global_pos, mavlink_local_position_ned_t local_pos) {
     init_local_position = local_pos;
     init_global_position = global_pos;
@@ -454,3 +474,10 @@ float radians2degrees(float radians) {
     return (radians * 180) / M_PI;
 }
 
+void Location_Manager::setSLAMTrackingStage(int stage){
+    SLAMTrackingStage = stage;
+}
+
+int Location_Manager::getSALMTrackingStage(){
+    return SLAMTrackingStage;
+}

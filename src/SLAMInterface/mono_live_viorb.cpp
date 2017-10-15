@@ -1,10 +1,12 @@
 
 #undef NDEBUG
+
 #include <assert.h>   // reinclude the header to update the definition of assert()
 #include "SLAMInterface/mono_live_viorb.h"
 #include "Utility/location_manager.h"
 
-Mono_Live_VIORB::Mono_Live_VIORB(System_Log *system_log_, bool bUseView_) : system_log(system_log_), bUseView(bUseView_)  {
+Mono_Live_VIORB::Mono_Live_VIORB(System_Log *system_log_, bool bUseView_) : system_log(system_log_),
+                                                                            bUseView(bUseView_) {
     time_to_exit = false;
     isFirstFrame = false;
     getFirstFrame = false;
@@ -12,7 +14,9 @@ Mono_Live_VIORB::Mono_Live_VIORB(System_Log *system_log_, bool bUseView_) : syst
     avgTime = 0;
     frameNo = 0;
     firstTimestamp = 0;
+    first_estimate_vision_pose = false;
 }
+
 Mono_Live_VIORB::~Mono_Live_VIORB() {}
 
 void Mono_Live_VIORB::setLocationManager(Location_Manager *location_manager_) {
@@ -84,19 +88,42 @@ void Mono_Live_VIORB::grabFrameData() {
         } else {
 
 
-        if (vimuData.size() < 5) {
-            //cout << "Skipping this frame (Specially if before initializing)!" << endl;
-            continue;
-        }
+            if (vimuData.size() < 10) {
+                //cout << "Skipping this frame (Specially if before initializing)!" << endl;
+                continue;
+            }
+            if(!first_estimate_vision_pose) initial_slam_pose = current_pose;
 
-        // Pass the image to the SLAM system
-        //SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
-        //cout << camFrame << " :: vimuData size : " << vimuData.size() << endl;
-        vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
-        system_log->write2txt("Estimated_Position (SLAM) ",vision_estimated_pose);
-       // cout << " vision_estimated_pose = " << vision_estimated_pose << endl;
+            // Pass the image to the SLAM system
+            //SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
+            cout << camFrame << " :: " << ni << " :: vimuData size : " << vimuData.size() << endl;
+            vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
 
-        location_manager->getEstimatedVisionPose(vision_estimated_pose);
+            //update tracking stage to location manager
+            cout << "Tracking status : " << getTrackingStage() << endl;
+            system_log->write2txt("Tracking status : " + to_string(getTrackingStage()));
+            if(trackingStage != getTrackingStage()) {
+                location_manager->setSLAMTrackingStage(getTrackingStage());
+                trackingStage = getTrackingStage();
+            }
+
+            //set initial pose of vision estimation pose
+            if(vision_estimated_pose.size().height > 1) {
+                if(!first_estimate_vision_pose){
+                    location_manager->setInitialEstimateVisionPose(initial_slam_pose);
+                    first_estimate_vision_pose = true;
+                }
+                else{
+                    // cout << " vision_estimated_pose = " << vision_estimated_pose << endl;
+                    location_manager->setEstimatedVisionPose(vision_estimated_pose);
+                    system_log->write2txt("Estimated_Position (SLAM Frame " + to_string(ni) + "(" + to_string(camFrame) + ")) ", vision_estimated_pose);
+                    //system_log->write2csv("Estimated_Position (SLAM Frame " + to_string(ni) + "(" + to_string(camFrame) + ")) ", vision_estimated_pose);
+                    cout << "call write2visionEstimatePositionLog" << endl;
+                    system_log->write2visionEstimatePositionLog(vision_estimated_pose);
+                }
+
+            }
+
 
 //            if(!lastest_vision_estimated_pose.empty()){
 //                accumulate_vision_estimated_pose = vision_estimated_pose * lastest_vision_estimated_pose;
@@ -106,18 +133,20 @@ void Mono_Live_VIORB::grabFrameData() {
 //
 //            system_log->write2txt("Accumulate Estimated_Position (SLAM) ",lastest_vision_estimated_pose);
 
-        vimuData.clear();
-        //while(!SLAM->bLocalMapAcceptKF()) {
-        //}
+            vimuData.clear();
+            //while(!SLAM->bLocalMapAcceptKF()) {
+            //}
         }
-        calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)); // stop
+        calAvgProcessingTime(
+                std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)); // stop
+        ni++;
     }
 
 }
 
 double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious) {
     double diff = 0.0;
-   // cout << "matFrameCurrent size : " << matFrameCurrent.size() <<  " matFramePrevious : " << matFramePrevious.size() << endl;
+    // cout << "matFrameCurrent size : " << matFrameCurrent.size() <<  " matFramePrevious : " << matFramePrevious.size() << endl;
     assert(matFrameCurrent.rows > 0 && matFrameCurrent.cols > 0);
     assert(
             matFrameCurrent.rows == matFramePrevious.rows
@@ -160,14 +189,13 @@ void Mono_Live_VIORB::findCamera() {
         cout << "cannot open camera";
         //return 0;
     }
-
     stream = new VideoCapture(i);
 }
 
 
 void Mono_Live_VIORB::cameraLoop() {
 
-    cout << "starting camera (Mono_Live_VIORB)" <<endl;
+    cout << "starting camera (Mono_Live_VIORB)" << endl;
     camFrame = 1;
 
     while (!time_to_exit) {
@@ -176,7 +204,7 @@ void Mono_Live_VIORB::cameraLoop() {
 //        imshow( "Display window", matFrame );
 //        if (waitKey(30) >= 0)
 //            break;
-        if (camFrame == 2){
+        if (camFrame == 2) {
             getFirstFrame = true;
             isFirstFrame = true;
         }
@@ -203,14 +231,17 @@ void Mono_Live_VIORB::calAvgProcessingTime(double time) {
 
 }
 
-void Mono_Live_VIORB::getIMUdata(posedata current_pose) {
+void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
+    current_pose = current_pose_;
     double timestamp = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
     if (firstTimestamp == 0) firstTimestamp = timestamp;
     timestamp = (timestamp - firstTimestamp) / 1000;
 
     rollc = current_pose.xgyro;
     pitchc = current_pose.ygyro;
-    yawc = current_pose.ygyro;
+    yawc = current_pose.zgyro;
+
+    //cout << "roll pitch yaw : " << rollc << ", " << pitchc << ", " << yawc << endl;
     ax = current_pose.xacc;
     ay = current_pose.yacc;
     az = current_pose.zacc;
@@ -225,6 +256,6 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose) {
     vimuData.push_back(imudata);
 }
 
-//int Mono_Live_VIORB::getTrackingStage(){
-//    return SLAM->getTrackingStage();
-//}
+int Mono_Live_VIORB::getTrackingStage() {
+    return SLAM->getTrackingStage();
+}

@@ -19,13 +19,14 @@ class Location_Manager;
 
 typedef struct posedata {
     float timestampms, timestampns;
-    float gpstime, nedtime;
+    float gpstime, nedtime, highres_imu_time, attitude_time;
     float x, y, z;
     double gpsx, gpsy, gpsz;
     float xacc, yacc, zacc;
     float xgyro, ygyro, zgyro;
     float roll, pitch, yaw;
     float vx,vy,vz;
+    double gpsvx, gpsvy, gpsvz;
     float gpsxacc, gpsyacc, gpszacc;
     float timebootms;
 
@@ -44,7 +45,7 @@ public:
     void grabFrameData();
     void findCamera();
     void cameraLoop();
-    void getIMUdata(posedata current_pose);
+    void getIMUdata(posedata current_pose_);
     int getTrackingStage();
     void setLocationManager(Location_Manager *location_manager_);
 
@@ -54,6 +55,7 @@ public:
     double rollc,pitchc,yawc;
     double timestampc, firstTimestamp;
     double ax, ay, az;
+    posedata current_pose, initial_slam_pose;
 
 private:
 
@@ -73,8 +75,7 @@ private:
     double imageMsgDelaySec;
 
     double frameDiff;
-    bool getFirstFrame;
-    bool isFirstFrame;
+    bool getFirstFrame, isFirstFrame, first_estimate_vision_pose;
     int camFrame;
 
     double frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious);
@@ -87,6 +88,7 @@ private:
     double avgTime;
     double maxPTime, minPTime;
     int frameNo;
+    int trackingStage;
 
     // 3dm imu output per g. 1g=9.80665 according to datasheet
     const double g3dm = 9.80665;

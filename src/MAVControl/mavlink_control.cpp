@@ -53,7 +53,7 @@ void Mavlink_Control::commands()
 //    mavlink_set_position_target_local_ned_t sp;
 //    mavlink_set_position_target_local_ned_t ip = autopilot_interface->initial_position;
 //
-    autopilot_interface->switchUpdatePosition(true);
+    autopilot_interface->switchUpdatePosition(false);
 //    syslog.write2csv("Update position = true");
 //    takeoff(ip.z - 5.0, sp);
 

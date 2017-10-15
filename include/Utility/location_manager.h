@@ -40,12 +40,17 @@ public:
     void poseToSLAM(mavlink_gps_raw_int_t gps_raw);
     void activateSLAM();
 
-    void getEstimatedVisionPose(Mat pose);
+    void setInitialEstimateVisionPose(posedata pose);
+    void setEstimatedVisionPose(Mat pose);
 
-    posedata current_pose;
-    posedata lastest_pose;
+    posedata current_pose, lastest_pose, pEstimatedVisionPose;
     Mat estimate_vision_pose, current_estimate_vision_pose;
-    bool bisInitialized;
+    bool bisInitialized, bNotFirstEstimatedPose;
+
+    void setSLAMTrackingStage(int stage);
+    int getSALMTrackingStage();
+    int SLAMTrackingStage;
+
 private:
 
     void initializePosedata();
@@ -59,6 +64,8 @@ private:
     bool bLiveMode, bRecordMode, bStartSLAM;
     float degrees2radians(float degrees);
     float radians2degrees(float radians);
+
+
 
 };
 

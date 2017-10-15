@@ -50,6 +50,8 @@ public:
     void write2csv(string text);
     void write2gps(float nedtime, float x, float y, float z, float gpstime, float lat, float lon, float alt, float gpsx, float gpsy, float gpsz, float errDRMS, float err99Sph);
     void write2origps(float nedtime, float x, float y, float z, float gpstime, float lat, float lon, float alt, float gpsx, float gpsy, float gpsz, float errDRMS, float err99Sph);
+    void write2gpsaccsample(float nedtime, float x, float y, float z, float vx, float vy, float vz, float gpstime, float lat, float lon, float alt, float gpsvx, float gpsvy, float gpsvz, float highres_imu_time, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float attitude_time, float roll, float pitch, float yaw);
+    void write2visionEstimatePositionLog(Mat mat_pos);
 
 
 
@@ -59,7 +61,7 @@ private:
     char txtfilename[80];
     char txtpath[160], csvpath[160];
     char csvfilename[80];
-    ofstream csvlog, gpslog, txtlog, gpsorilog;
+    ofstream csvlog, gpslog, txtlog, gpsorilog, gpsaccsample, visionEstimatePositionLog;
 };
 
 

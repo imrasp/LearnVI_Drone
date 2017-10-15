@@ -564,4 +564,8 @@ void System::SaveTrajectoryKITTI(const string &filename)
     cout << endl << "trajectory saved!" << endl;
 }
 
+int System::getTrackingStage(){
+    return mpTracker->mState;
+}
+
 } //namespace ORB_SLAM

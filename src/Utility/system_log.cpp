@@ -19,6 +19,7 @@ System_Log::~System_Log()
     csvlog.close();
     gpslog.close();
     gpsorilog.close();
+    gpsaccsample.close();
 }
 
 void System_Log::initialize_defaults(char *filename)
@@ -42,6 +43,8 @@ void System_Log::initialize_defaults(char *filename)
     csvlog.open("../sample_data/" + string(filename) + "/" + string(csvfilename));
     gpslog.open("../sample_data/" + string(filename) + "/gpsdata.csv");
     gpsorilog.open("../sample_data/" + string(filename) + "/gpsdata_original_coonversion.csv");
+    gpsaccsample.open("../sample_data/" + string(filename) + "/gps_acc_sample_data.csv");
+    visionEstimatePositionLog.open("../sample_data/" + string(filename) + "/visionEstimatePositionLog.csv");
 
     gpslog << string("ned_time")  + "," + "x" + "," + "y" + "," + "z" + "," +
               "gps_time" + "," + "lat" + "," + "lon" + "," + "alt" + "," +
@@ -53,6 +56,14 @@ void System_Log::initialize_defaults(char *filename)
               "gpsx" + "," + "gpsy" + "," + "gpsz" + "," +
               "DRMS error" + "," + "99% SphericalAccuracyStandard error" + "," +
               "\n";
+    gpsaccsample << string("ned_time") + "," + "x" + "," + "y" + "," + "z" + "," +
+                    "vx" + "," + "vy" + "," + "vz" + "," +
+                    "gps_time" + "," + "lat" + "," + "lon" + "," + "alt" + "," +
+                    "gps_vx" + "," + "gps_vy" + "," + "gps_vz" + "," +
+                    "highres_imu_time" + "," + "xacc" + "," + "yacc" + "," + "zacc" + "," +
+                    "xgyro" + "," + "ygyro" + "," + "zgyro" + "," +
+                    "\n";
+    visionEstimatePositionLog << string("x") + "," + "y" + "," + "z" + "," + "\n";
 }
 
 // write log to text file
@@ -76,19 +87,7 @@ void System_Log::write2txt(string text)
 }
 void System_Log::write2txt(string text, Mat matrix)
 {
-//    int rows = matrix.rows;
-//    int cols = matrix.cols;
-//    int a=0, b=0;
-//
-//    fprintf(txtlog, "%s \n", text.c_str());
-//    for(a=0;a<rows;a++)
-//    {
-//        for(b=0;b<cols;b++)
-//        {
-//            fprintf(txtlog, "%lf\t", matrix.at<float>(a,b));
-//        }
-//        fprintf(txtlog, "\n");
-//    }
+    txtlog << text << matrix << endl;
 }
 
 // write log to csv file
@@ -123,7 +122,7 @@ void System_Log::write2csv(string text, mavlink_attitude_t attitude)
 }
 void System_Log::write2csv(string text, Mat mat_pos)
 {
-    csvlog << text + string("(mat_pos)") + "," + to_string(mat_pos.at<float>(0)) + "," + to_string(mat_pos.at<float>(1)) + "," + to_string(mat_pos.at<float>(2)) + "," + "\n";
+    csvlog << text << string("(Matrix)") << ',' << format(mat_pos, "CSV") << '\n';
 }
 void System_Log::write2csv(string text, Mat mat_pos, mavlink_local_position_ned_t local_position, float errX, float errY, float errZ, float errAvg)
 {
@@ -148,4 +147,22 @@ void System_Log::write2origps(float nedtime, float x, float y, float z, float gp
               to_string(gpsx) + "," + to_string(gpsy) + "," + to_string(gpsz) + "," +
               to_string(errDRMS) + "," + to_string(err99Sph) + "," +
               "\n";
+}
+
+void System_Log::write2gpsaccsample(float nedtime, float x, float y, float z, float vx, float vy, float vz, float gpstime, float lat, float lon, float alt, float gpsvx, float gpsvy, float gpsvz, float highres_imu_time, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float attitude_time, float roll, float pitch, float yaw){
+    gpsaccsample << to_string(nedtime)  + "," + to_string(x) + "," + to_string(y) + "," + to_string(z) + "," +
+                    to_string(vx) + "," + to_string(vy) + "," + to_string(vz) + "," +
+                    to_string(gpstime) + "," + to_string(lat) + "," + to_string(lon) + "," + to_string(alt) + "," +
+                    to_string(gpsvx) + "," + to_string(gpsvy) + "," + to_string(gpsvz) + "," +
+                    to_string(highres_imu_time)  + "," + to_string(xacc) + "," + to_string(yacc) + "," + to_string(zacc) + "," +
+                    to_string(xgyro) + "," + to_string(ygyro) + "," + to_string(zgyro) + "," +
+                    to_string(attitude_time)  + "," + to_string(roll) + "," + to_string(pitch) + "," + to_string(yaw) + "," +
+                    "\n";
+}
+
+void System_Log::write2visionEstimatePositionLog(Mat mat_pos)
+{
+//    Mat M = mat_pos.clone();
+//    visionEstimatePositionLog << M.at<double>(0,0) << '\n';
+    visionEstimatePositionLog << mat_pos.at<double>(0,3) << ',' << mat_pos.at<double>(1,3) << ',' << mat_pos.at<double>(2,3) << ',' <<  '\n';
 }
