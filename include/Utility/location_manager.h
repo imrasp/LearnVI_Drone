@@ -16,6 +16,9 @@
 #include "SLAMInterface/mono_live_viorb.h"
 #include "SLAMInterface/mono_record_viorb.h"
 
+class Autopilot_Interface;
+class Mavlink_Control;
+
 using namespace cv;
 using namespace std;
 
@@ -26,6 +29,7 @@ public:
     ~Location_Manager();
     Location_Manager(System_Log *system_log_);
     Location_Manager(System_Log *system_log_, Mono_Live_VIORB *mono_live_viorb_, Mono_Record_VIORB *mono_record_viorb_);
+    void setMavlinkControl(Mavlink_Control *mavlink_control_);
 
     void initialize_coordinate(mavlink_global_position_int_t global_pos, mavlink_local_position_ned_t local_pos);
     void initialize_coordinate(mavlink_gps_raw_int_t global_pos, mavlink_local_position_ned_t local_pos);
@@ -59,6 +63,7 @@ private:
     mavlink_local_position_ned_t init_local_position;
     mavlink_global_position_int_t init_global_position;
     System_Log *system_log;
+    Mavlink_Control *mavlink_control;
     Mono_Live_VIORB *mono_live_viorb;
     Mono_Record_VIORB *mono_record_viorb;
     bool bLiveMode, bRecordMode, bStartSLAM;

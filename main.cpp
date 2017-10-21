@@ -76,6 +76,7 @@ int main(int argc, char **argv) {
             Location_Manager location_manager(&system_log,&mono_live_viorb,&mono_record_viorb);
             mono_live_viorb.setLocationManager(&location_manager);
             Mavlink_Control mavlink_control(baudrate, uart_name, &system_log, &location_manager);
+            location_manager.setMavlinkControl(&mavlink_control);
 
             cout << "Start SLAM thread,..." << endl;
             mono_live_viorb.start(vocabulary, setting);

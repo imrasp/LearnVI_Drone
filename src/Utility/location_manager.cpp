@@ -282,6 +282,11 @@ void Location_Manager::initializePosedata(){
     bisInitialized = false;
     bNotFirstEstimatedPose = false;
 }
+
+void Location_Manager::setMavlinkControl(Mavlink_Control *mavlink_control_){
+    mavlink_control = mavlink_control_;
+}
+
 void Location_Manager::setInitialEstimateVisionPose(posedata pose){
     pEstimatedVisionPose = pose;
 }
@@ -290,8 +295,6 @@ void Location_Manager::setEstimatedVisionPose(Mat pose){
         current_estimate_vision_pose = pose.mul(estimate_vision_pose);
     }
     estimate_vision_pose = current_estimate_vision_pose.clone();
-//    system_log->write2txt("Accumulate Estimated_Position (SLAM) ",estimate_vision_pose);
-//    system_log->write2csv("Accumulate Estimated_Position (SLAM) ",pose);
 
 
 }

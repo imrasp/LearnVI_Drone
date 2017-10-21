@@ -251,6 +251,7 @@ public:
     void update_setpoint(mavlink_set_position_target_local_ned_t setpoint);
 
     void switchUpdatePosition(bool input);
+    void updateVisionEstimationPosition(mavlink_vision_position_estimate_t vpe);
     void update_geodetic2local(mavlink_global_position_int_t gps_pos);
     void update_geodetic2local(mavlink_gps_raw_int_t raw_pos);
 

@@ -52,6 +52,8 @@ public:
     Mavlink_Control(int baudrate, char *&uart_name, System_Log *system_log, Location_Manager *location_manager_);
     ~Mavlink_Control();
 
+    void setVisionEstimatedPosition(float x, float y, float z, float roll, float pitch, float yaw, float time);
+
     //int start(int argc, char **argv);
     //int start(int baudrate, char *&uart_name);
     void start();

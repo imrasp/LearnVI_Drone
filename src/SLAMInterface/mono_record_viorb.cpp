@@ -12,6 +12,7 @@ Mono_Record_VIORB::Mono_Record_VIORB(System_Log *system_log_, bool gui, Mono_Liv
                                      int timespace_) : system_log(system_log_), bUseView(gui),
                                      mono_live_viorb(mono_live_viorb_), timespace(timespace_) {
     time_to_exit = false;
+    frameno = 0;
 }
 
 void Mono_Record_VIORB::start(char *filename) {

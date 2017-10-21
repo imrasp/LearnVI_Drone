@@ -378,3 +378,16 @@ positiondata Mavlink_Control::getCurrentPose()
 
     return current_pose;
 }
+
+void Mavlink_Control::setVisionEstimatedPosition(float x, float y, float z, float roll, float pitch, float yaw, float time){
+    mavlink_vision_position_estimate_t vpe;
+    vpe.x = 0;
+    vpe.y = 0;
+    vpe.z = 0;
+    vpe.roll = 0;
+    vpe.pitch = 0;
+    vpe.yaw = 0;
+    vpe.usec = (uint32_t) (get_time_usec()/1000000);
+
+    autopilot_interface->updateVisionEstimationPosition(vpe);
+}

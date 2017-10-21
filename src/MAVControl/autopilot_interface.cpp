@@ -639,15 +639,22 @@ void Autopilot_Interface::switchUpdatePosition(bool input)
     //default is false
     bUpdatePosition = input;
 }
-void Autopilot_Interface::update_geodetic2local(mavlink_gps_raw_int_t raw_pos)
-{
-    mavlink_global_position_int_t gps_pos;
-    gps_pos.lat = raw_pos.lat;
-    gps_pos.lon = raw_pos.lon;
-    gps_pos.alt = raw_pos.alt;
 
-    update_geodetic2local(gps_pos);
+void Autopilot_Interface::updateVisionEstimationPosition(mavlink_vision_position_estimate_t vpe)
+{
+    mavlink_message_t message;
+    mavlink_msg_vision_position_estimate_encode(system_id, companion_id, &message, &vpe);
+
+    int len = write_message(message);
+
+    if ( !len )
+    {
+        system_log->write2txt("cannot write to VISION_POSITION_ESTIMATE");
+    }
+    else
+        system_log->write2txt("write to VISION_POSITION_ESTIMATE");
 }
+
 void Autopilot_Interface::update_geodetic2local(mavlink_global_position_int_t gps_pos)
 {
     Mat result = location_manager->geodetic2NED(gps_pos);
