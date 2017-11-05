@@ -5,6 +5,7 @@ Mavlink_Control::Mavlink_Control() {
 }
 Mavlink_Control::Mavlink_Control(int baudrate, char *&uart_name, System_Log *system_log, Location_Manager *location_manager_) : location_manager(location_manager_)
 {
+
     //   PORT and THREAD STARTUP
     serial_port = Serial_Port(uart_name, baudrate, system_log);
 
@@ -44,28 +45,45 @@ void Mavlink_Control::commands()
 {
     printf("start command...");
 
-//    autopilot_interface->arm_control(); usleep(100);
+    autopilot_interface->set_message_interval(105,500); // msg_id,interval in microseconds, HIGHRES_IMU = 105
+    autopilot_interface->arm_control();
+    usleep(100);
 
-    autopilot_interface->enable_offboard_control(); usleep(100);
+    autopilot_interface->enable_offboard_control();
+    usleep(100);
 
+    //wait until slam tracking is ready
+//    cout << "location_manager->getSALMTrackingStage() : " << location_manager->getSALMTrackingStage() << endl;
+//    while(location_manager->getSALMTrackingStage() != 2) {
+//        usleep(100);
+//    }
 
-//    printf("SEND OFFBOARD COMMANDS\n");
-//    mavlink_set_position_target_local_ned_t sp;
-//    mavlink_set_position_target_local_ned_t ip = autopilot_interface->initial_position;
-//
-    autopilot_interface->switchUpdatePosition(false);
+        printf("SEND OFFBOARD COMMANDS\n");
+        mavlink_set_position_target_local_ned_t sp;
+        mavlink_set_position_target_local_ned_t ip = autopilot_interface->initial_position;
+
+    autopilot_interface->enable_takeoff(5.0,0.5);
+    autopilot_interface->enable_land();
+    cout << "landed" << endl;
+
+//-----------------------------------------------------------------------------------------------------new/old
+
+//    autopilot_interface->switchUpdatePosition(false);
 //    syslog.write2csv("Update position = true");
-//    takeoff(ip.z - 5.0, sp);
+//
+//        takeoff(ip.z - 5.0, sp);
+//    }
 
-    /*float ninetydeg = ( 90 * 180 ) / M_PI;
-    mavlink_attitude_t catt = autopilot_interface->current_messages.attitude;
-    printf("ATTITUDE : roll %lf pitch %lf yaw %lf \n", catt.roll, catt.pitch, catt.yaw);
-    printf("first turn \n");
-    yaw_rotation(ninetydeg,sp);
-    sleep(5);
-    catt = autopilot_interface->current_messages.attitude;
-    printf("ATTITUDE : roll %lf pitch %lf yaw %lf \n", catt.roll, catt.pitch, catt.yaw);
-*/
+
+        /*float ninetydeg = ( 90 * 180 ) / M_PI;
+        mavlink_attitude_t catt = autopilot_interface->current_messages.attitude;
+        printf("ATTITUDE : roll %lf pitch %lf yaw %lf \n", catt.roll, catt.pitch, catt.yaw);
+        printf("first turn \n");
+        yaw_rotation(ninetydeg,sp);
+        sleep(5);
+        catt = autopilot_interface->current_messages.attitude;
+        printf("ATTITUDE : roll %lf pitch %lf yaw %lf \n", catt.roll, catt.pitch, catt.yaw);
+    */
 //	printf("second turn \n");
 //	yaw_rotation(90,sp);
 //	sleep(5);
@@ -78,42 +96,43 @@ void Mavlink_Control::commands()
 //	catt = autopilot_interface->current_messages.attitude;
 //	printf("ATTITUDE : roll %lf pitch %lf yaw %lf \n", catt.roll, catt.pitch, catt.yaw);
 
-    //	mavlink_local_position_ned_t cp = autopilot_interface->current_messages.local_position_ned;
-    //	goto_local_position(cp.x - 5.0, cp.y,  cp.z, sp);
-    //	goto_local_position(cp.x- 5.0, cp.y- 5.0,  cp.z, sp);
-    //
-    //	autopilot_interface->switchUpdatePosition(false);
-    //	syslog.write2csv("Update position = false");
-    //	goto_local_position(cp.x, cp.y- 5.0,  cp.z, sp);
-    //	goto_local_position(cp.x, cp.y,  cp.z, sp);
-    //
-    //	hold_position(5, sp);
-    //	land(sp);
-    //	sleep(1);
-    //	cp = autopilot_interface->current_messages.local_position_ned;
-    //	takeoff(cp.z - 5.0, sp);
-    //
-    //	cp = autopilot_interface->current_messages.local_position_ned;
-    //	autopilot_interface->switchUpdatePosition(true);
-    //	syslog.write2csv("Update position = true");
-    //	goto_velocity(cp.x - 10.0, cp.y,  cp.z, 1.0, sp);
-    //	goto_velocity(cp.x- 10.0, cp.y - 10.0, cp.z, 1.0, sp);
-    //
-    //	autopilot_interface->switchUpdatePosition(false);
-    //	syslog.write2csv("Update position = false");
-    //	goto_velocity(cp.x, cp.y - 10.0,  cp.z, 1.0, sp);
-    //	goto_velocity(cp.x, cp.y, cp.z, 1.0, sp);
-    //
-    //	//	mavlink_global_position_int_t cpg = autopilot_interface->current_messages.global_position_int;
-    //	//	goto_local_position(sp);
+        //	mavlink_local_position_ned_t cp = autopilot_interface->current_messages.local_position_ned;
+        //	goto_local_position(cp.x - 5.0, cp.y,  cp.z, sp);
+        //	goto_local_position(cp.x- 5.0, cp.y- 5.0,  cp.z, sp);
+        //
+        //	autopilot_interface->switchUpdatePosition(false);
+        //	syslog.write2csv("Update position = false");
+        //	goto_local_position(cp.x, cp.y- 5.0,  cp.z, sp);
+        //	goto_local_position(cp.x, cp.y,  cp.z, sp);
+        //
+        //	hold_position(5, sp);
+        //	land(sp);
+        //	sleep(1);
+        //	cp = autopilot_interface->current_messages.local_position_ned;
+        //	takeoff(cp.z - 5.0, sp);
+        //
+        //	cp = autopilot_interface->current_messages.local_position_ned;
+        //	autopilot_interface->switchUpdatePosition(true);
+        //	syslog.write2csv("Update position = true");
+        //	goto_velocity(cp.x - 10.0, cp.y,  cp.z, 1.0, sp);
+        //	goto_velocity(cp.x- 10.0, cp.y - 10.0, cp.z, 1.0, sp);
+        //
+        //	autopilot_interface->switchUpdatePosition(false);
+        //	syslog.write2csv("Update position = false");
+        //	goto_velocity(cp.x, cp.y - 10.0,  cp.z, 1.0, sp);
+        //	goto_velocity(cp.x, cp.y, cp.z, 1.0, sp);
+        //
+        //	//	mavlink_global_position_int_t cpg = autopilot_interface->current_messages.global_position_int;
+        //	//	goto_local_position(sp);
 
 //    hold_position(5, sp);
 //    land(sp);
+        sleep(60);
+        autopilot_interface->disarm_control();
+        usleep(100);
 
-//    autopilot_interface->disarm_control(); usleep(100);
-    sleep(60);
-    autopilot_interface->disable_offboard_control(); usleep(100);
-
+        autopilot_interface->disable_offboard_control();
+        usleep(100);
     printf("end offboard command \n");
 
     return;
@@ -333,61 +352,15 @@ bool Mavlink_Control::IsInWaypointGlobal(mavlink_global_position_int_t current, 
         return false;
 }
 
-positiondata Mavlink_Control::getCurrentPose()
-{
-    positiondata current_pose;
-    if (autopilot_interface == nullptr)
-    {
-        cout<< "autopilot_interface pointer is null" <<endl;
-        return current_pose;
-    }
-    //cout<< "getCurrentPose from sutopilot_interface" <<endl;
-    mavlink_gps_raw_int_t gps_raw_int = autopilot_interface->current_messages.gps_raw_int;
-    current_pose.satellites_visible = gps_raw_int.satellites_visible;
-    current_pose.hdop = gps_raw_int.eph;
-
-    mavlink_local_position_ned_t local_pos = autopilot_interface->current_messages.local_position_ned;
-    current_pose.x = local_pos.x;
-    current_pose.y = local_pos.y;
-    current_pose.z = local_pos.z;
-
-    mavlink_global_position_int_t global_pos = autopilot_interface->current_messages.global_position_int;
-    current_pose.lat = global_pos.lat;
-    current_pose.lon = global_pos.lon;
-    current_pose.alt = global_pos.alt;
-
-    mavlink_attitude_t attitude = autopilot_interface->current_messages.attitude;
-    current_pose.roll = attitude.roll;
-    current_pose.pitch = attitude.pitch;
-    current_pose.yaw = attitude.yaw;
-
-//    mavlink_raw_imu_t raw_imu = autopilot_interface->current_messages.raw_imu;
-//    current_pose.xacc = raw_imu.xacc;
-//    current_pose.yacc = raw_imu.yacc;
-//    current_pose.zacc = raw_imu.zacc;
-
-//    mavlink_scaled_imu_t scaled_imu = autopilot_interface->current_messages.scaled_imu;
-//    current_pose.xacc = scaled_imu.xacc;
-//    current_pose.yacc = scaled_imu.yacc;
-//    current_pose.zacc = scaled_imu.zacc;
-
-    mavlink_highres_imu_t highres_imu = autopilot_interface->current_messages.highres_imu;
-    current_pose.xacc = highres_imu.xacc;
-    current_pose.yacc = highres_imu.yacc;
-    current_pose.zacc = highres_imu.zacc;
-
-    return current_pose;
-}
-
 void Mavlink_Control::setVisionEstimatedPosition(float x, float y, float z, float roll, float pitch, float yaw, float time){
     mavlink_vision_position_estimate_t vpe;
-    vpe.x = 0;
-    vpe.y = 0;
-    vpe.z = 0;
-    vpe.roll = 0;
-    vpe.pitch = 0;
-    vpe.yaw = 0;
-    vpe.usec = (uint32_t) (get_time_usec()/1000000);
+    vpe.x = x;
+    vpe.y = y;
+    vpe.z = z;
+    vpe.roll = roll;
+    vpe.pitch = pitch;
+    vpe.yaw = yaw;
+    vpe.usec = (uint32_t)time;
 
     autopilot_interface->updateVisionEstimationPosition(vpe);
 }

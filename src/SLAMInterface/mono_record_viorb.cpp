@@ -19,13 +19,26 @@ void Mono_Record_VIORB::start(char *filename) {
     printf("Initialize IMU file (txt) \n");
 
     boost::filesystem::path dir("../sample_data/" + string(filename));
+    boost::filesystem::path dir2("../sample_data/" + string(filename) + "/ForwardCamera");
+    boost::filesystem::path dir3("../sample_data/" + string(filename) + "/DownwardCamera");
+
     if (!(boost::filesystem::exists(dir))) {
         std::cout << "Doesn't Exists" << std::endl;
 
-        if (boost::filesystem::create_directory(dir))
-            std::cout << "....Successfully Created !" << std::endl;
+        if (boost::filesystem::create_directory(dir)) {
+            std::cout << "....Successfully Created Main Directory!" << std::endl;
+        }
     }
-
+    if (!(boost::filesystem::exists(dir2))) {
+                std::cout << "Doesn't Exists" << std::endl;
+                if (boost::filesystem::create_directory(dir2))
+                    std::cout << "....Successfully Created Forward Directory!" << std::endl;
+            }
+    if (!(boost::filesystem::exists(dir3))) {
+        std::cout << "Doesn't Exists" << std::endl;
+        if (boost::filesystem::create_directory(dir3))
+            std::cout << "....Successfully Created Downward Directory!" << std::endl;
+    }
     foldername = string(filename);
 
     imulog.open("../sample_data/" + string(filename) + "/imulog.txt");
@@ -81,9 +94,18 @@ void Mono_Record_VIORB::stop() {
 void Mono_Record_VIORB::cameraRecorder() {
     while (!time_to_exit) {
         mono_live_viorb->matFrame.copyTo(currentFrame);
+//        mono_live_viorb->matFrameDownward.copyTo(currentFrameDownward);
         tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
-        imgname = "../sample_data/" + foldername + "/" + to_string(frameno) + ".jpg";
-        imwrite(imgname, currentFrame);
+
+        imgnameForward = "../sample_data/" + foldername + "/ForwardCamera/" + to_string(frameno) + ".jpg";
+//        imgnameDownward = "../sample_data/" + foldername + "/DownwardCamera/" + to_string(frameno) + ".jpg";
+
+//        imgnameForward = "../sample_data/" + foldername + "/" + to_string(frameno) + "-forward.jpg";
+//        imgnameDownward = "../sample_data/" + foldername + "/" + to_string(frameno) + "-downward.jpg";
+
+        imwrite(imgnameForward, currentFrame);
+//        imwrite(imgnameDownward, currentFrameDownward);
+
         tframelog << string("Frame,") + to_string(frameno) + "," + to_string(tframe) + "," + "\n";
         if (bUseView) {
             imshow("Camera Recorder", currentFrame);

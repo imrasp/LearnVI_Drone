@@ -1,4 +1,6 @@
 #include "Utility/location_manager.h"
+#include "MAVControl/mavlink_control.h"
+
 namespace geodetic_converter {
 // Geodetic system parameters
     static double kSemimajorAxis = 6378137;
@@ -241,6 +243,7 @@ Location_Manager::Location_Manager(System_Log *system_log_, Mono_Live_VIORB *mon
 //    estimate_vision_pose = Mat::zeros(3, 3, CV_64F);
     bStartSLAM = false;
    geodeticConverter = new GeodeticConverter();
+    SLAMTrackingStage = -1; // SYSTEM_NOT_READY
 }
 
 void Location_Manager::activateSLAM(){
@@ -280,6 +283,8 @@ void Location_Manager::initializePosedata(){
 
     current_estimate_vision_pose = Mat::zeros(4,4,CV_32F);
     bisInitialized = false;
+    bUpdateGPSPoseToMavlink = false;
+    bUpdateVisionPoseToMavlink = false;
     bNotFirstEstimatedPose = false;
 }
 
@@ -290,16 +295,40 @@ void Location_Manager::setMavlinkControl(Mavlink_Control *mavlink_control_){
 void Location_Manager::setInitialEstimateVisionPose(posedata pose){
     pEstimatedVisionPose = pose;
 }
+
 void Location_Manager::setEstimatedVisionPose(Mat pose){
-    if(bNotFirstEstimatedPose) {
-        current_estimate_vision_pose = pose.mul(estimate_vision_pose);
+
+    float roll, pitch, yaw;
+
+    SLAMTrackingStage = mono_live_viorb->getTrackingStage();
+    if(SLAMTrackingStage == 2 && bNotFirstEstimatedPose) {
+        getRotationTranslation(pose, &roll, &pitch, &yaw);
+
+        if(bUpdateVisionPoseToMavlink){
+            //mavlink_control->setVisionEstimatedPosition(current_pose.gpsx,current_pose.gpsy,current_pose.gpsz, 0, 0, 0 , global_pos.time_boot_ms*1000);
+        }
     }
-    estimate_vision_pose = current_estimate_vision_pose.clone();
+
 
 
 }
+void Location_Manager::setUpdateVisionPoseToMavlink(bool update){
+    bUpdateVisionPoseToMavlink = update;
+}
 
-void Location_Manager::poseToSLAM(mavlink_highres_imu_t highres_imu) {
+bool Location_Manager::getUpdateVisionPoseToMavlink(){
+    return bUpdateVisionPoseToMavlink;
+}
+
+void Location_Manager::setUpdateGPSPoseToMavlink(bool update){
+    bUpdateGPSPoseToMavlink = update;
+}
+
+bool Location_Manager::getUpdateGPSPoseToMavlink(){
+    return bUpdateGPSPoseToMavlink;
+}
+
+void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
     current_pose.xacc = highres_imu.xacc;
     current_pose.yacc = highres_imu.yacc;
     current_pose.zacc = highres_imu.zacc;
@@ -320,7 +349,7 @@ void Location_Manager::poseToSLAM(mavlink_highres_imu_t highres_imu) {
 
 }
 
-void Location_Manager::poseToSLAM(mavlink_attitude_t attitude) {
+void Location_Manager::setPose(mavlink_attitude_t attitude) {
     current_pose.roll = attitude.roll;
     current_pose.pitch = attitude.pitch;
     current_pose.yaw = attitude.yaw;
@@ -333,7 +362,7 @@ void Location_Manager::poseToSLAM(mavlink_attitude_t attitude) {
     }
 }
 
-void Location_Manager::poseToSLAM(mavlink_global_position_int_t global_pos) {
+void Location_Manager::setPose(mavlink_global_position_int_t global_pos) {
     current_pose.timebootms = global_pos.time_boot_ms;
     current_pose.lat = global_pos.lat;
     current_pose.lon = global_pos.lon;
@@ -360,6 +389,13 @@ void Location_Manager::poseToSLAM(mavlink_global_position_int_t global_pos) {
         current_pose.gpsy = current_pose.gpsy + init_nedy;
         current_pose.gpsz = current_pose.gpsz + init_nedz;
 
+        current_pose.yaw = (global_pos.hdg * M_PI) / 180;
+
+        //update to mavlink
+        if(bUpdateGPSPoseToMavlink){
+            mavlink_control->setVisionEstimatedPosition(current_pose.gpsx,current_pose.gpsy,current_pose.gpsz, 0, 0, 0 , global_pos.time_boot_ms*1000);
+        }
+
         double dx = current_pose.x - current_pose.gpsx; //cout << "dx : " << dx <<endl;
         double dy = current_pose.y - current_pose.gpsy; //cout << "dy : " << dy <<endl;
         double dz = current_pose.z - current_pose.gpsz; //cout << "dz : " << dz <<endl;
@@ -382,24 +418,15 @@ void Location_Manager::poseToSLAM(mavlink_global_position_int_t global_pos) {
 
     }
 
-    if (lastest_pose.vx != 0 ){
-        //Average Acc = diff Velocity / diff Time
-        float dt = (current_pose.timebootms - lastest_pose.timebootms);
-        current_pose.gpsxacc = ((current_pose.vx - lastest_pose.vx) * 10) / dt;
-        current_pose.gpsyacc = ((current_pose.vy - lastest_pose.vy) * 10) / dt;
-        current_pose.gpszacc = ((current_pose.vz - lastest_pose.vz) * 10) / dt;
-    }
-
-    lastest_pose = current_pose;
-
     if(bStartSLAM)
     {
         //if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
         if(mono_record_viorb) mono_record_viorb->getPoseData("global_position_int", current_pose);
     }
+
 }
 
-void Location_Manager::poseToSLAM(mavlink_local_position_ned_t local_pos) {
+void Location_Manager::setPose(mavlink_local_position_ned_t local_pos) {
     current_pose.x = local_pos.x;
     current_pose.y = local_pos.y;
     current_pose.z = local_pos.z;
@@ -415,7 +442,7 @@ void Location_Manager::poseToSLAM(mavlink_local_position_ned_t local_pos) {
     }
 }
 
-void Location_Manager::poseToSLAM(mavlink_gps_raw_int_t gps_raw) {
+void Location_Manager::setPose(mavlink_gps_raw_int_t gps_raw) {
     current_pose.satellites_visible = gps_raw.satellites_visible;
     current_pose.hdop = gps_raw.eph;
 
@@ -483,4 +510,12 @@ void Location_Manager::setSLAMTrackingStage(int stage){
 
 int Location_Manager::getSALMTrackingStage(){
     return SLAMTrackingStage;
+}
+
+//https://github.com/mavlink/c_library_v1/blob/master/mavlink_conversions.h
+void Location_Manager::getRotationTranslation(Mat mtransformation, float *roll, float *pitch, float *yaw){
+    float a[3][3] = {mtransformation.at<float>(0,0) , mtransformation.at<float>(0,1), mtransformation.at<float>(0,2),
+                     mtransformation.at<float>(1,0) , mtransformation.at<float>(1,1), mtransformation.at<float>(1,2),
+                     mtransformation.at<float>(2,0) , mtransformation.at<float>(2,1), mtransformation.at<float>(2,2)};
+    mavlink_dcm_to_euler(a, roll, pitch, yaw);
 }

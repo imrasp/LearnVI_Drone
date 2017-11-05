@@ -360,7 +360,7 @@ void Autopilot_Interface::read_messages()
                     this_timestamps.local_position_ned = current_messages.time_stamps.local_position_ned;
 
                     system_log->write2csv("ned", current_messages.local_position_ned);
-                    location_manager->poseToSLAM(current_messages.local_position_ned);
+                    location_manager->setPose(current_messages.local_position_ned);
                     //system_log->write2txt("ned", current_messages.local_position_ned);
                     if (imu_status == UNINITIAL_IMU)
                     {
@@ -377,7 +377,7 @@ void Autopilot_Interface::read_messages()
                     this_timestamps.global_position_int = current_messages.time_stamps.global_position_int;
 
                     system_log->write2csv("int", current_messages.global_position_int);
-                    location_manager->poseToSLAM(current_messages.global_position_int);
+                    location_manager->setPose(current_messages.global_position_int);
 
                     // set initial params for coordinate conversion
                     if(init_coord_conversion == false && imu_status == INITIAL_IMU )
@@ -386,19 +386,6 @@ void Autopilot_Interface::read_messages()
                         system_log->write2csv("initial coordinate conversion");
                         init_coord_conversion = true;
                         location_manager->initialize_coordinate(current_messages.global_position_int, current_messages.local_position_ned);
-                    }
-                    else if(init_coord_conversion == true)
-                    {
-//                        update_geodetic2local(current_messages.global_position_int);
-                        if(bUpdatePosition){
-                            mavlink_vision_position_estimate_t vpe;
-                            vpe.x = location_manager->current_pose.gpsx;
-                            vpe.y = location_manager->current_pose.gpsy;
-                            vpe.z = location_manager->current_pose.gpsz;
-                            vpe.yaw = ( ((float)current_messages.global_position_int.hdg/100) * M_PI ) / 180;
-
-                            write_vision_position(vpe);
-                        }
                     }
 
                     break;
@@ -411,7 +398,7 @@ void Autopilot_Interface::read_messages()
                     current_messages.time_stamps.gps_raw_int = get_time_usec();
                     this_timestamps.gps_raw_int = current_messages.time_stamps.gps_raw_int;
 
-                    location_manager->poseToSLAM(current_messages.gps_raw_int);
+                    location_manager->setPose(current_messages.gps_raw_int);
                     system_log->write2csv("raw", current_messages.gps_raw_int);
 
                     break;
@@ -470,7 +457,7 @@ void Autopilot_Interface::read_messages()
                     this_timestamps.highres_imu = current_messages.time_stamps.highres_imu;
 
                     system_log->write2csv("HIGHRES_IMU", current_messages.highres_imu);
-                    location_manager->poseToSLAM(current_messages.highres_imu);
+                    location_manager->setPose(current_messages.highres_imu);
 
                     break;
                 }
@@ -506,7 +493,7 @@ void Autopilot_Interface::read_messages()
                     this_timestamps.attitude = current_messages.time_stamps.attitude;
 
                     system_log->write2csv("Attitude", current_messages.attitude);
-                    location_manager->poseToSLAM(current_messages.attitude);
+                    location_manager->setPose(current_messages.attitude);
                     break;
                 }
 
@@ -653,32 +640,6 @@ void Autopilot_Interface::updateVisionEstimationPosition(mavlink_vision_position
     }
     else
         system_log->write2txt("write to VISION_POSITION_ESTIMATE");
-}
-
-void Autopilot_Interface::update_geodetic2local(mavlink_global_position_int_t gps_pos)
-{
-    Mat result = location_manager->geodetic2NED(gps_pos);
-
-    //calculate percent error
-    mavlink_local_position_ned_t current_ned = current_messages.local_position_ned;
-    float errX = 100 * abs((current_ned.x - result.at<float>(0)) / result.at<float>(0));
-    float errY = 100 * abs((current_ned.y - result.at<float>(1)) / result.at<float>(1));
-    float errZ = 100 * abs((current_ned.z - result.at<float>(2)) / result.at<float>(2));
-    float errAvg = (errX + errY + errZ) / 3;
-
-    //system_log->write2csv("GPS2NED ", result);
-    system_log->write2csv("GPS2NED with %Err ", result, current_ned, errX, errY, errZ, errAvg);
-
-    mavlink_vision_position_estimate_t vpe;
-    vpe.x = result.at<float>(0);
-    vpe.y = result.at<float>(1);
-    vpe.z = result.at<float>(2);
-    vpe.yaw = ( ((float)gps_pos.hdg/100) * M_PI ) / 180;
-
-    if (bUpdatePosition)
-        write_vision_position(vpe);
-
-
 }
 
 void Autopilot_Interface::write_vision_position(mavlink_vision_position_estimate_t &vision_position_estimate_)
@@ -1049,5 +1010,80 @@ void set_yaw_rate(float yaw_rate, mavlink_set_position_target_local_ned_t &sp)
 }
 
 
+//SET AND UPDATE SETPOINT
+void Autopilot_Interface::enable_takeoff(float height,float velocity)
+{
+    printf("Mode TAKEOFF\n"); //Drone décolle
+    float precision_distance = 0.1; // [m]
+    mavlink_set_position_target_local_ned_t sp_target;
+    sp_target.vx = 0;
+    sp_target.vy = 0;
+    sp_target.vz = -velocity;
+    sp_target.z = -height;
+    sp_target.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_TAKEOFF;
+    sp_target.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
+
+    update_setpoint(sp_target);
+
+    while((current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_IN_AIR)
+          && ( fabs(current_messages.local_position_ned.z - current_messages.position_target_local_ned.z) < precision_distance ))
+    {
+        sleep(0.5);
+    }
+
+    cout << "takeoff complete!" << endl;
+}
+
+void Autopilot_Interface::enable_land()
+{
+    printf("Mode land\n"); //Drone atterrit
+    mavlink_set_position_target_local_ned_t setpoint;
+    setpoint.vx = 0;
+    setpoint.vy = 0;
+    setpoint.vz = 0.5;
+    setpoint.z = 0.00;
+    setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_LAND ;
+    setpoint.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
+
+    update_setpoint(setpoint);
+
+    //while( (current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_ON_GROUND) || (current_messages.local_position_ned.z <= 0.00))
+    while(current_messages.local_position_ned.z <= -0.05)
+    {
+        cout << " current landing z is " << current_messages.local_position_ned.z << endl;
+        sleep(0.5);
+    }
+    cout << "landed complete!\n" << endl;
+}
+
+//void Autopilot_Interface::goto_positon(){
+//
+//}
+
+// Request MSG streaming rate
+// param 1 = message ID and param 2 = interval in microseconds
+void Autopilot_Interface::set_message_interval( int msg_id, int hz )
+{
+    mavlink_command_long_t com;
+    com.target_system    = system_id;
+    com.target_component = autopilot_id;
+    com.command          = 	MAV_CMD_SET_MESSAGE_INTERVAL;
+    com.confirmation = 0;
+    com.param1 = MAVLINK_MSG_ID_HIGHRES_IMU;
+    com.param2 = hz;
+
+    // Encode
+    mavlink_message_t message;
+    mavlink_msg_command_long_encode(system_id, companion_id, &message, &com);
+
+    // Send the message
+    int len = serial_port->write_message(message);
+
+    // Check the command was written
+    if (!len){
+        fprintf(stderr,"Error: Unable to set_message_interval, could not write message\n");
+        throw EXIT_FAILURE;
+    }
+}
 
 

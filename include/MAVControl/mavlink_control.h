@@ -58,7 +58,6 @@ public:
     //int start(int baudrate, char *&uart_name);
     void start();
     void stop();
-    positiondata getCurrentPose();
 private:
 
     void commands();

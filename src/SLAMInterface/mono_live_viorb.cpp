@@ -33,7 +33,6 @@ void Mono_Live_VIORB::start(char *&vocabulary, char *&setting) {
     imageMsgDelaySec = config->GetImageDelayToIMU();
     // ORBVIO::MsgSynchronizer msgsync(imageMsgDelaySec);
     bAccMultiply98 = config->GetAccMultiply9p8();
-
     findCamera();
     cout << "Start Camera thread..." << endl;
     boost::thread threadCamera = boost::thread(&Mono_Live_VIORB::cameraLoop, this);
@@ -118,7 +117,6 @@ void Mono_Live_VIORB::grabFrameData() {
                     location_manager->setEstimatedVisionPose(vision_estimated_pose);
                     system_log->write2txt("Estimated_Position (SLAM Frame " + to_string(ni) + "(" + to_string(camFrame) + ")) ", vision_estimated_pose);
                     //system_log->write2csv("Estimated_Position (SLAM Frame " + to_string(ni) + "(" + to_string(camFrame) + ")) ", vision_estimated_pose);
-                    cout << "call write2visionEstimatePositionLog" << endl;
                     system_log->write2visionEstimatePositionLog(vision_estimated_pose);
                 }
 
@@ -167,29 +165,40 @@ double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, Mat &matFrameP
 }
 
 void Mono_Live_VIORB::findCamera() {
-    cout << "Starting camera connection..." << endl;
-    // VideoCapture = 0 is the id of video device.0 if you have only one camera.
-
-    int maxTested = 2;
-    int i;
-    for (i = maxTested; i >= 0; i--) {
-        VideoCapture stream(i);
-        bool res = (stream.isOpened());
-        cout << res << endl;
-        if (res) {
-            cout << "Open camera " << i << endl;
-            break;
-        } else {
-            stream.release();
-            cout << "Camera " << i << " is released" << endl;
-        }
-    }
-
-    if (i == -1) {
+    int cam = findACamera(5);
+    if(cam == -1)
+    {
         cout << "cannot open camera";
         //return 0;
     }
-    stream = new VideoCapture(i);
+    stream1  = VideoCapture(cam);
+//    int cam2 = findACamera(cam-1);
+//    stream2  = VideoCapture(cam2);
+}
+
+int Mono_Live_VIORB::findACamera(int max)
+{
+    VideoCapture stream;   //0 is the id of video device.0 if you have only one camera.
+
+    int maxTested = max;
+    int i;
+    for (i = maxTested; i >= 0; i--){
+        VideoCapture stream(i);
+        bool res = (stream.isOpened());
+        cout << res <<endl;
+        if (res)
+        {
+            cout <<"Open camera " << i <<endl;
+            return i;
+
+        }
+        else
+        {
+            stream.release();
+            cout <<"Camera " << i << " is released" <<endl;
+        }
+    }
+    return -1;
 }
 
 
@@ -199,7 +208,8 @@ void Mono_Live_VIORB::cameraLoop() {
     camFrame = 1;
 
     while (!time_to_exit) {
-        stream->read(matFrame);
+        stream1.read(matFrame);
+//        stream2.read(matFrameDownward);
         //cout << "matFrame size : " << matFrame.size();
 //        imshow( "Display window", matFrame );
 //        if (waitKey(30) >= 0)

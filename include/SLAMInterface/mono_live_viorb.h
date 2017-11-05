@@ -44,13 +44,14 @@ public:
     void stop();
     void grabFrameData();
     void findCamera();
+    int findACamera(int max);
     void cameraLoop();
     void getIMUdata(posedata current_pose_);
     int getTrackingStage();
     void setLocationManager(Location_Manager *location_manager_);
 
     cv::Mat vision_estimated_pose, lastest_vision_estimated_pose, accumulate_vision_estimated_pose;
-    cv::Mat matFrame, matFrameForward, matFrameForwardLast;
+    cv::Mat matFrame, matFrameForward, matFrameForwardLast, matFrameDownward;
     double xc,yc,zc;
     double rollc,pitchc,yawc;
     double timestampc, firstTimestamp;
@@ -60,7 +61,7 @@ public:
 private:
 
     System_Log *system_log;
-    VideoCapture *stream;
+    VideoCapture stream1, stream2;
     Location_Manager *location_manager;
 
     bool bUseView;

@@ -37,15 +37,19 @@ public:
     Mat geodetic2NED(mavlink_gps_raw_int_t gps_pos);
     bool isInitialized();
 
-    void poseToSLAM(mavlink_highres_imu_t highres_imu);
-    void poseToSLAM(mavlink_global_position_int_t global_pos);
-    void poseToSLAM(mavlink_attitude_t attitude);
-    void poseToSLAM(mavlink_local_position_ned_t local_pos);
-    void poseToSLAM(mavlink_gps_raw_int_t gps_raw);
+    void setPose(mavlink_highres_imu_t highres_imu);
+    void setPose(mavlink_global_position_int_t global_pos);
+    void setPose(mavlink_attitude_t attitude);
+    void setPose(mavlink_local_position_ned_t local_pos);
+    void setPose(mavlink_gps_raw_int_t gps_raw);
     void activateSLAM();
 
     void setInitialEstimateVisionPose(posedata pose);
     void setEstimatedVisionPose(Mat pose);
+    void setUpdateVisionPoseToMavlink(bool update);
+    bool getUpdateVisionPoseToMavlink();
+    void setUpdateGPSPoseToMavlink(bool update);
+    bool getUpdateGPSPoseToMavlink();
 
     posedata current_pose, lastest_pose, pEstimatedVisionPose;
     Mat estimate_vision_pose, current_estimate_vision_pose;
@@ -53,6 +57,12 @@ public:
 
     void setSLAMTrackingStage(int stage);
     int getSALMTrackingStage();
+//    eTrackingState
+//    SYSTEM_NOT_READY=-1,
+//    NO_IMAGES_YET=0,
+//    NOT_INITIALIZED=1,
+//    OK=2,
+//    LOST=3
     int SLAMTrackingStage;
 
 private:
@@ -66,10 +76,10 @@ private:
     Mavlink_Control *mavlink_control;
     Mono_Live_VIORB *mono_live_viorb;
     Mono_Record_VIORB *mono_record_viorb;
-    bool bLiveMode, bRecordMode, bStartSLAM;
+    bool bLiveMode, bRecordMode, bStartSLAM, bUpdateGPSPoseToMavlink, bUpdateVisionPoseToMavlink;
     float degrees2radians(float degrees);
     float radians2degrees(float radians);
-
+    void getRotationTranslation(Mat mtransformation, float *roll, float *pitch, float *yaw);
 
 
 };

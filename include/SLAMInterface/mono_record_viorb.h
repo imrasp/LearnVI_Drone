@@ -41,10 +41,10 @@ private:
     boost::thread *threadCamera, *threadRecorder;
     int timespace;
 
-    string foldername, imgname;
+    string foldername, imgnameForward, imgnameDownward;
     ofstream imulog, tframelog;
     ofstream csvposelog;
-    cv::Mat currentFrame;
+    cv::Mat currentFrame, currentFrameDownward;
     bool time_to_exit;
     int frameno;
     double tframe;
