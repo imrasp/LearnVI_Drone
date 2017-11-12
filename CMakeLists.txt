@@ -121,7 +121,6 @@ target_link_libraries(
         boost_filesystem
         GL
         cholmod
-        profiler
         ${EIGEN3_LIBS}
         ${Pangolin_LIBRARIES}
         ${CHOLMOD_LIBRARIES}
