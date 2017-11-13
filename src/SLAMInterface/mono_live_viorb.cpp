@@ -182,7 +182,7 @@ int Mono_Live_VIORB::findACamera(int max)
 
     int maxTested = max;
     int i;
-    for (i = maxTested; i >= 0; i--){
+    for (i = 0; i >= maxTested; i--){
         VideoCapture stream(i);
         bool res = (stream.isOpened());
         cout << res <<endl;
