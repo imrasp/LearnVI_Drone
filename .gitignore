@@ -48,6 +48,7 @@ Vocabulary/
 *.eps
 LearnVI_Drone
 datasets
+download_result
 sample_data
 script/KeyFrameTrajectory.txt
 VIORB/Examples/Monocular/euro_imu
