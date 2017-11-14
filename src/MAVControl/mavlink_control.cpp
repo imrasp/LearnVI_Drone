@@ -75,19 +75,19 @@ void Mavlink_Control::stop() {
 }
 
 void Mavlink_Control::commands() {
-    printf("start command...");
+    //printf("start command...");
 
     //autopilot_interface->set_message_interval(105,500); // msg_id,interval in microseconds, HIGHRES_IMU = 105
 
 
-    autopilot_interface->enable_offboard_control();
-    usleep(100);
+    //autopilot_interface->enable_offboard_control();
+    //usleep(100);
 
     sleep(60);
 
-    autopilot_interface->disable_offboard_control();
-    usleep(100);
-    printf("end offboard command \n");
+    //autopilot_interface->disable_offboard_control();
+    //usleep(100);
+    //printf("end offboard command \n");
 
     return;
 
