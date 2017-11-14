@@ -49,7 +49,7 @@ class Mavlink_Control{
 public:
     Mavlink_Control();
     Mavlink_Control(int baudrate, char *&uart_name);
-    Mavlink_Control(int baudrate, char *&uart_name, System_Log *system_log, Location_Manager *location_manager_);
+    Mavlink_Control(int baudrate, char *&uart_name, System_Log *system_log_, Location_Manager *location_manager_, char *mission_route);
     ~Mavlink_Control();
 
     void setVisionEstimatedPosition(float x, float y, float z, float roll, float pitch, float yaw, float time);
@@ -78,11 +78,11 @@ private:
     // quit handler
     Autopilot_Interface *autopilot_interface_quit;
     Serial_Port *serial_port_quit;
-    static void quit_handler( int sig );
+    void quit_handler( int sig );
 
     System_Log *system_log;
     Location_Manager *location_manager;
-    Serial_Port serial_port;
+    Serial_Port *serial_port;
     Autopilot_Interface* autopilot_interface;
     int testint;
 

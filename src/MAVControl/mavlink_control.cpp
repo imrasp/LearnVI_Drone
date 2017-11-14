@@ -3,42 +3,74 @@
 Mavlink_Control::Mavlink_Control() {
 
 }
-Mavlink_Control::Mavlink_Control(int baudrate, char *&uart_name, System_Log *system_log, Location_Manager *location_manager_) : location_manager(location_manager_)
+Mavlink_Control::Mavlink_Control(int baudrate, char *&uart_name, System_Log *system_log_, Location_Manager *location_manager_, char *mission_route) : location_manager(location_manager_), system_log(system_log_)
 {
 
+    // --------------------------------------------------------------------------
     //   PORT and THREAD STARTUP
-    serial_port = Serial_Port(uart_name, baudrate, system_log);
+    // --------------------------------------------------------------------------
 
-    autopilot_interface = new Autopilot_Interface(&serial_port, system_log, location_manager);
+    /*
+     * Instantiate a serial port object
+     *
+     * This object handles the opening and closing of the offboard computer's
+     * serial port over which it will communicate to an autopilot.  It has
+     * methods to read and write a mavlink_message_t object.  To help with read
+     * and write in the context of pthreading, it gaurds port operations with a
+     * pthread mutex lock.
+     *
+     */
+     serial_port = new Serial_Port(uart_name, baudrate);
 
-    // Setup interrupt signal handler
 
-//    serial_port_quit         = &serial_port;
-//    autopilot_interface_quit = &autopilot_interface;
-    signal(SIGINT,quit_handler);
+    /*
+     * Instantiate an autopilot interface object
+     *
+     * This starts two threads for read and write over MAVlink. The read thread
+     * listens for any MAVlink message and pushes it to the current_messages
+     * attribute.  The write thread at the moment only streams a position target
+     * in the local NED frame (mavlink_set_position_target_local_ned_t), which
+     * is changed by using the method update_setpoint().  Sending these messages
+     * are only half the requirement to get response from the autopilot, a signal
+     * to enter "offboard_control" mode is sent by using the enable_offboard_control()
+     * method.  Signal the exit of this mode with disable_offboard_control().  It's
+     * important that one way or another this program signals offboard mode exit,
+     * otherwise the vehicle will go into failsafe.
+     *
+     */
+     autopilot_interface = new Autopilot_Interface(serial_port, system_log, location_manager);
 
-    //Start the port and autopilot_interface
-    serial_port.start();
+    /*
+     * Setup interrupt signal handler
+     *
+     * Responds to early exits signaled with Ctrl-C.  The handler will command
+     * to exit offboard mode if required, and close threads and the port.
+     * The handler in this example needs references to the above objects.
+     *
+     */
+    serial_port_quit         = serial_port;
+    autopilot_interface_quit = autopilot_interface;
+    //signal(SIGINT,quit_handler);
+
+    /*
+     * Start the port and autopilot_interface
+     * This is where the port is opened, and read and write threads are started.
+     */
+    serial_port->start();
     autopilot_interface->start();
-
 }
 Mavlink_Control::~Mavlink_Control()
 {}
 
 void Mavlink_Control::start()
 {
-    //   RUN COMMANDS
     commands();
-
-    // Give sometime for system to print out more information
-    //sleep(10);
-
 }
 void Mavlink_Control::stop()
 {
     //   THREAD and PORT SHUTDOWN
     autopilot_interface->stop();
-    serial_port.stop();
+    serial_port->stop();
 }
 
 void Mavlink_Control::commands()
@@ -149,207 +181,20 @@ void Mavlink_Control::quit_handler( int sig )
 
     // autopilot interface
     try {
-        //autopilot_interface_quit->handle_quit(sig);
-        //autopilot_interface->handle_quit(sig);
+        autopilot_interface_quit->handle_quit(sig);
+        autopilot_interface->handle_quit(sig);
     }
     catch (int error){}
 
     // serial port
     try {
-        //serial_port_quit->handle_quit(sig);
-        //serial_port->handle_quit(sig);
+        serial_port_quit->handle_quit(sig);
+        serial_port->handle_quit(sig);
     }
     catch (int error){}
 
     // end program here
     exit(0);
-}
-void Mavlink_Control::takeoff(float  h, mavlink_set_position_target_local_ned_t &sp)
-{
-    set_takeoff_position( 0.0, 0.0,  h, sp ); // [m, m, m, sp]
-    autopilot_interface->update_setpoint(sp);
-    while (autopilot_interface->current_messages.local_position_ned.z > h)
-    {
-        //printf("current height is %f \n", (float)autopilot_interface->current_messages.local_position_ned.z);
-        system_log->write2txt("current takeoff position ", autopilot_interface->current_messages.local_position_ned);
-        autopilot_interface->update_setpoint(sp);
-        usleep(50000);
-    }
-    printf("current height after takeoff is %f \n", (float)autopilot_interface->current_messages.local_position_ned.z);
-    printf("takeoff complete!");
-}
-
-void Mavlink_Control::land(mavlink_set_position_target_local_ned_t &sp)
-{
-    set_land_position( 0.0, 0.0,  0.0, sp ); // [m, m, m, sp]
-    autopilot_interface->update_setpoint(sp);
-    while (autopilot_interface->current_messages.local_position_ned.z <= 0.00)
-    {
-        //printf("current height is %f \n", (float)autopilot_interface->current_messages.local_position_ned.z);
-        system_log->write2txt("current land position ", autopilot_interface->current_messages.local_position_ned);
-        usleep(50000);
-    }
-    printf("current height after land is %f \n", (float)autopilot_interface->current_messages.local_position_ned.z);
-    printf("land complete!");
-}
-void Mavlink_Control::goto_local_position(float x, float y, float z, mavlink_set_position_target_local_ned_t &sp)
-{
-    set_position( x, y, z, sp ); // [m, m, m, sp]
-    autopilot_interface->update_setpoint(sp);
-    printf("the next position is %f, %f, %f \n", x, y, z);
-    while (!IsInWaypointLocal(autopilot_interface->current_messages.local_position_ned, sp, 0.5))
-    {
-        //printf("check IsInWaypoint? current x : %lf", autopilot_interface->current_messages.local_position_ned.x);
-        system_log->write2txt("current position (after command to move) ", autopilot_interface->current_messages.local_position_ned);
-        //set_position( x, y, z, sp);
-        //autopilot_interface->update_setpoint(sp);
-        usleep(50000);
-    }
-    printf("current x, y, z : %lf, %lf, %lf \n", autopilot_interface->current_messages.local_position_ned.x,
-           autopilot_interface->current_messages.local_position_ned.y,
-           autopilot_interface->current_messages.local_position_ned.z);
-    printf("complete using local position move to %f, %f, %f \n", x, y, z);
-    return;
-}
-
-void Mavlink_Control::goto_global_position(float lat, float lon, float alt, mavlink_set_position_target_local_ned_t &sp)
-{
-    mavlink_global_position_int_t gps_setpoint_pos;
-    gps_setpoint_pos.lat = (int32_t)lat;
-    gps_setpoint_pos.lon = (int32_t)lon;
-    gps_setpoint_pos.alt = (int32_t)alt;
-
-    Location_Manager locman(system_log);
-    locman.initialize_coordinate(autopilot_interface->current_messages.global_position_int, autopilot_interface->current_messages.local_position_ned);
-    Mat result = locman.geodetic2NED(gps_setpoint_pos);
-
-    set_position( result.at<float>(0), result.at<float>(1), result.at<float>(2), sp ); // [m, m, m, sp]
-    autopilot_interface->update_setpoint(sp);
-    printf("the next position is %f, %f, %f \n", result.at<float>(0), result.at<float>(1), result.at<float>(2));
-    while (!IsInWaypointGlobal(autopilot_interface->current_messages.local_position_ned, gps_setpoint_pos, 0.5))
-    {
-        //printf("check IsInWaypoint? current x : %lf", autopilot_interface->current_messages.local_position_ned.x);
-        system_log->write2txt("current position (after command to move) ", autopilot_interface->current_messages.local_position_ned);
-        locman.initialize_coordinate(autopilot_interface->current_messages.global_position_int, autopilot_interface->current_messages.local_position_ned);
-        result = locman.geodetic2NED(gps_setpoint_pos);
-        set_position( result.at<float>(0), result.at<float>(1), result.at<float>(2), sp);
-        autopilot_interface->update_setpoint(sp);
-        usleep(50000);
-    }
-    printf("current x, y, z : %lf, %lf, %lf \n", autopilot_interface->current_messages.local_position_ned.x,
-           autopilot_interface->current_messages.local_position_ned.y,
-           autopilot_interface->current_messages.local_position_ned.z);
-    printf("complete using GPS position move to %f, %f, %f \n", result.at<float>(0), result.at<float>(1), result.at<float>(2));
-    return;
-}
-
-void Mavlink_Control::goto_velocity(float x, float y, float z, float speed, mavlink_set_position_target_local_ned_t &sp)
-{
-    mavlink_local_position_ned_t current_pos = autopilot_interface->current_messages.local_position_ned;
-
-    float resX = speed * cos(atan2((y - current_pos.y), (x - current_pos.x)));
-    float resY = speed * sin(atan2((y - current_pos.y), (x - current_pos.x)));
-    float resZ = speed * sin(atan2((z - current_pos.z), (y - current_pos.y)));
-
-    printf(" velocity input : %lf %lf %lf\n", resX, resY, resZ);
-    mavlink_set_position_target_local_ned_t sp2;
-    set_position( x, y, z, sp2 );
-    set_velocity( resX, resY, resZ, sp);
-    autopilot_interface->update_setpoint(sp);
-
-    while (!IsInWaypointLocal(autopilot_interface->current_messages.local_position_ned, sp2, speed))
-    {
-        printf("current x, y, z : %lf, %lf, %lf \n", autopilot_interface->current_messages.local_position_ned.x,
-               autopilot_interface->current_messages.local_position_ned.y,
-               autopilot_interface->current_messages.local_position_ned.z);
-        //printf("check IsInWaypoint? current x : %lf", (float)autopilot_interface->current_messages.local_position_ned.x);
-        system_log->write2txt("current position (after command to move) ", autopilot_interface->current_messages.local_position_ned);
-        current_pos = autopilot_interface->current_messages.local_position_ned;
-
-        resX = speed * cos(atan2((y - current_pos.y), (x - current_pos.x)));
-        resY = speed * sin(atan2((y - current_pos.y), (x - current_pos.x)));
-        resZ = speed * sin(atan2((z - current_pos.z), (y - current_pos.y)));
-        printf(" velocity input : %lf %lf %lf\n", resX, resY, resZ);
-        set_velocity( resX, resY, resZ, sp);
-        autopilot_interface->update_setpoint(sp);
-        usleep(50000);
-    }
-    printf("current x, y, z : %lf, %lf, %lf \n", autopilot_interface->current_messages.local_position_ned.x,
-           autopilot_interface->current_messages.local_position_ned.y,
-           autopilot_interface->current_messages.local_position_ned.z);
-    printf("complete using velocity move to %f, %f, %f \n", x, y, z);
-    return;
-}
-
-void Mavlink_Control::hold_position(int sec, mavlink_set_position_target_local_ned_t &sp)
-{
-    set_velocity( 0.0, 0.0, 0.0, sp);
-    autopilot_interface->update_setpoint(sp);
-    sleep(sec);
-
-    return;
-}
-
-void Mavlink_Control::yaw_rotation(float yaw, mavlink_set_position_target_local_ned_t &sp)
-{
-    set_yaw( yaw, sp);
-    autopilot_interface->update_setpoint(sp);
-    return;
-}
-
-void Mavlink_Control::yaw_rotation_rate(float yaw_rate, mavlink_set_position_target_local_ned_t &sp)
-{
-    set_yaw_rate( yaw_rate, sp); //rad/second
-    autopilot_interface->update_setpoint(sp);
-    return;
-}
-
-bool Mavlink_Control::IsInWaypointLocal(mavlink_local_position_ned_t current, mavlink_set_position_target_local_ned_t goal, float radius)
-{
-    // Radios is in meters
-    float dx = goal.x - current.x;
-    float dy = goal.y - current.y;
-    float dz = goal.z - current.z;
-    float distance = sqrtf(pow(dx,2) + pow(dy,2) + pow(dz,2));
-
-    printf("distance to next position : %lf \n", distance);
-
-    if(distance < radius)
-    {printf("Is in Waypoint"); return true;}
-    else
-        return false;
-}
-bool Mavlink_Control::IsInWaypointGlobal(mavlink_local_position_ned_t current, mavlink_global_position_int_t goal, float radius)
-{
-
-    Location_Manager locman(system_log);
-    locman.initialize_coordinate(autopilot_interface->current_messages.global_position_int, autopilot_interface->current_messages.local_position_ned);
-    Mat result = locman.geodetic2NED(goal);
-
-    float dx = result.at<float>(0) - current.x;
-    float dy = result.at<float>(1) - current.y;
-    float dz = result.at<float>(2) - current.z;
-    float distance = sqrtf(pow(dx,2) + pow(dy,2) + pow(dz,2));
-
-    if(distance < radius)
-        return true;
-    else
-        return false;
-}
-bool Mavlink_Control::IsInWaypointGlobal(mavlink_global_position_int_t current, mavlink_set_position_target_local_ned_t goal, float radius)
-{
-
-    Mat result = location_manager->geodetic2NED(current);
-
-    float dx = goal.x - result.at<float>(0);
-    float dy = goal.y - result.at<float>(1);
-    float dz = goal.z - result.at<float>(2);
-    float distance = sqrtf(pow(dx,2) + pow(dy,2) + pow(dz,2));
-
-    if(distance < radius)
-        return true;
-    else
-        return false;
 }
 
 void Mavlink_Control::setVisionEstimatedPosition(float x, float y, float z, float roll, float pitch, float yaw, float time){

@@ -1,19 +1,70 @@
+/****************************************************************************
+ *
+ *   Copyright (c) 2014 MAVlink Development Team. All rights reserved.
+ *   Author: Trent Lukaczyk, <aerialhedgehog@gmail.com>
+ *           Jaycee Lock,    <jaycee.lock@gmail.com>
+ *           Lorenz Meier,   <lm@inf.ethz.ch>
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ * 3. Neither the name PX4 nor the names of its contributors may be
+ *    used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ ****************************************************************************/
+
+/**
+ * @file autopilot_interface.h
+ *
+ * @brief Autopilot interface definition
+ *
+ * Functions for sending and recieving commands to an autopilot via MAVlink
+ *
+ * @author Trent Lukaczyk, <aerialhedgehog@gmail.com>
+ * @author Jaycee Lock,    <jaycee.lock@gmail.com>
+ * @author Lorenz Meier,   <lm@inf.ethz.ch>
+ *
+ */
+
+
+#ifndef AUTOPILOT_INTERFACE_H_
+#define AUTOPILOT_INTERFACE_H_
+
+// ------------------------------------------------------------------------------
+//   Includes
+// ------------------------------------------------------------------------------
+
+#include "serial_port.h"
+
 #include <signal.h>
 #include <time.h>
 #include <sys/time.h>
-#include <opencv2/opencv.hpp>
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-#include <string>
 
 #include "mavlink/v1.0/common/mavlink.h"
 #include "serial_port.h"
 #include "Utility/system_log.h"
 #include "Utility/location_manager.h"
-
-using std::ofstream;
-using namespace std;
 
 // ------------------------------------------------------------------------------
 //   Defines
@@ -57,8 +108,9 @@ using namespace std;
 #define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_POSITION     0b0000110111111000
 #define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_VELOCITY     0b0000110111000111
 #define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_ACCELERATION 0b0000110000111111
-//#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_TAKEOFF 		0x1000 | 0b110111000011
-//#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_LAND			0x2000 | 0b110111000011
+#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_FORCE        0b0000111000111111
+#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_YAW_ANGLE    0b0000100111111111
+#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_YAW_RATE     0b0000010111111111
 
 #define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_TAKEOFF     (0b0000110111000011 | 0x1000)
 #define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_LAND        (0b0000110111000011 | 0x2000)
@@ -66,14 +118,11 @@ using namespace std;
 #define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_IDLE        (0b0000110111111111 | 0x4000)
 #define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_ALT_HOLD     0b0000110111111011
 
-#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_FORCE        0b0000111000111111
-#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_YAW_ANGLE    0b0000100111111111
-#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_YAW_RATE     0b0000010111111111
-
 
 // ------------------------------------------------------------------------------
 //   Prototypes
 // ------------------------------------------------------------------------------
+
 
 // helper functions
 uint64_t get_time_usec();
@@ -82,8 +131,6 @@ void set_velocity(float vx, float vy, float vz, mavlink_set_position_target_loca
 void set_acceleration(float ax, float ay, float az, mavlink_set_position_target_local_ned_t &sp);
 void set_yaw(float yaw, mavlink_set_position_target_local_ned_t &sp);
 void set_yaw_rate(float yaw_rate, mavlink_set_position_target_local_ned_t &sp);
-void set_takeoff_position(float x, float y, float z, mavlink_set_position_target_local_ned_t &sp);
-void set_land_position(float x, float y, float z, mavlink_set_position_target_local_ned_t &sp);
 
 void* start_autopilot_interface_read_thread(void *args);
 void* start_autopilot_interface_write_thread(void *args);
@@ -111,12 +158,6 @@ struct Time_Stamps
     uint64_t highres_imu;
     uint64_t attitude;
     uint64_t home_position;
-    uint64_t gps_input;
-    uint64_t gps_status;
-    uint64_t gps_raw_int;
-    uint64_t altitude;
-    uint64_t raw_imu;
-    uint64_t scaled_imu;
 
     void
     reset_timestamps()
@@ -132,13 +173,6 @@ struct Time_Stamps
         highres_imu = 0;
         attitude = 0;
         home_position =0;
-        gps_input = 0;
-        gps_status = 0;
-        gps_raw_int = 0;
-        altitude = 0;
-        raw_imu = 0;
-        scaled_imu =0;
-
     }
 
 };
@@ -178,31 +212,13 @@ struct Mavlink_Messages {
     // HiRes IMU
     mavlink_highres_imu_t highres_imu;
 
-    // Raw IMU
-    mavlink_raw_imu_t raw_imu;
-
-    // Scaled IMU
-    mavlink_scaled_imu_t scaled_imu;
-
     // Attitude
     mavlink_attitude_t attitude;
 
-    // Home Position
+// Home Position
     mavlink_home_position_t home_position;
 
-    // GPS Input
-    mavlink_gps_input_t gps_input;
-
-    // GPS Status
-    mavlink_gps_status_t gps_status;
-
-    // GPS Raw INT
-    mavlink_gps_raw_int_t gps_raw_int;
-
-    // Altitude
-    mavlink_altitude_t altitude;
-
-    //extended_sys_state
+//extended_sys_state
     mavlink_extended_sys_state_t extended_sys_state;
 
     // System Parameters?
@@ -218,6 +234,7 @@ struct Mavlink_Messages {
     }
 
 };
+
 
 // ----------------------------------------------------------------------------------
 //   Autopilot Interface Class
@@ -236,15 +253,37 @@ struct Mavlink_Messages {
  * important that one way or another this program signals offboard mode exit,
  * otherwise the vehicle will go into failsafe.
  */
-enum Imu_Status { UNINITIAL_IMU, INITIAL_IMU };
-
 class Autopilot_Interface
 {
+
 public:
 
     Autopilot_Interface();
     Autopilot_Interface(Serial_Port *serial_port_, System_Log *system_log_, Location_Manager *location_manager_);
     ~Autopilot_Interface();
+
+    char reading_status;
+    char writing_status;
+    char control_status;
+
+    char arm_status;
+    char home_status;
+
+    uint64_t write_count;
+
+    int system_id;
+    int autopilot_id;
+    int companion_id;
+
+    Mavlink_Messages current_messages;
+    mavlink_set_position_target_local_ned_t initial_position;
+
+    void update_setpoint(mavlink_set_position_target_local_ned_t setpoint);
+    void read_messages();
+    int  write_message(mavlink_message_t message);
+
+    void enable_offboard_control();
+    void disable_offboard_control();
 
     void start();
     void stop();
@@ -254,57 +293,19 @@ public:
 
     void handle_quit( int sig );
 
-    void read_messages();
-    int  write_message(mavlink_message_t message);
-
-    void update_setpoint(mavlink_set_position_target_local_ned_t setpoint);
-
-    void switchUpdatePosition(bool input);
-    void updateVisionEstimationPosition(mavlink_vision_position_estimate_t vpe);
-    void update_geodetic2local(mavlink_global_position_int_t gps_pos);
-    void update_geodetic2local(mavlink_gps_raw_int_t raw_pos);
-
-    void enable_offboard_control();
-    void disable_offboard_control();
-    void set_home();
     void arm_control();
     void disarm_control();
-    void RTL();
+
     void enable_takeoff(float height,float velocity);
     void enable_land();
     void set_message_interval( int msg_id, int hz );
-
-
-    char reading_status;
-    char writing_status;
-    char control_status;
-    char arm_status;
-    char home_status;
-    char takeoff_status;
-    char land_status;
-    uint64_t write_count;
-
-
-    Imu_Status imu_status;
-    ofstream myfile;
-    string pos;
-
-    char init_coord_conversion;
-
-    int system_id;
-    int autopilot_id;
-    int companion_id;
-
-    Mavlink_Messages current_messages;
-    mavlink_set_position_target_local_ned_t initial_position;
+    void updateVisionEstimationPosition(mavlink_vision_position_estimate_t vpe);
+void set_home();
 
 private:
 
     Serial_Port *serial_port;
-    System_Log *system_log;
-    Location_Manager *location_manager;
 
-    bool bUpdatePosition;
     bool time_to_exit;
 
     pthread_t read_tid;
@@ -316,8 +317,17 @@ private:
     void write_thread(void);
 
     int toggle_offboard_control( bool flag );
-    int toggle_arm_control( bool flag );
     void write_setpoint();
-    void write_vision_position(mavlink_vision_position_estimate_t &vision_position_estimate_);
+
+System_Log *system_log;
+Location_Manager *location_manager;
+
+int toggle_arm_control( bool flag );
+
 
 };
+
+
+
+#endif // AUTOPILOT_INTERFACE_H_
+
