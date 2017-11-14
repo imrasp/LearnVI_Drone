@@ -92,6 +92,16 @@ int main(int argc, char **argv) {
             mono_record_viorb.stop();
             mavlink_control.stop();
         }
+        else if (string(mode) == "MAVONLY")
+        {
+            Location_Manager location_manager(&system_log,nullptr,nullptr);
+            Mavlink_Control mavlink_control(baudrate, uart_name, &system_log, &location_manager, mission);
+            location_manager.setMavlinkControl(&mavlink_control);
+
+            cout << "Start Mavlink thread,..." << endl;
+            mavlink_control.start();
+            mavlink_control.stop();
+        }
         else if (string(mode) == "OFFLINE")
         {
             Mono_Offline_VIORB mono_live_viorb(&system_log);
@@ -99,6 +109,8 @@ int main(int argc, char **argv) {
             cout << "Start SLAM thread,..." << endl;
             mono_live_viorb.start(vocabulary, setting, filename);
         }
+
+
         else cout << "This mode is not implemented yet" << endl;
         return 0;
     }
