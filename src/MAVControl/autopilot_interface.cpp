@@ -1022,7 +1022,7 @@ void Autopilot_Interface::enable_land()
     cout << "landed complete!\n" << endl;
 }
 
-void Autopilot_Interface::enable_hold()
+void Autopilot_Interface::enable_hold(double sec)
 {
 //    printf("Mode Hold Position\n"); //Drone atterrit
 //    mavlink_set_position_target_local_ned_t setpoint;
