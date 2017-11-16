@@ -102,6 +102,7 @@ int main(int argc, char **argv) {
             mavlink_control.start();
             mavlink_control.stop();
         }
+
         else if (string(mode) == "OFFLINE")
         {
             Mono_Offline_VIORB mono_live_viorb(&system_log);
