@@ -87,6 +87,8 @@ private:
     int testint;
 
     float maxRotation; // degree/second
+
+   char *mission_route;
 };
 
 #endif //LEARNVI_DRONE_MAVLINK_CONTROL_H

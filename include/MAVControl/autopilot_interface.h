@@ -298,6 +298,7 @@ public:
 
     void enable_takeoff(float height,float velocity);
     void enable_land();
+    void enable_hold(double sec);
     void set_message_interval( int msg_id, int hz );
     void updateVisionEstimationPosition(mavlink_vision_position_estimate_t vpe);
 void set_home();
