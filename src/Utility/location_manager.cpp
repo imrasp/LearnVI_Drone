@@ -281,6 +281,7 @@ void Location_Manager::initializePosedata(){
     current_pose.gpsyacc = 0;
     current_pose.gpszacc = 0;
 
+    counter = 0;
     current_estimate_vision_pose = Mat::zeros(4,4,CV_32F);
     bisInitialized = false;
     bUpdateGPSPoseToMavlink = false;
@@ -329,6 +330,7 @@ bool Location_Manager::getUpdateGPSPoseToMavlink(){
 }
 
 void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
+    system_log->write2csv("imu", highres_imu);
     current_pose.xacc = highres_imu.xacc;
     current_pose.yacc = highres_imu.yacc;
     current_pose.zacc = highres_imu.zacc;

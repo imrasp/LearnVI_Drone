@@ -81,6 +81,8 @@ private:
     float radians2degrees(float radians);
     void getRotationTranslation(Mat mtransformation, float *roll, float *pitch, float *yaw);
 
+    int counter;
+
 
 };
 
