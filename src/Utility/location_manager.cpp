@@ -341,7 +341,7 @@ void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
 
     current_pose.highres_imu_time = highres_imu.time_usec;
 
-//    cout << "HIGHRES_IMU (gyro): " << highres_imu.xgyro << ", " << highres_imu.ygyro << ", " << highres_imu.zgyro << endl;
+    cout << "HIGHRES_IMU (accel): " << highres_imu.xacc << ", " << highres_imu.yacc << ", " << highres_imu.zacc << endl;
 //    cout << "HIGHRES_IMU (gyro2): " << current_pose.xgyro << ", " << current_pose.ygyro << ", " << current_pose.zgyro << endl;
     if(bStartSLAM)
     {

@@ -60,6 +60,12 @@ Mavlink_Control::Mavlink_Control(int baudrate, char *&uart_name, System_Log *sys
      */
     serial_port->start();
     autopilot_interface->start();
+
+    mavlink_set_position_target_local_ned_t sp;
+    mavlink_set_position_target_local_ned_t ip = autopilot_interface->
+            initial_position;
+    // SEND THE COMMAND
+    autopilot_interface->update_setpoint(sp);
 }
 
 Mavlink_Control::~Mavlink_Control() {}
@@ -81,51 +87,66 @@ void Mavlink_Control::commands() {
     //autopilot_interface->set_message_interval(105,500); // msg_id,interval in microseconds, HIGHRES_IMU = 105
     autopilot_interface->enable_offboard_control(); usleep(100);
 
-    ifstream input(mission_route);
-    string line, temp;
-    double param1, param2;
+//    // initialize command data strtuctures
+//    mavlink_set_position_target_local_ned_t sp;
+//    mavlink_set_position_target_local_ned_t ip = autopilot_interface->
+//            initial_position;
+//    // SEND THE COMMAND
+//    autopilot_interface->update_setpoint(sp);
+    // NOW pixhawk will try to move
+    // Wait for 10 seconds, check position
+    for (int i=0; i < 60; i++)
+    {
+        mavlink_local_position_ned_t pos = autopilot_interface->current_messages.local_position_ned;
+        printf("%i CURRENT POSITION XYZ = [ % .4f , % .4f , % .4f ] \n", i, pos.x, pos.y, pos.z);
+        sleep(1);
+    }
 
-    if (input.is_open()) {
-        while (getline(input,line)) {
-            cout << line << endl;
-            stringstream s (line);
-            int i = 0;
-            int mode = 0; // 1:hold, 2:gotoned
+//    ifstream input(mission_route);
+//    string line, temp;
+//    double param1, param2;
+//
+//    if (input.is_open()) {
+//        while (getline(input,line)) {
+//            cout << line << endl;
+//            stringstream s (line);
+//            int i = 0;
+//            int mode = 0; // 1:hold, 2:gotoned
+//
+//            // example : goto 9.0 8.0 7.0
+//            //          goto > i == 0
+//            //          9.0 > i == 1
+//            //          8.0 > i == 2
+//            //          7.0 > i == 3
+//            while(s>> temp) {
+//                cout << i << " : mode " << mode << " : " << temp << endl;
+//                if ( i == 0 && temp == "takeoff" ){
+//                    autopilot_interface->enable_takeoff(10, 0.5);
+//                } else if ( i == 0 && temp == "land" ){
+//                    autopilot_interface->enable_land();
+//                } else if ( i == 0 && temp == "hold" ){
+//                    mode = 1; i++;
+//                } else if ( i == 0 && temp == "gotoned" ){
+//                    mode = 2; i++;
+//                } else if ( i != 0 ) { // hold and goto
+//                    if( i == 1 && mode == 1 ){
+//                        autopilot_interface->enable_hold(stod(temp));
+//                    } else if ( i == 1 && mode == 2 ){
+//                        param1 = stod(temp); i++;
+//                    } else if (i != 1 ){
+//                        if( i == 2 ) {
+//                            param2 = stod(temp); i++;
+//                        } else if( i == 3 && mode == 2 ){
+//                            //autopilot_interface->goto_position_ned(param1,param2,stod(temp));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    } else
+//        cout << "ERROR: Cannot Open  File" << '\n';
 
-            // example : goto 9.0 8.0 7.0
-            //          goto > i == 0
-            //          9.0 > i == 1
-            //          8.0 > i == 2
-            //          7.0 > i == 3
-            while(s>> temp) {
-                cout << i << " : mode " << mode << " : " << temp << endl;
-                if ( i == 0 && temp == "takeoff" ){
-                    autopilot_interface->enable_takeoff(10, 0.5);
-                } else if ( i == 0 && temp == "land" ){
-                    autopilot_interface->enable_land();
-                } else if ( i == 0 && temp == "hold" ){
-                    mode = 1; i++;
-                } else if ( i == 0 && temp == "gotoned" ){
-                    mode = 2; i++;
-                } else if ( i != 0 ) { // hold and goto
-                    if( i == 1 && mode == 1 ){
-                        autopilot_interface->enable_hold(stod(temp));
-                    } else if ( i == 1 && mode == 2 ){
-                        param1 = stod(temp); i++;
-                    } else if (i != 1 ){
-                        if( i == 2 ) {
-                            param2 = stod(temp); i++;
-                        } else if( i == 3 && mode == 2 ){
-                            //autopilot_interface->goto_position_ned(param1,param2,stod(temp));
-                        }
-                    }
-                }
-            }
-        }
-    } else
-        cout << "ERROR: Cannot Open  File" << '\n';
-
-    sleep(60);
+    //sleep(4);
 
     autopilot_interface->disable_offboard_control();
     usleep(100);

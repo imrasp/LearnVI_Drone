@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 echo "Configuring and building Thirdparty/DBoW2 ..."
 
 cd ../Thirdparty/DBoW2
