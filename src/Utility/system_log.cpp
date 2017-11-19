@@ -24,7 +24,7 @@ System_Log::~System_Log()
 
 void System_Log::initialize_defaults(char *filename)
 {
-    boost::filesystem::path dir("../sample_data/" + string(filename));
+    boost::filesystem::path dir("/home/odroid/workspace/VIDrone/sample_data/" + string(filename));
     if (!(boost::filesystem::exists(dir))) {
         std::cout << "Doesn't Exists" << std::endl;
 
@@ -39,12 +39,12 @@ void System_Log::initialize_defaults(char *filename)
     strftime(csvfilename,80,"%Y-%m-%d_%H:%M:%S.csv",now);
 
 
-    txtlog.open("../sample_data/" + string(filename) + "/" + string(txtfilename));
-    csvlog.open("../sample_data/" + string(filename) + "/" + string(csvfilename));
-    gpslog.open("../sample_data/" + string(filename) + "/gpsdata.csv");
-    gpsorilog.open("../sample_data/" + string(filename) + "/gpsdata_original_coonversion.csv");
-    gpsaccsample.open("../sample_data/" + string(filename) + "/gps_acc_sample_data.csv");
-    visionEstimatePositionLog.open("../sample_data/" + string(filename) + "/visionEstimatePositionLog.csv");
+    txtlog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/" + string(txtfilename));
+    csvlog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/" + string(csvfilename));
+    gpslog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/gpsdata.csv");
+    gpsorilog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/gpsdata_original_coonversion.csv");
+    gpsaccsample.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/gps_acc_sample_data.csv");
+    visionEstimatePositionLog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/visionEstimatePositionLog.csv");
 
     gpslog << string("ned_time")  + "," + "x" + "," + "y" + "," + "z" + "," +
               "gps_time" + "," + "lat" + "," + "lon" + "," + "alt" + "," +

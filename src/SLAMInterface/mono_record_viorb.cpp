@@ -18,9 +18,9 @@ Mono_Record_VIORB::Mono_Record_VIORB(System_Log *system_log_, bool gui, Mono_Liv
 void Mono_Record_VIORB::start(char *filename) {
     printf("Initialize IMU file (txt) \n");
 
-    boost::filesystem::path dir("../sample_data/" + string(filename));
-    boost::filesystem::path dir2("../sample_data/" + string(filename) + "/ForwardCamera");
-    boost::filesystem::path dir3("../sample_data/" + string(filename) + "/DownwardCamera");
+    boost::filesystem::path dir("/home/odroid/workspace/VIDrone/sample_data/" + string(filename));
+    boost::filesystem::path dir2("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/ForwardCamera");
+    boost::filesystem::path dir3("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/DownwardCamera");
 
     if (!(boost::filesystem::exists(dir))) {
         std::cout << "Doesn't Exists" << std::endl;
@@ -41,9 +41,9 @@ void Mono_Record_VIORB::start(char *filename) {
     }
     foldername = string(filename);
 
-    imulog.open("../sample_data/" + string(filename) + "/imulog.txt");
-    tframelog.open("../sample_data/" + string(filename) + "/tframe.txt");
-    csvposelog.open("../sample_data/" + string(filename) + "/posedata.csv");
+    imulog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/imulog.txt");
+    tframelog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/tframe.txt");
+    csvposelog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/posedata.csv");
 
     csvposelog
             << string("Pose") + ","
