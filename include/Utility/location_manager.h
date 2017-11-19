@@ -45,7 +45,7 @@ public:
     void activateSLAM();
 
     void setInitialEstimateVisionPose(posedata pose);
-    void setEstimatedVisionPose(Mat pose);
+    void setEstimatedVisionPose(Mat pose,float ms);
     void setUpdateVisionPoseToMavlink(bool update);
     bool getUpdateVisionPoseToMavlink();
     void setUpdateGPSPoseToMavlink(bool update);

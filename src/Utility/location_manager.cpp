@@ -297,7 +297,7 @@ void Location_Manager::setInitialEstimateVisionPose(posedata pose){
     pEstimatedVisionPose = pose;
 }
 
-void Location_Manager::setEstimatedVisionPose(Mat pose){
+void Location_Manager::setEstimatedVisionPose(Mat pose,float ms){
 
     float roll, pitch, yaw;
     Eigen::Matrix3d Tbc;
@@ -317,7 +317,7 @@ void Location_Manager::setEstimatedVisionPose(Mat pose){
     system_log->write2visionEstimatePositionLog(pose);
     system_log->write2visionEstimate2IMULog(result(0),result(1),result(2));
         if(bUpdateVisionPoseToMavlink) {
-            //mavlink_control->setVisionEstimatedPosition(current_pose.gpsx,current_pose.gpsy,current_pose.gpsz, 0, 0, 0 , global_pos.time_boot_ms*1000);
+            mavlink_control->setVisionEstimatedPosition(result(0),result(1),result(2), 0, 0, 0 , ms*1000);
         }
 
 }
