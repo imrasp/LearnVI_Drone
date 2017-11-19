@@ -25,15 +25,10 @@ int main(int argc, char **argv) {
         char *gui = (char *) "ENABLE";
         char *filename = (char *) "Sample_data";
         int timespace = 1000000;
-        if (string(gui) == "DISABLE") {
-            char *mission = (char*) "/home/odroid/workspace/VIDrone/mission_route.txt";
-            char *vocabulary = (char *) "/home/odroid/workspace/VIDrone/Vocabulary/ORBvoc.txt";
-            char *setting = (char *) "./home/odroid/workspace/VIDrone/config/mobius.yaml";
-        } else{
-            char *mission = (char *) "./mission_route.txt";
-            char *vocabulary = (char *) "../Vocabulary/ORBvoc.txt";
-            char *setting = (char *) "../config/mobius.yaml";
-        }
+        char *mission = (char*) "/home/odroid/workspace/VIDrone/mission_route.txt";
+        char *vocabulary = (char *) "/home/odroid/workspace/VIDrone/Vocabulary/ORBvoc.txt";
+        char *setting = (char *) "./home/odroid/workspace/VIDrone/config/mobius.yaml";
+
         // do the parse, will throw an int if it fails
         parse_commandline(argc, argv, uart_name, baudrate, vocabulary, setting, mode, gui, filename, timespace);
 
