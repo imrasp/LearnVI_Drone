@@ -1,0 +1,3 @@
+/home/rasp/CLionProjects/LearnVI_Drone/build/CMakeFiles/rebuild_cache.dir
+/home/rasp/CLionProjects/LearnVI_Drone/build/CMakeFiles/edit_cache.dir
+/home/rasp/CLionProjects/LearnVI_Drone/build/CMakeFiles/LearnVI_Drone.dir

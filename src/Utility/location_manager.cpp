@@ -304,13 +304,10 @@ void Location_Manager::setEstimatedVisionPose(Mat pose){
     SLAMTrackingStage = mono_live_viorb->getTrackingStage();
     if(SLAMTrackingStage == 2 && bNotFirstEstimatedPose) {
         getRotationTranslation(pose, &roll, &pitch, &yaw);
-
         if(bUpdateVisionPoseToMavlink){
             //mavlink_control->setVisionEstimatedPosition(current_pose.gpsx,current_pose.gpsy,current_pose.gpsz, 0, 0, 0 , global_pos.time_boot_ms*1000);
         }
     }
-
-
 
 }
 void Location_Manager::setUpdateVisionPoseToMavlink(bool update){
@@ -341,7 +338,7 @@ void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
 
     current_pose.highres_imu_time = highres_imu.time_usec;
 
-    cout << "HIGHRES_IMU (accel): " << highres_imu.xacc << ", " << highres_imu.yacc << ", " << highres_imu.zacc << endl;
+    //cout << "HIGHRES_IMU (accel): " << highres_imu.xacc << ", " << highres_imu.yacc << ", " << highres_imu.zacc << endl;
 //    cout << "HIGHRES_IMU (gyro2): " << current_pose.xgyro << ", " << current_pose.ygyro << ", " << current_pose.zgyro << endl;
     if(bStartSLAM)
     {

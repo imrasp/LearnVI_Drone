@@ -91,7 +91,10 @@ void Mono_Live_VIORB::grabFrameData() {
                 //cout << "Skipping this frame (Specially if before initializing)!" << endl;
                 continue;
             }
-            if(!first_estimate_vision_pose) initial_slam_pose = current_pose;
+
+            if(getTrackingStage() == 1 ){
+                initial_slam_pose = current_pose;
+            }
 
             // Pass the image to the SLAM system
             //SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
@@ -100,37 +103,19 @@ void Mono_Live_VIORB::grabFrameData() {
 
             //update tracking stage to location manager
             cout << "Tracking status : " << getTrackingStage() << endl;
-            system_log->write2txt("Tracking status : " + to_string(getTrackingStage()));
-            if(trackingStage != getTrackingStage()) {
-                location_manager->setSLAMTrackingStage(getTrackingStage());
-                trackingStage = getTrackingStage();
-            }
-
-            //set initial pose of vision estimation pose
-            if(vision_estimated_pose.size().height > 1) {
-                if(!first_estimate_vision_pose){
+            if(getTrackingStage() == 2 ){
+                // 1st track
+                if(trackingStage == 1){
                     location_manager->setInitialEstimateVisionPose(initial_slam_pose);
-                    first_estimate_vision_pose = true;
-                }
-                else{
-                    // cout << " vision_estimated_pose = " << vision_estimated_pose << endl;
+                } else if (trackingStage == 2){
                     location_manager->setEstimatedVisionPose(vision_estimated_pose);
-                    system_log->write2txt("Estimated_Position (SLAM Frame " + to_string(ni) + "(" + to_string(camFrame) + ")) ", vision_estimated_pose);
-                    //system_log->write2csv("Estimated_Position (SLAM Frame " + to_string(ni) + "(" + to_string(camFrame) + ")) ", vision_estimated_pose);
-                    system_log->write2visionEstimatePositionLog(vision_estimated_pose);
                 }
-
+                system_log->write2txt("Estimated_Position (SLAM Frame " + to_string(ni) + "(" + to_string(camFrame) + ")) ", vision_estimated_pose);
+                system_log->write2visionEstimatePositionLog(vision_estimated_pose);
             }
 
-
-//            if(!lastest_vision_estimated_pose.empty()){
-//                accumulate_vision_estimated_pose = vision_estimated_pose * lastest_vision_estimated_pose;
-//                lastest_vision_estimated_pose = accumulate_vision_estimated_pose.clone();
-//            }
-//            else lastest_vision_estimated_pose = vision_estimated_pose;
-//
-//            system_log->write2txt("Accumulate Estimated_Position (SLAM) ",lastest_vision_estimated_pose);
-
+            trackingStage = getTrackingStage();
+            
             vimuData.clear();
             //while(!SLAM->bLocalMapAcceptKF()) {
             //}
@@ -182,7 +167,7 @@ int Mono_Live_VIORB::findACamera(int max)
 
     int maxTested = max;
     int i;
-    for (i = 0; i >= maxTested; i++){
+    for (i = max; i >= 0; i--){
         VideoCapture stream(i);
         bool res = (stream.isOpened());
         cout << res <<endl;
