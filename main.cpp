@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
         int timespace = 1000000;
         char *mission = (char*) "/home/odroid/workspace/VIDrone/mission_route.txt";
         char *vocabulary = (char *) "/home/odroid/workspace/VIDrone/Vocabulary/ORBvoc.txt";
-        char *setting = (char *) "./home/odroid/workspace/VIDrone/config/mobius.yaml";
+        char *setting = (char *) "/home/odroid/workspace/VIDrone/config/mobius.yaml";
 
         // do the parse, will throw an int if it fails
         parse_commandline(argc, argv, uart_name, baudrate, vocabulary, setting, mode, gui, filename, timespace);
