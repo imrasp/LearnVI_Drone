@@ -781,6 +781,10 @@ time.h
 -
 string
 -
+vector
+-
+math.h
+-
 opencv2/opencv.hpp
 -
 mavlink/v1.0/common/mavlink.h
