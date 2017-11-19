@@ -97,7 +97,7 @@ void Mono_Record_VIORB::cameraRecorder() {
 //        mono_live_viorb->matFrameDownward.copyTo(currentFrameDownward);
         tframe = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
 
-        imgnameForward = "../sample_data/" + foldername + "/ForwardCamera/" + to_string(frameno) + ".jpg";
+        imgnameForward = "/home/odroid/workspace/VIDrone/sample_data/" + foldername + "/ForwardCamera/" + to_string(frameno) + ".jpg";
 //        imgnameDownward = "../sample_data/" + foldername + "/DownwardCamera/" + to_string(frameno) + ".jpg";
 
 //        imgnameForward = "../sample_data/" + foldername + "/" + to_string(frameno) + "-forward.jpg";
