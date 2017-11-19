@@ -300,10 +300,24 @@ void Location_Manager::setInitialEstimateVisionPose(posedata pose){
 void Location_Manager::setEstimatedVisionPose(Mat pose){
 
     float roll, pitch, yaw;
+    Eigen::Matrix3d Tbc;
+    ret(0, 0) = -0.448074;
+    ret(0, 1) = -0.400576;
+    ret(0, 2) = 0.79923;
+    ret(0, 3) = 0;
+    ret(1, 0) = -0.893997;
+    ret(1, 1) = 0.20077;
+    ret(1, 2) = -0.400576;
+    ret(1, 3) = 0;
+    ret(2, 0) = 0;
+    ret(2, 1) = -0.893997;
+    ret(2, 2) = -0.448074;
 
-    SLAMTrackingStage = mono_live_viorb->getTrackingStage();
-    if(SLAMTrackingStage == 2 && bNotFirstEstimatedPose) {
+    Eigen::Vector3d vVisionPosition(pose.at<double>(0,3), pose.at<double>(1,3, pose.at<double>(2,3)));
         getRotationTranslation(pose, &roll, &pitch, &yaw);
+        Eigen::Vector3d result = Tbc.transpose() * vVisionPosition;
+    system_log->write2visionEstimatePositionLog(pose);
+    system_log->write2visionEstimate2IMULog(result);
         if(bUpdateVisionPoseToMavlink){
             //mavlink_control->setVisionEstimatedPosition(current_pose.gpsx,current_pose.gpsy,current_pose.gpsz, 0, 0, 0 , global_pos.time_boot_ms*1000);
         }

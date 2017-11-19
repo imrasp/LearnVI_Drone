@@ -10,6 +10,8 @@
 #include <fstream>
 #include <time.h>
 #include <string>
+#include <vector>
+#include <math.h>
 
 #include <opencv2/opencv.hpp>
 #include <mavlink/v1.0/common/mavlink.h>
@@ -52,6 +54,7 @@ public:
     void write2origps(float nedtime, float x, float y, float z, float gpstime, float lat, float lon, float alt, float gpsx, float gpsy, float gpsz, float errDRMS, float err99Sph);
     void write2gpsaccsample(float nedtime, float x, float y, float z, float vx, float vy, float vz, float gpstime, float lat, float lon, float alt, float gpsvx, float gpsvy, float gpsvz, float highres_imu_time, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float attitude_time, float roll, float pitch, float yaw);
     void write2visionEstimatePositionLog(Mat mat_pos);
+    void write2visionEstimate2IMULog(double x, double y, double z);
 
 
 
@@ -61,7 +64,7 @@ private:
     char txtfilename[80];
     char txtpath[160], csvpath[160];
     char csvfilename[80];
-    ofstream csvlog, gpslog, txtlog, gpsorilog, gpsaccsample, visionEstimatePositionLog;
+    ofstream csvlog, gpslog, txtlog, gpsorilog, gpsaccsample, visionEstimatePositionLog,visionEstimate2IMULog;
 };
 
 

@@ -45,6 +45,7 @@ void System_Log::initialize_defaults(char *filename)
     gpsorilog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/gpsdata_original_coonversion.csv");
     gpsaccsample.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/gps_acc_sample_data.csv");
     visionEstimatePositionLog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/visionEstimatePositionLog.csv");
+    visionEstimate2IMULog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/visionEstimate2IMULog.csv");
 
     gpslog << string("ned_time")  + "," + "x" + "," + "y" + "," + "z" + "," +
               "gps_time" + "," + "lat" + "," + "lon" + "," + "alt" + "," +
@@ -165,4 +166,9 @@ void System_Log::write2visionEstimatePositionLog(Mat mat_pos)
 //    Mat M = mat_pos.clone();
 //    visionEstimatePositionLog << M.at<double>(0,0) << '\n';
     visionEstimatePositionLog << mat_pos.at<double>(0,3) << ',' << mat_pos.at<double>(1,3) << ',' << mat_pos.at<double>(2,3) << ',' <<  '\n';
+}
+
+void System_Log::write2visionEstimate2IMULog(double x, double y, double z)
+{
+    visionEstimate2IMULog << x << ',' << y << ',' << z << ',' <<  '\n';
 }
