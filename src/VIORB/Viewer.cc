@@ -206,6 +206,7 @@ bool Viewer::isStopped()
 
 bool Viewer::Stop()
 {
+    cout << "call stop() in viewer" << endl;
     unique_lock<mutex> lock(mMutexStop);
     unique_lock<mutex> lock2(mMutexFinish);
 
