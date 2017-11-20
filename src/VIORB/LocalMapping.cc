@@ -866,6 +866,7 @@ void LocalMapping::AddToLocalWindow(KeyFrame* pKF)
         {
             cout << "Checkpoint from localmapping.cc::867";
             pKF0 = pKF0->GetPrevKeyFrame();
+            if(pKF0->mnId != 0) //新增加的语句 //added
             mlLocalKeyFrames.push_front(pKF0);
         }
     }
