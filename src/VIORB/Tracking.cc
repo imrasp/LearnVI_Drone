@@ -2074,7 +2074,7 @@ void Tracking::Reset()
 
     cout << "System Reseting" << endl;
     while(!mpViewer->isStopped()) {
-        cout << "mpViewer stop?" << mpViewer->isStopped() << end;
+        cout << "mpViewer stop?" << mpViewer->isStopped() << endl;
         usleep(3000);
     }
 
