@@ -313,7 +313,7 @@ void Location_Manager::setEstimatedVisionPose(Mat pose,float ms){
 
     Eigen::Vector3d vVisionPosition(pose.at<double>(0,3), pose.at<double>(1,3), pose.at<double>(2,3));
         getRotationTranslation(pose, &roll, &pitch, &yaw);
-        Eigen::Vector3d result = Tbc.transpose() * vVisionPosition;
+        Eigen::Vector3d result = Tbc.inverse() * vVisionPosition;
     system_log->write2visionEstimatePositionLog(pose);
     system_log->write2visionEstimate2IMULog(result(0),result(1),result(2));
         if(bUpdateVisionPoseToMavlink) {
