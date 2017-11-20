@@ -151,7 +151,7 @@ void Viewer::Run()
             mpSystem->Reset();
             menuReset = false;
         }
-
+        cout << "viewer run thread call stop." << endl;
         if(Stop())
         {
             while(isStopped())
