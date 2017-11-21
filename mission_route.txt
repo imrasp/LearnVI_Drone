@@ -1,9 +1,4 @@
 arm
 takeoff
-gotoned 5.0 0 0
-gotoned 5.0 5.0 0
-gotoned 0.0 5.0 0
-gotoned 0.0 0 0
-hold 10
 land
 disarm
