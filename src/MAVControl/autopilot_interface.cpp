@@ -991,15 +991,17 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
     sp_target.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
 
     update_setpoint(sp_target);
+
+    //wait message to update
     while(-height != current_messages.position_target_local_ned.z){
-        cout << "current expected h " << current_messages.position_target_local_ned.z << endl;
+        //cout << "current expected h " << current_messages.position_target_local_ned.z << endl;
         sleep(0.5);
     }
 
     while((current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_IN_AIR)
           && ( fabs(current_messages.local_position_ned.z - current_messages.position_target_local_ned.z) < precision_distance ))
     {
-        cout << "current h is " << current_messages.local_position_ned.z << " expect " << current_messages.position_target_local_ned.z << endl;
+        //cout << "current h is " << current_messages.local_position_ned.z << " expect " << current_messages.position_target_local_ned.z << endl;
         sleep(0.5);
     }
 
@@ -1010,17 +1012,21 @@ void Autopilot_Interface::enable_land()
 {
     printf("Mode land\n"); //Drone atterrit
     mavlink_set_position_target_local_ned_t setpoint;
-    setpoint.vx = 0;
-    setpoint.vy = 0;
-    setpoint.vz = 0.5;
-    setpoint.z = 0.00;
+//    setpoint.vx = 0;
+//    setpoint.vy = 0;
+//    setpoint.vz = 0.5;
+//    setpoint.z = 0.00;
     setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_LAND ;
     setpoint.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
 
     update_setpoint(setpoint);
 
-    //while( (current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_ON_GROUND) || (current_messages.local_position_ned.z <= 0.00))
-    while(current_messages.local_position_ned.z <= -0.05)
+    //wait message to update
+    while(0.0 != current_messages.position_target_local_ned.z){
+        sleep(0.5);
+    }
+    while(current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_ON_GROUND)
+//    while(current_messages.local_position_ned.z <= -0.05)
     {
         cout << " current landing z is " << current_messages.local_position_ned.z << endl;
         sleep(0.5);
