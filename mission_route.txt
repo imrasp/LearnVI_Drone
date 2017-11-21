@@ -1,5 +1,4 @@
 arm
 takeoff
 gotoned 10.0 0.0 0.0
-land
 disarm
