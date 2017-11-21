@@ -994,6 +994,7 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
     while((current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_IN_AIR)
           && ( fabs(current_messages.local_position_ned.z - current_messages.position_target_local_ned.z) < precision_distance ))
     {
+        cout << "current h is " << current_messages.local_position_ned.z << " expect " << current_messages.position_target_local_ned.z << endl;
         sleep(0.5);
     }
 
@@ -1047,7 +1048,7 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
 
     update_setpoint(setpoint);
 
-    while(!IsInWaypointLocal(setpoint, 0.5)){
+    while(!IsInWaypointLocal(0.5)){
         sleep(0.5);
     }
 }
@@ -1132,12 +1133,12 @@ void Autopilot_Interface::updateVisionEstimationPosition(mavlink_vision_position
         cout << "write to VISION_POSITION_ESTIMATE \n";
 }
 
-bool Autopilot_Interface::IsInWaypointLocal( mavlink_set_position_target_local_ned_t goal, float radius)
+bool Autopilot_Interface::IsInWaypointLocal(float radius)
 {
     // Radios is in meters
-    float dx = goal.x - current_messages.local_position_ned.x;
-    float dy = goal.y - current_messages.local_position_ned.y;
-    float dz = goal.z - current_messages.local_position_ned.z;
+    float dx = current_messages.position_target_local_ned.x - current_messages.local_position_ned.x;
+    float dy = current_messages.position_target_local_ned.y - current_messages.local_position_ned.y;
+    float dz = current_messages.position_target_local_ned.z - current_messages.local_position_ned.z;
     float distance = sqrtf(pow(dx,2) + pow(dy,2) + pow(dz,2));
 
     //printf("distance to next position : %lf \n", distance);

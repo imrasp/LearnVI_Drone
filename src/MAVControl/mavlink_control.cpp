@@ -91,6 +91,8 @@ void Mavlink_Control::commands() {
     printf(" CURRENT POSITION XYZ = [ % .4f , % .4f , % .4f ] \n", pos.x, pos.y, pos.z);
     sleep(1);
 
+    autopilot_interface->enable_takeoff(10, 0.5);
+
     ifstream input(mission_route);
     string line, temp;
     double param1, param2;
