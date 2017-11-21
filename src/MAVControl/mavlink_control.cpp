@@ -123,7 +123,7 @@ void Mavlink_Control::commands() {
                     mode = 1; i++;
                 } else if ( i == 0 && temp == "gotoned" ){
                     mode = 2; i++;
-                } else if ( i == 0 && temp == "gotoned" ) {
+                } else if ( i == 0 && temp == "sleep" ) {
                     mode = 3; i++;
                 } else if ( i != 0 ) { // hold and goto
                     if( i == 1 && mode == 1 ){

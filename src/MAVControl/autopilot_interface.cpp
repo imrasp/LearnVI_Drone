@@ -1051,7 +1051,7 @@ void Autopilot_Interface::enable_hold(double sec)
         sleep(0.5);
     }
     sleep(sec);
-    cout << "Time up for holding!\n" << endl;
+    cout << "Time up for holding!\n";
 }
 
 void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
@@ -1071,6 +1071,7 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     while(!IsInWaypointLocal(0.5)){
         sleep(0.5);
     }
+    cout << "reached! \n";
 }
 
 // Request MSG streaming rate
