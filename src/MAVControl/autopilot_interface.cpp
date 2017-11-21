@@ -504,6 +504,9 @@ enable_offboard_control()
             //throw EXIT_FAILURE;
         }
 
+        while(current_messages.heartbeat.base_mode != MAV_MODE_FLAG_GUIDED_ENABLED){
+            sleep(0.1);
+        }
         printf("\n");
 
     } // end: if not offboard_status
@@ -538,6 +541,10 @@ disable_offboard_control()
         {
             fprintf(stderr,"Error: off-board mode not set, could not write message\n");
             //throw EXIT_FAILURE;
+        }
+
+        while(current_messages.heartbeat.base_mode == MAV_MODE_FLAG_GUIDED_ENABLED){
+            sleep(0.1);
         }
 
         printf("\n");
@@ -918,6 +925,10 @@ void Autopilot_Interface::arm_control()
             fprintf(stderr,"Error: Unable to arm, could not write message\n");
             //throw EXIT_FAILURE;
         }
+        while(current_messages.heartbeat.base_mode != MAV_MODE_FLAG_SAFETY_ARMED){
+            sleep(0.1);
+        }
+
 
         printf("\n");
 
@@ -945,6 +956,9 @@ void Autopilot_Interface::disarm_control()
         {
             fprintf(stderr,"Error: Unable to disarm, could not write message\n");
             //throw EXIT_FAILURE;
+        }
+        while(current_messages.heartbeat.base_mode == MAV_MODE_FLAG_SAFETY_ARMED){
+            sleep(0.1);
         }
 
         printf("\n");
@@ -1065,7 +1079,7 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     setpoint.z = cp.z + z;
 
     update_setpoint(setpoint);
-    cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z << " expected " << cp.x+x << " , " << cp.y + y << " , " << cp.z + z <<endl;
+    cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z << " expected " << cp.x+x << " , " << cp.y + y << " , " << cp.z + z << endl;
     //wait message to update
     while( cp.x+x != current_messages.position_target_local_ned.x && cp.y+y != current_messages.position_target_local_ned.y && cp.z+z != current_messages.position_target_local_ned.z){
         sleep(0.1);
