@@ -1015,7 +1015,7 @@ void Autopilot_Interface::enable_land()
 //    setpoint.vx = 0;
 //    setpoint.vy = 0;
 //    setpoint.vz = 0.5;
-//    setpoint.z = 0.00;
+    setpoint.z = 0.00;
     setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_LAND ;
     setpoint.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
 
@@ -1046,6 +1046,10 @@ void Autopilot_Interface::enable_hold(double sec)
 
     update_setpoint(setpoint);
 
+    //wait message to update
+    while(0.0 != current_messages.position_target_local_ned.vx || 0.0 != current_messages.position_target_local_ned.vy || 0.0 != current_messages.position_target_local_ned.vz){
+        sleep(0.5);
+    }
     sleep(sec);
     cout << "Time up for holding!\n" << endl;
 }
@@ -1058,6 +1062,11 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     setpoint.z = cp.z+z;
 
     update_setpoint(setpoint);
+
+    //wait message to update
+    while( cp.x+x != current_messages.position_target_local_ned.x || cp.y+y != current_messages.position_target_local_ned.y || cp.z+z != current_messages.position_target_local_ned.z){
+        sleep(0.5);
+    }
 
     while(!IsInWaypointLocal(0.5)){
         sleep(0.5);
