@@ -1025,7 +1025,7 @@ void Autopilot_Interface::enable_land()
     while(0.0 != current_messages.position_target_local_ned.z){
         sleep(0.5);
     }
-    while(current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_ON_GROUND)
+    while(current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_ON_GROUND || current_messages.local_position_ned.z < 0.005)
 //    while(current_messages.local_position_ned.z <= -0.05)
     {
         cout << " current landing z is " << current_messages.local_position_ned.z << endl;

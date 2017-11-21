@@ -123,9 +123,13 @@ void Mavlink_Control::commands() {
                     mode = 1; i++;
                 } else if ( i == 0 && temp == "gotoned" ){
                     mode = 2; i++;
+                } else if ( i == 0 && temp == "gotoned" ) {
+                    mode = 3; i++;
                 } else if ( i != 0 ) { // hold and goto
                     if( i == 1 && mode == 1 ){
                         autopilot_interface->enable_hold(stod(temp));
+                    } else if( i == 1 && mode == 3 ){
+                       sleep(stod(temp));
                     } else if ( i == 1 && mode == 2 ){
                         param1 = stod(temp); i++;
                     } else if (i != 1 ){
