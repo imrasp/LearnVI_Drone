@@ -1004,8 +1004,8 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
         //cout << "current h is " << current_messages.local_position_ned.z << " expect " << current_messages.position_target_local_ned.z << endl;
         sleep(0.5);
     }
-
-    cout << "takeoff complete!" << endl;
+    mavlink_local_position_ned_t cp = current_messages.local_position_ned;
+    cout << "takeoff complete! current position is " << cp.x << " , " << cp.y << " , " << cp.z  << endl;
 }
 
 void Autopilot_Interface::enable_land()
@@ -1072,7 +1072,7 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     }
 
     while(!IsInWaypointLocal(0.5)){
-        cout << "current x is " << current_messages.local_position_ned.x << " expect " << current_messages.position_target_local_ned.x << endl;
+        //cout << "current x is " << current_messages.local_position_ned.x << " expect " << current_messages.position_target_local_ned.x << endl;
         sleep(0.5);
     }
     cout << "reached! \n";
