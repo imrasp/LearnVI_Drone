@@ -405,6 +405,7 @@ read_messages()
         // give the write thread time to use the port
         if ( writing_status > false ) {
             //usleep(100); // look for components of batches at 10kHz
+            usleep(1);
         }
 
     } // end: while not received all
@@ -990,6 +991,9 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
     sp_target.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
 
     update_setpoint(sp_target);
+    while(height != current_messages.position_target_local_ned.z){
+        sleep(0.5);
+    }
 
     while((current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_IN_AIR)
           && ( fabs(current_messages.local_position_ned.z - current_messages.position_target_local_ned.z) < precision_distance ))
