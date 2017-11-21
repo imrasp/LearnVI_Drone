@@ -199,7 +199,3 @@ Mavlink_Control::setVisionEstimatedPosition(float x, float y, float z, float rol
 
     autopilot_interface->updateVisionEstimationPosition(vpe);
 }
-
-void Mavlink_Control::GPSFinder(){
-
-}
