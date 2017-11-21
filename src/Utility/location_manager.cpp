@@ -296,17 +296,17 @@ void Location_Manager::setMavlinkControl(Mavlink_Control *mavlink_control_){
 void Location_Manager::setInitialEstimateVisionPose(posedata pose){
     pEstimatedVisionPose = pose;
 
-    double Rxangle = degrees2radians(pEstimatedVisionPose.roll);
+    double Rxangle = (pEstimatedVisionPose.roll * M_PI) / 180;
     Eigen::Matrix3d Rx;
     Rx << 1, 0, 0,
             0, cos(-Rxangle), -sin(-Rxangle),
             0, sin(-Rxangle), cos(-Rxangle);
-    double Ryangle = degrees2radians(pEstimatedVisionPose.pitch);
+    double Ryangle = (pEstimatedVisionPose.pitch * M_PI) / 180;
     Eigen::Matrix3d Ry;
     Ry << cos(-Ryangle), 0, sin(-Ryangle),
             0, 1, 0,
             -sin(-Ryangle), 0, cos(-Ryangle);
-    double Rzangle = degrees2radians(pEstimatedVisionPose.yaw);
+    double Rzangle = (pEstimatedVisionPose.yaw * M_PI) / 180;
     Eigen::Matrix3d Rz;
     Rz << cos(-Rzangle), -sin(-Rzangle), 0,
             sin(-Rzangle), cos(-Rzangle), 0,
@@ -329,18 +329,31 @@ void Location_Manager::setInitialEstimateVisionPose(posedata pose){
 
 void Location_Manager::setEstimatedVisionPose(Mat pose,float ms){
 
+    //Pose Matrices
+    Eigen::Matrix3d mRcw;
+    mRcw << pose.at<double>(0,0), pose.at<double>(0,1), pose.at<double>(0,2),
+            pose.at<double>(1,0), pose.at<double>(1,1), pose.at<double>(1,2),
+            pose.at<double>(2,0), pose.at<double>(2,1), pose.at<double>(2,2);
+    Eigen::Matrix3d mRwc = mRcw.transpose();
+    Eigen::Vector3d mtcw;
+    mtcw << pose.at<double>(0,3), pose.at<double>(1,3), pose.at<double>(2,3);
+    // position in camera coordinate (z:forward x:left y:down)
+    Eigen::Vector3d mOw = -mRcw.transpose()*mtcw;
+    Eigen::Vector4d mOw4d;
+     mOw4d << mOw, 1;
+
     float roll, pitch, yaw;
 
-    Eigen::Vector4d vVisionPosition(pose.at<double>(0,3), pose.at<double>(1,3), pose.at<double>(2,3),1);
-        getRotationTranslation(pose, &roll, &pitch, &yaw);
+    //Eigen::Vector4d vVisionPosition(pose.at<double>(0,3), pose.at<double>(1,3), pose.at<double>(2,3),1);
+    //getRotationTranslation(pose, &roll, &pitch, &yaw);
     //convert to IMU coordinate (x:forward y:left z:up)
-    Eigen::Vector4d result = Tnb * vVisionPosition;
-    //
+    Eigen::Vector4d pIMU = Tbc * mOw4d;
+    Eigen::Vector4d pNED = Tnb * pIMU;
 
     system_log->write2visionEstimatePositionLog(pose);
-    system_log->write2visionEstimate2IMULog(result(0),result(1),result(2));
+    system_log->write2visionEstimate2IMULog(pNED(0),pNED(1),pNED(2));
         if(bUpdateVisionPoseToMavlink) {
-            mavlink_control->setVisionEstimatedPosition(result(0),result(1),result(2), 0, 0, 0 , ms*1000);
+            mavlink_control->setVisionEstimatedPosition(pNED(0),pNED(1),pNED(2), 0, 0, 0 , pEstimatedVisionPose.highres_imu_time);
         }
 
 }

@@ -301,7 +301,9 @@ public:
     void enable_hold(double sec);
     void set_message_interval( int msg_id, int hz );
     void updateVisionEstimationPosition(mavlink_vision_position_estimate_t vpe);
-void set_home();
+    void set_home();
+    void goto_positon_ned(float x, float y, float z);
+    bool IsInWaypointLocal( mavlink_set_position_target_local_ned_t goal, float radius);
 
 private:
 

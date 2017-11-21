@@ -1024,29 +1024,35 @@ void Autopilot_Interface::enable_land()
 
 void Autopilot_Interface::enable_hold(double sec)
 {
-//    printf("Mode Hold Position\n"); //Drone atterrit
-//    mavlink_set_position_target_local_ned_t setpoint;
-//    setpoint.vx = 0;
-//    setpoint.vy = 0;
-//    setpoint.vz = 0.5;
-//    setpoint.z = 0.00;
-//    setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_LAND ;
-//    setpoint.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
-//
-//    update_setpoint(setpoint);
-//
-//    //while( (current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_ON_GROUND) || (current_messages.local_position_ned.z <= 0.00))
-//    while(current_messages.local_position_ned.z <= -0.05)
-//    {
-//        cout << " current landing z is " << current_messages.local_position_ned.z << endl;
-//        sleep(0.5);
-//    }
-//    cout << "Time up for holding!\n" << endl;
+    printf("Mode Hold Position\n"); //Drone atterrit
+    mavlink_set_position_target_local_ned_t setpoint;
+    setpoint.vx = 0;
+    setpoint.vy = 0;
+    setpoint.vz = 0;
+    setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_ALT_HOLD ;
+    setpoint.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
+
+    update_setpoint(setpoint);
+
+    sleep(sec);
+    cout << "Time up for holding!\n" << endl;
 }
 
-//void Autopilot_Interface::goto_positon(){
-//
-//}
+void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
+    mavlink_set_position_target_local_ned_t setpoint;
+    mavlink_local_position_ned_t cp = current_messages.local_position_ned;
+    setpoint.x = cp.x+x;
+    setpoint.y = cp.y+y;
+    setpoint.z = cp.z+z;
+    setpoint.vz = 0.5;
+    setpoint.vy = 0.5;
+
+    update_setpoint(setpoint);
+
+    while(!IsInWaypointLocal(setpoint, 0.5)){
+        sleep(0.5);
+    }
+}
 
 // Request MSG streaming rate
 // param 1 = message ID and param 2 = interval in microseconds
@@ -1123,7 +1129,25 @@ void Autopilot_Interface::updateVisionEstimationPosition(mavlink_vision_position
     int len = write_message(message);
 
     if ( !len )
-        cout << "cannot write to VISION_POSITION_ESTIMATE";
+        cout << "cannot write to VISION_POSITION_ESTIMATE \n";
     else
-        cout << "write to VISION_POSITION_ESTIMATE";
+        cout << "write to VISION_POSITION_ESTIMATE \n";
+}
+
+bool Autopilot_Interface::IsInWaypointLocal( mavlink_set_position_target_local_ned_t goal, float radius)
+{
+    // Radios is in meters
+    float dx = goal.x - current_messages.local_position_ned.x;
+    float dy = goal.y - current_messages.local_position_ned.y;
+    float dz = goal.z - current_messages.local_position_ned.z;
+    float distance = sqrtf(pow(dx,2) + pow(dy,2) + pow(dz,2));
+
+    //printf("distance to next position : %lf \n", distance);
+
+    if(distance < radius) {
+        //printf("Is in Waypoint");
+        return true;
+    }
+    else
+        return false;
 }

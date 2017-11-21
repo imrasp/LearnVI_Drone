@@ -89,6 +89,8 @@ private:
     float maxRotation; // degree/second
 
    char *mission_route;
+
+    mavlink_set_position_target_local_ned_t ip;
 };
 
 #endif //LEARNVI_DRONE_MAVLINK_CONTROL_H
