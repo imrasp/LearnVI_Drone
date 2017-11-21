@@ -1059,13 +1059,13 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     printf("Goto Position\n");
     mavlink_set_position_target_local_ned_t setpoint;
     mavlink_local_position_ned_t cp = current_messages.local_position_ned;
-    cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z <<endl;
-    setpoint.x = cp.x+x;
-    setpoint.y = cp.y+y;
-    setpoint.z = cp.z+z;
+
+    setpoint.x = cp.x + x;
+    setpoint.y = cp.y + y;
+    setpoint.z = cp.z + z;
 
     update_setpoint(setpoint);
-
+    cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z << " expected " << cp.x+x << " , " << cp.y + y << " , " << cp.z + z <<endl;
     //wait message to update
     while( cp.x+x != current_messages.position_target_local_ned.x && cp.y+y != current_messages.position_target_local_ned.y && cp.z+z != current_messages.position_target_local_ned.z){
         sleep(0.5);

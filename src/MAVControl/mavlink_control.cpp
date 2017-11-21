@@ -129,6 +129,7 @@ void Mavlink_Control::commands() {
                     if( i == 1 && mode == 1 ){
                         autopilot_interface->enable_hold(stod(temp));
                     } else if( i == 1 && mode == 3 ){
+                        cout << "sleep for " << stod(temp) << " sec. \n";
                        sleep(stod(temp));
                     } else if ( i == 1 && mode == 2 ){
                         param1 = stod(temp); i++;
