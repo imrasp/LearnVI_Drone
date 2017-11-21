@@ -503,10 +503,10 @@ enable_offboard_control()
             fprintf(stderr,"Error: off-board mode not set, could not write message\n");
             //throw EXIT_FAILURE;
         }
-
-        while(current_messages.heartbeat.base_mode != MAV_MODE_FLAG_GUIDED_ENABLED){
-            sleep(0.1);
-        }
+        cout << "current_messages.heartbeat.base_mode : " << current_messages.heartbeat.base_mode << endl;
+//        while(current_messages.heartbeat.base_mode != MAV_MODE_FLAG_GUIDED_ENABLED){
+//            sleep(0.1);
+//        }
         printf("\n");
 
     } // end: if not offboard_status
@@ -543,9 +543,9 @@ disable_offboard_control()
             //throw EXIT_FAILURE;
         }
 
-        while(current_messages.heartbeat.base_mode == MAV_MODE_FLAG_GUIDED_ENABLED){
-            sleep(0.1);
-        }
+//        while(current_messages.heartbeat.base_mode == MAV_MODE_FLAG_GUIDED_ENABLED){
+//            sleep(0.1);
+//        }
 
         printf("\n");
 
@@ -925,9 +925,11 @@ void Autopilot_Interface::arm_control()
             fprintf(stderr,"Error: Unable to arm, could not write message\n");
             //throw EXIT_FAILURE;
         }
-        while(current_messages.heartbeat.base_mode != MAV_MODE_FLAG_SAFETY_ARMED){
-            sleep(0.1);
-        }
+
+        cout << "current_messages.heartbeat.base_mode : " << current_messages.heartbeat.base_mode << endl;
+//        while(current_messages.heartbeat.base_mode != MAV_MODE_FLAG_SAFETY_ARMED){
+//            sleep(0.1);
+//        }
 
 
         printf("\n");
@@ -957,9 +959,9 @@ void Autopilot_Interface::disarm_control()
             fprintf(stderr,"Error: Unable to disarm, could not write message\n");
             //throw EXIT_FAILURE;
         }
-        while(current_messages.heartbeat.base_mode == MAV_MODE_FLAG_SAFETY_ARMED){
-            sleep(0.1);
-        }
+//        while(current_messages.heartbeat.base_mode == MAV_MODE_FLAG_SAFETY_ARMED){
+//            sleep(0.1);
+//        }
 
         printf("\n");
     }
