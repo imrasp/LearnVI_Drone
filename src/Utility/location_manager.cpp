@@ -322,8 +322,8 @@ void Location_Manager::setInitialEstimateVisionPose(posedata pose){
             0, 0, 0, 1;
      // Your Transformation IMU to body Matrix
     Tnb.setIdentity();   // Set to Identity to make bottom row of Matrix 0,0,0,1
-    Tnb.block(0,0,3,3) = Rt;
-    Tnb.rightCols(1) = T;
+    Tnb.block(0,0,3,3) << Rt;
+    Tnb.rightCols(1) << T;
 
 }
 
