@@ -158,6 +158,7 @@ struct Time_Stamps
     uint64_t highres_imu;
     uint64_t attitude;
     uint64_t home_position;
+    uint64_t gps_raw_int;
 
     void
     reset_timestamps()
@@ -173,6 +174,7 @@ struct Time_Stamps
         highres_imu = 0;
         attitude = 0;
         home_position =0;
+        gps_raw_int =0;
     }
 
 };
@@ -221,6 +223,8 @@ struct Mavlink_Messages {
 //extended_sys_state
     mavlink_extended_sys_state_t extended_sys_state;
 
+    //gps_raw_int
+    mavlink_gps_raw_int_t gps_raw_int;
     // System Parameters?
 
 
@@ -303,6 +307,7 @@ public:
     void updateVisionEstimationPosition(mavlink_vision_position_estimate_t vpe);
     void set_home();
     void goto_positon_ned(float x, float y, float z);
+    void goto_positon__offset_ned(float x, float y, float z);
     bool IsInWaypointLocal( float radius);
 
 private:

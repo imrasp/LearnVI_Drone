@@ -125,6 +125,10 @@ void Mavlink_Control::commands() {
                     mode = 2; i++;
                 } else if ( i == 0 && temp == "sleep" ) {
                     mode = 3; i++;
+                } else if ( i == 0 && temp == "findgps" ) {
+                    while(autopilot_interface->current_messages.gps_raw_int.eph > 120 && autopilot_interface->current_messages.local_position_ned.z > -30){
+
+                    }
                 } else if ( i != 0 ) { // hold and goto
                     if( i == 1 && mode == 1 ){
                         autopilot_interface->enable_hold(stod(temp));
@@ -194,4 +198,8 @@ Mavlink_Control::setVisionEstimatedPosition(float x, float y, float z, float rol
     vpe.usec = (uint32_t) time;
 
     autopilot_interface->updateVisionEstimationPosition(vpe);
+}
+
+void Mavlink_Control::GPSFinder(){
+
 }

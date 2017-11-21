@@ -377,6 +377,15 @@ read_messages()
                     break;
                 }
 
+                case MAVLINK_MSG_ID_GPS_RAW_INT:
+                {
+                    //printf("MAVLINK_MSG_ID_HOME_POSITION\n");
+                    mavlink_msg_gps_raw_int_decode(&message, &(current_messages.gps_raw_int));
+                    current_messages.time_stamps.gps_raw_int = get_time_usec();
+                    this_timestamps.gps_raw_int = current_messages.time_stamps.gps_raw_int;
+                    break;
+                }
+
                 default:
                 {
                     // printf("Warning, did not handle message id %i\n",message.msgid);
@@ -999,9 +1008,9 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
     printf("Mode TAKEOFF\n");
     float precision_distance = 0.1; // [m]
     mavlink_set_position_target_local_ned_t sp_target;
-    sp_target.vx = 0;
-    sp_target.vy = 0;
-    sp_target.vz = -velocity;
+//    sp_target.vx = 0;
+//    sp_target.vy = 0;
+//    sp_target.vz = -velocity;
     sp_target.z = -height;
     sp_target.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_TAKEOFF;
     sp_target.coordinate_frame = MAV_FRAME_LOCAL_NED;
@@ -1095,6 +1104,33 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     }
     cout << "reached! \n";
 }
+
+void Autopilot_Interface::goto_positon__offset_ned(float x, float y, float z){
+
+    printf("Goto Position\n");
+    mavlink_set_position_target_local_ned_t setpoint;
+    mavlink_local_position_ned_t cp = current_messages.local_position_ned;
+
+    setpoint.x = x;
+    setpoint.y = y;
+    setpoint.z = z;
+    setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_POSITION;
+    setpoint.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
+
+    update_setpoint(setpoint);
+    cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z << " expected " << cp.x+x << " , " << cp.y + y << " , " << cp.z + z << endl;
+    //wait message to update
+//    while( cp.x+x != current_messages.position_target_local_ned.x && cp.y+y != current_messages.position_target_local_ned.y && cp.z+z != current_messages.position_target_local_ned.z){
+        sleep(1);
+//    }
+
+    while(!IsInWaypointLocal(0.5)){
+        //cout << "current x is " << current_messages.local_position_ned.x << " expect " << current_messages.position_target_local_ned.x << endl;
+        sleep(0.1);
+    }
+    cout << "reached! \n";
+}
+
 
 // Request MSG streaming rate
 // param 1 = message ID and param 2 = interval in microseconds
