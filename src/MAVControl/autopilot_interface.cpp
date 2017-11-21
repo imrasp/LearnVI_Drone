@@ -980,7 +980,7 @@ int Autopilot_Interface::toggle_arm_control( bool flag )
 // ------------------------------------------------------------------------------
 void Autopilot_Interface::enable_takeoff(float height,float velocity)
 {
-    printf("Mode TAKEOFF\n"); //Drone décolle
+    printf("Mode TAKEOFF\n");
     float precision_distance = 0.1; // [m]
     mavlink_set_position_target_local_ned_t sp_target;
     sp_target.vx = 0;
@@ -1010,7 +1010,7 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
 
 void Autopilot_Interface::enable_land()
 {
-    printf("Mode land\n"); //Drone atterrit
+    printf("Mode land\n");
     mavlink_set_position_target_local_ned_t setpoint;
 //    setpoint.vx = 0;
 //    setpoint.vy = 0;
@@ -1036,7 +1036,7 @@ void Autopilot_Interface::enable_land()
 
 void Autopilot_Interface::enable_hold(double sec)
 {
-    printf("Mode Hold Position\n"); //Drone atterrit
+    printf("Mode Hold Position\n");
     mavlink_set_position_target_local_ned_t setpoint;
     setpoint.vx = 0;
     setpoint.vy = 0;
@@ -1055,6 +1055,8 @@ void Autopilot_Interface::enable_hold(double sec)
 }
 
 void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
+
+    printf("Goto Position\n");
     mavlink_set_position_target_local_ned_t setpoint;
     mavlink_local_position_ned_t cp = current_messages.local_position_ned;
     setpoint.x = cp.x+x;
@@ -1064,11 +1066,12 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     update_setpoint(setpoint);
 
     //wait message to update
-    while( cp.x+x != current_messages.position_target_local_ned.x || cp.y+y != current_messages.position_target_local_ned.y || cp.z+z != current_messages.position_target_local_ned.z){
+    while( cp.x+x != current_messages.position_target_local_ned.x && cp.y+y != current_messages.position_target_local_ned.y && cp.z+z != current_messages.position_target_local_ned.z){
         sleep(0.5);
     }
 
     while(!IsInWaypointLocal(0.5)){
+        cout << "current x is " << current_messages.local_position_ned.x << " expect " << current_messages.position_target_local_ned.x << endl;
         sleep(0.5);
     }
     cout << "reached! \n";
