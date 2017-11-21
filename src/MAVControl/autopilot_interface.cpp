@@ -405,7 +405,7 @@ read_messages()
         // give the write thread time to use the port
         if ( writing_status > false ) {
             //usleep(100); // look for components of batches at 10kHz
-            usleep(1);
+            usleep(100);
         }
 
     } // end: while not received all
