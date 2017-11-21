@@ -87,7 +87,7 @@ void Mono_Live_VIORB::grabFrameData() {
         } else {
 
 
-            if (vimuData.size() < 10) {
+            if (vimuData.size() < 5) {
                 //cout << "Skipping this frame (Specially if before initializing)!" << endl;
                 continue;
             }

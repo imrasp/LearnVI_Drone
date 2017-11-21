@@ -1059,6 +1059,7 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     printf("Goto Position\n");
     mavlink_set_position_target_local_ned_t setpoint;
     mavlink_local_position_ned_t cp = current_messages.local_position_ned;
+    cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z <<endl;
     setpoint.x = cp.x+x;
     setpoint.y = cp.y+y;
     setpoint.z = cp.z+z;
