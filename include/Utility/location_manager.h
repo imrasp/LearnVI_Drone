@@ -83,6 +83,8 @@ private:
 
     int counter;
 
+    //Transformation from camera to ned
+    Eigen::Matrix4d Tnb, Tbc;
 
 };
 

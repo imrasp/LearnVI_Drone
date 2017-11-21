@@ -295,25 +295,48 @@ void Location_Manager::setMavlinkControl(Mavlink_Control *mavlink_control_){
 
 void Location_Manager::setInitialEstimateVisionPose(posedata pose){
     pEstimatedVisionPose = pose;
+
+    double Rxangle = degrees2radians(pEstimatedVisionPose.roll);
+    Eigen::Matrix3d Rx;
+    Rx << 1, 0, 0,
+            0, cos(-Rxangle), -sin(-Rxangle),
+            0, sin(-Rxangle), cos(-Rxangle);
+    double Ryangle = degrees2radians(pEstimatedVisionPose.pitch);
+    Eigen::Matrix3d Ry;
+    Ry << cos(-Ryangle), 0, sin(-Ryangle),
+            0, 1, 0,
+            -sin(-Ryangle), 0, cos(-Ryangle);
+    double Rzangle = degrees2radians(pEstimatedVisionPose.yaw);
+    Eigen::Matrix3d Rz;
+    Rz << cos(-Rzangle), -sin(-Rzangle), 0,
+            sin(-Rzangle), cos(-Rzangle), 0,
+            0, 0, 1;
+    Eigen::Matrix3d Rt = Rx * Ry * Rz;
+
+    Eigen::Vector3d T;
+    T << pEstimatedVisionPose.x, pEstimatedVisionPose.y, pEstimatedVisionPose.z;
+    //camera-imu transformation
+    Tbc << 0, -1, 0, 0,
+            0, 0, -1, 0,
+            1, 0, 0, 0,
+            0, 0, 0, 1;
+     // Your Transformation IMU to body Matrix
+    Tnb.setIdentity();   // Set to Identity to make bottom row of Matrix 0,0,0,1
+    Tnb.block(0,0,3,3) = Rt;
+    Tnb.rightCols(1) = T;
+
 }
 
 void Location_Manager::setEstimatedVisionPose(Mat pose,float ms){
 
     float roll, pitch, yaw;
-    Eigen::Matrix3d Tbc;
-    Tbc(0, 0) = -0.448074;
-    Tbc(0, 1) = -0.400576;
-    Tbc(0, 2) = 0.79923;
-    Tbc(1, 0) = -0.893997;
-    Tbc(1, 1) = 0.20077;
-    Tbc(1, 2) = -0.400576;
-    Tbc(2, 0) = 0;
-    Tbc(2, 1) = -0.893997;
-    Tbc(2, 2) = -0.448074;
 
-    Eigen::Vector3d vVisionPosition(pose.at<double>(0,3), pose.at<double>(1,3), pose.at<double>(2,3));
+    Eigen::Vector4d vVisionPosition(pose.at<double>(0,3), pose.at<double>(1,3), pose.at<double>(2,3),1);
         getRotationTranslation(pose, &roll, &pitch, &yaw);
-        Eigen::Vector3d result = Tbc.inverse() * vVisionPosition;
+    //convert to IMU coordinate (x:forward y:left z:up)
+    Eigen::Vector4d result = Tnb * vVisionPosition;
+    //
+
     system_log->write2visionEstimatePositionLog(pose);
     system_log->write2visionEstimate2IMULog(result(0),result(1),result(2));
         if(bUpdateVisionPoseToMavlink) {
