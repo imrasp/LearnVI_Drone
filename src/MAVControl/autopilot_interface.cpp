@@ -908,7 +908,7 @@ void Autopilot_Interface::arm_control()
 
         // Sends the command to arm
         int success = toggle_arm_control( true );
-
+        sleep(1);
         // Check the command was written
         if ( success )
             arm_status = true;
@@ -936,7 +936,7 @@ void Autopilot_Interface::disarm_control()
 
         // Sends the command to arm
         int success = toggle_arm_control( false );
-
+        sleep(1);
         // Check the command was written
         if ( success )
             arm_status = false;
@@ -1044,8 +1044,6 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     setpoint.x = cp.x+x;
     setpoint.y = cp.y+y;
     setpoint.z = cp.z+z;
-    setpoint.vz = 0.5;
-    setpoint.vy = 0.5;
 
     update_setpoint(setpoint);
 
