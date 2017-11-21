@@ -1004,7 +1004,7 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
     sp_target.vz = -velocity;
     sp_target.z = -height;
     sp_target.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_TAKEOFF;
-    sp_target.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
+    sp_target.coordinate_frame = MAV_FRAME_LOCAL_NED;
 
     update_setpoint(sp_target);
 
@@ -1033,7 +1033,7 @@ void Autopilot_Interface::enable_land()
 //    setpoint.vz = 0.5;
     setpoint.z = 0.00;
     setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_LAND;
-    setpoint.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
+    setpoint.coordinate_frame = MAV_FRAME_LOCAL_NED;
 
     update_setpoint(setpoint);
 
@@ -1058,7 +1058,7 @@ void Autopilot_Interface::enable_hold(double sec)
     setpoint.vy = 0;
     setpoint.vz = 0;
     setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_ALT_HOLD;
-    setpoint.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
+    setpoint.coordinate_frame = MAV_FRAME_LOCAL_NED;
 
     update_setpoint(setpoint);
 
@@ -1079,6 +1079,8 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     setpoint.x = cp.x + x;
     setpoint.y = cp.y + y;
     setpoint.z = cp.z + z;
+    setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_POSITION;
+    setpoint.coordinate_frame = MAV_FRAME_LOCAL_NED;
 
     update_setpoint(setpoint);
     cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z << " expected " << cp.x+x << " , " << cp.y + y << " , " << cp.z + z << endl;
