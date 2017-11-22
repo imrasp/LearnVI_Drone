@@ -1030,10 +1030,10 @@ void Autopilot_Interface::enable_land()
 {
     printf("Mode land\n");
     mavlink_set_position_target_local_ned_t setpoint;
-    setpoint.vx = 0;
-    setpoint.vy = 0;
-    setpoint.vz = 0.5;
-    setpoint.z = 0.00;
+//    setpoint.vx = 0;
+//    setpoint.vy = 0;
+//    setpoint.vz = 0.5;
+//    setpoint.z = 0.00;
     setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_LAND;
     setpoint.coordinate_frame = MAV_FRAME_LOCAL_NED;
 
