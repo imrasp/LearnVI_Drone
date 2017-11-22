@@ -1017,12 +1017,9 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
     while(-height != current_messages.position_target_local_ned.z){
         sleep(1);
     }
-    if(fabs(current_messages.local_position_ned.z - current_messages.position_target_local_ned.z) > precision_distance ) cout << "!!!!!!!!!!!!!!!!!!!\n";
-    cout << "after waitting loop want h = " << sp_target.z << " current expected h " << current_messages.position_target_local_ned.z  << " diff to current : " << fabs(current_messages.local_position_ned.z - current_messages.position_target_local_ned.z) << endl;
     while(current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_IN_AIR
           &&  fabs(current_messages.local_position_ned.z - current_messages.position_target_local_ned.z) > precision_distance )
     {
-        cout << "current h is " << current_messages.local_position_ned.z << " expect " << current_messages.position_target_local_ned.z << endl;
         sleep(1);
     }
     mavlink_local_position_ned_t cp = current_messages.local_position_ned;
