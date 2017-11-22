@@ -49,6 +49,7 @@ public:
     void RequestFinish();
 
     void RequestStop();
+    void RequestStop_no_view();
 
     bool isFinished();
 
