@@ -28,28 +28,28 @@ The CXX compiler identification is GNU, found in "/home/odroid/workspace/VIDrone
 Determining if the C compiler works passed with the following output:
 Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_a5750/fast"
-/usr/bin/make -f CMakeFiles/cmTC_a5750.dir/build.make CMakeFiles/cmTC_a5750.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_064a5/fast"
+/usr/bin/make -f CMakeFiles/cmTC_064a5.dir/build.make CMakeFiles/cmTC_064a5.dir/build
 make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_a5750.dir/testCCompiler.c.o
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc     -o CMakeFiles/cmTC_a5750.dir/testCCompiler.c.o   -c /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp/testCCompiler.c
-Linking C executable cmTC_a5750
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a5750.dir/link.txt --verbose=1
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc       CMakeFiles/cmTC_a5750.dir/testCCompiler.c.o  -o cmTC_a5750 -rdynamic 
+Building C object CMakeFiles/cmTC_064a5.dir/testCCompiler.c.o
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc     -o CMakeFiles/cmTC_064a5.dir/testCCompiler.c.o   -c /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_064a5
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_064a5.dir/link.txt --verbose=1
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc       CMakeFiles/cmTC_064a5.dir/testCCompiler.c.o  -o cmTC_064a5 -rdynamic 
 make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
 
 
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_1364b/fast"
-/usr/bin/make -f CMakeFiles/cmTC_1364b.dir/build.make CMakeFiles/cmTC_1364b.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_cbaef/fast"
+/usr/bin/make -f CMakeFiles/cmTC_cbaef.dir/build.make CMakeFiles/cmTC_cbaef.dir/build
 make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_1364b.dir/CMakeCCompilerABI.c.o
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc     -o CMakeFiles/cmTC_1364b.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.5/Modules/CMakeCCompilerABI.c
-Linking C executable cmTC_1364b
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1364b.dir/link.txt --verbose=1
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc      -v CMakeFiles/cmTC_1364b.dir/CMakeCCompilerABI.c.o  -o cmTC_1364b -rdynamic  
+Building C object CMakeFiles/cmTC_cbaef.dir/CMakeCCompilerABI.c.o
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc     -o CMakeFiles/cmTC_cbaef.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.5/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_cbaef
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cbaef.dir/link.txt --verbose=1
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc      -v CMakeFiles/cmTC_cbaef.dir/CMakeCCompilerABI.c.o  -o cmTC_cbaef -rdynamic  
 Using built-in specs.
 COLLECT_GCC=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc
 COLLECT_LTO_WRAPPER=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper
@@ -59,8 +59,8 @@ Thread model: posix
 gcc version 4.9.4 (Linaro GCC 4.9-2017.01) 
 COMPILER_PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/bin/
 LIBRARY_PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_1364b' '-rdynamic' '-march=armv7-a' '-mtune=cortex-a9' '-mfloat-abi=hard' '-mfpu=vfpv3-d16' '-mthumb' '-mtls-dialect=gnu'
- /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/collect2 -plugin /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/liblto_plugin.so -plugin-opt=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper -plugin-opt=-fresolution=/tmp/ccLb1H4O.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X -m armelf_linux_eabi -o cmTC_1364b /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crt1.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crti.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtbegin.o -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4 -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib CMakeFiles/cmTC_1364b.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtend.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_cbaef' '-rdynamic' '-march=armv7-a' '-mtune=cortex-a9' '-mfloat-abi=hard' '-mfpu=vfpv3-d16' '-mthumb' '-mtls-dialect=gnu'
+ /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/collect2 -plugin /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/liblto_plugin.so -plugin-opt=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper -plugin-opt=-fresolution=/tmp/ccoRG1Pv.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X -m armelf_linux_eabi -o cmTC_cbaef /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crt1.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crti.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtbegin.o -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4 -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib CMakeFiles/cmTC_cbaef.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtend.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crtn.o
 make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
 
 
@@ -68,14 +68,14 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_1364b/fast"]
-  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_1364b.dir/build.make CMakeFiles/cmTC_1364b.dir/build]
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_cbaef/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_cbaef.dir/build.make CMakeFiles/cmTC_cbaef.dir/build]
   ignore line: [make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp']
-  ignore line: [Building C object CMakeFiles/cmTC_1364b.dir/CMakeCCompilerABI.c.o]
-  ignore line: [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc     -o CMakeFiles/cmTC_1364b.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.5/Modules/CMakeCCompilerABI.c]
-  ignore line: [Linking C executable cmTC_1364b]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1364b.dir/link.txt --verbose=1]
-  ignore line: [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc      -v CMakeFiles/cmTC_1364b.dir/CMakeCCompilerABI.c.o  -o cmTC_1364b -rdynamic  ]
+  ignore line: [Building C object CMakeFiles/cmTC_cbaef.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc     -o CMakeFiles/cmTC_cbaef.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.5/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTC_cbaef]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cbaef.dir/link.txt --verbose=1]
+  ignore line: [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc      -v CMakeFiles/cmTC_cbaef.dir/CMakeCCompilerABI.c.o  -o cmTC_cbaef -rdynamic  ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc]
   ignore line: [COLLECT_LTO_WRAPPER=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper]
@@ -85,13 +85,13 @@ Parsed C implicit link information from above output:
   ignore line: [gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ]
   ignore line: [COMPILER_PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/bin/]
   ignore line: [LIBRARY_PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_1364b' '-rdynamic' '-march=armv7-a' '-mtune=cortex-a9' '-mfloat-abi=hard' '-mfpu=vfpv3-d16' '-mthumb' '-mtls-dialect=gnu']
-  link line: [ /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/collect2 -plugin /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/liblto_plugin.so -plugin-opt=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper -plugin-opt=-fresolution=/tmp/ccLb1H4O.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X -m armelf_linux_eabi -o cmTC_1364b /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crt1.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crti.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtbegin.o -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4 -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib CMakeFiles/cmTC_1364b.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtend.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_cbaef' '-rdynamic' '-march=armv7-a' '-mtune=cortex-a9' '-mfloat-abi=hard' '-mfpu=vfpv3-d16' '-mthumb' '-mtls-dialect=gnu']
+  link line: [ /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/collect2 -plugin /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/liblto_plugin.so -plugin-opt=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper -plugin-opt=-fresolution=/tmp/ccoRG1Pv.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X -m armelf_linux_eabi -o cmTC_cbaef /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crt1.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crti.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtbegin.o -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4 -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib CMakeFiles/cmTC_cbaef.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtend.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crtn.o]
     arg [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccLb1H4O.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccoRG1Pv.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -107,7 +107,7 @@ Parsed C implicit link information from above output:
     arg [-m] ==> ignore
     arg [armelf_linux_eabi] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_1364b] ==> ignore
+    arg [cmTC_cbaef] ==> ignore
     arg [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crt1.o] ==> ignore
     arg [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crti.o] ==> ignore
     arg [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtbegin.o] ==> ignore
@@ -118,7 +118,7 @@ Parsed C implicit link information from above output:
     arg [-L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib] ==> dir [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib]
     arg [-L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib] ==> dir [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib]
     arg [-L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib] ==> dir [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib]
-    arg [CMakeFiles/cmTC_1364b.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTC_cbaef.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [--as-needed] ==> ignore
     arg [-lgcc_s] ==> lib [gcc_s]
@@ -151,14 +151,14 @@ Parsed C implicit link information from above output:
 Detecting C [-std=c11] compiler features compiled with the following output:
 Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_42666/fast"
-/usr/bin/make -f CMakeFiles/cmTC_42666.dir/build.make CMakeFiles/cmTC_42666.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_6586d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_6586d.dir/build.make CMakeFiles/cmTC_6586d.dir/build
 make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_42666.dir/feature_tests.c.o
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc    -std=c11 -o CMakeFiles/cmTC_42666.dir/feature_tests.c.o   -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.c
-Linking C executable cmTC_42666
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_42666.dir/link.txt --verbose=1
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc       CMakeFiles/cmTC_42666.dir/feature_tests.c.o  -o cmTC_42666 -rdynamic 
+Building C object CMakeFiles/cmTC_6586d.dir/feature_tests.c.o
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc    -std=c11 -o CMakeFiles/cmTC_6586d.dir/feature_tests.c.o   -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_6586d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6586d.dir/link.txt --verbose=1
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc       CMakeFiles/cmTC_6586d.dir/feature_tests.c.o  -o cmTC_6586d -rdynamic 
 make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
 
 
@@ -171,14 +171,14 @@ make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMak
 Detecting C [-std=c99] compiler features compiled with the following output:
 Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_ce042/fast"
-/usr/bin/make -f CMakeFiles/cmTC_ce042.dir/build.make CMakeFiles/cmTC_ce042.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_d6c30/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d6c30.dir/build.make CMakeFiles/cmTC_d6c30.dir/build
 make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_ce042.dir/feature_tests.c.o
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc    -std=c99 -o CMakeFiles/cmTC_ce042.dir/feature_tests.c.o   -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.c
-Linking C executable cmTC_ce042
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ce042.dir/link.txt --verbose=1
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc       CMakeFiles/cmTC_ce042.dir/feature_tests.c.o  -o cmTC_ce042 -rdynamic 
+Building C object CMakeFiles/cmTC_d6c30.dir/feature_tests.c.o
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc    -std=c99 -o CMakeFiles/cmTC_d6c30.dir/feature_tests.c.o   -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_d6c30
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d6c30.dir/link.txt --verbose=1
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc       CMakeFiles/cmTC_d6c30.dir/feature_tests.c.o  -o cmTC_d6c30 -rdynamic 
 make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
 
 
@@ -191,14 +191,14 @@ make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMak
 Detecting C [-std=c90] compiler features compiled with the following output:
 Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_45543/fast"
-/usr/bin/make -f CMakeFiles/cmTC_45543.dir/build.make CMakeFiles/cmTC_45543.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_63510/fast"
+/usr/bin/make -f CMakeFiles/cmTC_63510.dir/build.make CMakeFiles/cmTC_63510.dir/build
 make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_45543.dir/feature_tests.c.o
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc    -std=c90 -o CMakeFiles/cmTC_45543.dir/feature_tests.c.o   -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.c
-Linking C executable cmTC_45543
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_45543.dir/link.txt --verbose=1
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc       CMakeFiles/cmTC_45543.dir/feature_tests.c.o  -o cmTC_45543 -rdynamic 
+Building C object CMakeFiles/cmTC_63510.dir/feature_tests.c.o
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc    -std=c90 -o CMakeFiles/cmTC_63510.dir/feature_tests.c.o   -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_63510
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_63510.dir/link.txt --verbose=1
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc       CMakeFiles/cmTC_63510.dir/feature_tests.c.o  -o cmTC_63510 -rdynamic 
 make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
 
 
@@ -209,28 +209,28 @@ make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMak
 Determining if the CXX compiler works passed with the following output:
 Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_bc37f/fast"
-/usr/bin/make -f CMakeFiles/cmTC_bc37f.dir/build.make CMakeFiles/cmTC_bc37f.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_41498/fast"
+/usr/bin/make -f CMakeFiles/cmTC_41498.dir/build.make CMakeFiles/cmTC_41498.dir/build
 make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_bc37f.dir/testCXXCompiler.cxx.o
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++      -o CMakeFiles/cmTC_bc37f.dir/testCXXCompiler.cxx.o -c /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
-Linking CXX executable cmTC_bc37f
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bc37f.dir/link.txt --verbose=1
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++        CMakeFiles/cmTC_bc37f.dir/testCXXCompiler.cxx.o  -o cmTC_bc37f -rdynamic 
+Building CXX object CMakeFiles/cmTC_41498.dir/testCXXCompiler.cxx.o
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++      -o CMakeFiles/cmTC_41498.dir/testCXXCompiler.cxx.o -c /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_41498
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_41498.dir/link.txt --verbose=1
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++        CMakeFiles/cmTC_41498.dir/testCXXCompiler.cxx.o  -o cmTC_41498 -rdynamic 
 make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_5de85/fast"
-/usr/bin/make -f CMakeFiles/cmTC_5de85.dir/build.make CMakeFiles/cmTC_5de85.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_7b691/fast"
+/usr/bin/make -f CMakeFiles/cmTC_7b691.dir/build.make CMakeFiles/cmTC_7b691.dir/build
 make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_5de85.dir/CMakeCXXCompilerABI.cpp.o
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++      -o CMakeFiles/cmTC_5de85.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.5/Modules/CMakeCXXCompilerABI.cpp
-Linking CXX executable cmTC_5de85
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5de85.dir/link.txt --verbose=1
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++       -v CMakeFiles/cmTC_5de85.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_5de85 -rdynamic  
+Building CXX object CMakeFiles/cmTC_7b691.dir/CMakeCXXCompilerABI.cpp.o
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++      -o CMakeFiles/cmTC_7b691.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.5/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTC_7b691
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7b691.dir/link.txt --verbose=1
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++       -v CMakeFiles/cmTC_7b691.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_7b691 -rdynamic  
 Using built-in specs.
 COLLECT_GCC=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++
 COLLECT_LTO_WRAPPER=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper
@@ -240,8 +240,8 @@ Thread model: posix
 gcc version 4.9.4 (Linaro GCC 4.9-2017.01) 
 COMPILER_PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/bin/
 LIBRARY_PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_5de85' '-rdynamic' '-shared-libgcc' '-march=armv7-a' '-mtune=cortex-a9' '-mfloat-abi=hard' '-mfpu=vfpv3-d16' '-mthumb' '-mtls-dialect=gnu'
- /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/collect2 -plugin /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/liblto_plugin.so -plugin-opt=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper -plugin-opt=-fresolution=/tmp/ccEngXR8.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X -m armelf_linux_eabi -o cmTC_5de85 /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crt1.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crti.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtbegin.o -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4 -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib CMakeFiles/cmTC_5de85.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtend.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7b691' '-rdynamic' '-shared-libgcc' '-march=armv7-a' '-mtune=cortex-a9' '-mfloat-abi=hard' '-mfpu=vfpv3-d16' '-mthumb' '-mtls-dialect=gnu'
+ /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/collect2 -plugin /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/liblto_plugin.so -plugin-opt=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper -plugin-opt=-fresolution=/tmp/cce5OHKP.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X -m armelf_linux_eabi -o cmTC_7b691 /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crt1.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crti.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtbegin.o -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4 -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib CMakeFiles/cmTC_7b691.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtend.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crtn.o
 make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
 
 
@@ -249,14 +249,14 @@ Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_5de85/fast"]
-  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_5de85.dir/build.make CMakeFiles/cmTC_5de85.dir/build]
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_7b691/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_7b691.dir/build.make CMakeFiles/cmTC_7b691.dir/build]
   ignore line: [make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp']
-  ignore line: [Building CXX object CMakeFiles/cmTC_5de85.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++      -o CMakeFiles/cmTC_5de85.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.5/Modules/CMakeCXXCompilerABI.cpp]
-  ignore line: [Linking CXX executable cmTC_5de85]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5de85.dir/link.txt --verbose=1]
-  ignore line: [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++       -v CMakeFiles/cmTC_5de85.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_5de85 -rdynamic  ]
+  ignore line: [Building CXX object CMakeFiles/cmTC_7b691.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++      -o CMakeFiles/cmTC_7b691.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.5/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTC_7b691]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7b691.dir/link.txt --verbose=1]
+  ignore line: [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++       -v CMakeFiles/cmTC_7b691.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_7b691 -rdynamic  ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++]
   ignore line: [COLLECT_LTO_WRAPPER=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper]
@@ -266,13 +266,13 @@ Parsed CXX implicit link information from above output:
   ignore line: [gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ]
   ignore line: [COMPILER_PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/bin/]
   ignore line: [LIBRARY_PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib/:/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_5de85' '-rdynamic' '-shared-libgcc' '-march=armv7-a' '-mtune=cortex-a9' '-mfloat-abi=hard' '-mfpu=vfpv3-d16' '-mthumb' '-mtls-dialect=gnu']
-  link line: [ /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/collect2 -plugin /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/liblto_plugin.so -plugin-opt=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper -plugin-opt=-fresolution=/tmp/ccEngXR8.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X -m armelf_linux_eabi -o cmTC_5de85 /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crt1.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crti.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtbegin.o -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4 -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib CMakeFiles/cmTC_5de85.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtend.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7b691' '-rdynamic' '-shared-libgcc' '-march=armv7-a' '-mtune=cortex-a9' '-mfloat-abi=hard' '-mfpu=vfpv3-d16' '-mthumb' '-mtls-dialect=gnu']
+  link line: [ /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/collect2 -plugin /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/liblto_plugin.so -plugin-opt=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper -plugin-opt=-fresolution=/tmp/cce5OHKP.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X -m armelf_linux_eabi -o cmTC_7b691 /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crt1.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crti.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtbegin.o -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4 -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib -L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib CMakeFiles/cmTC_7b691.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtend.o /apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crtn.o]
     arg [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../libexec/gcc/arm-linux-gnueabihf/4.9.4/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccEngXR8.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/cce5OHKP.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -288,7 +288,7 @@ Parsed CXX implicit link information from above output:
     arg [-m] ==> ignore
     arg [armelf_linux_eabi] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_5de85] ==> ignore
+    arg [cmTC_7b691] ==> ignore
     arg [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crt1.o] ==> ignore
     arg [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib/arm-linux-gnueabihf/crti.o] ==> ignore
     arg [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/crtbegin.o] ==> ignore
@@ -299,7 +299,7 @@ Parsed CXX implicit link information from above output:
     arg [-L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib] ==> dir [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../lib/gcc/arm-linux-gnueabihf/4.9.4/../../../../arm-linux-gnueabihf/lib]
     arg [-L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib] ==> dir [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/lib]
     arg [-L/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib] ==> dir [/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/../arm-linux-gnueabihf/libc/usr/lib]
-    arg [CMakeFiles/cmTC_5de85.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [CMakeFiles/cmTC_7b691.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
     arg [-lstdc++] ==> lib [stdc++]
     arg [-lm] ==> lib [m]
     arg [-lgcc_s] ==> lib [gcc_s]
@@ -330,14 +330,14 @@ Parsed CXX implicit link information from above output:
 Detecting CXX [-std=c++14] compiler features compiled with the following output:
 Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_7839b/fast"
-/usr/bin/make -f CMakeFiles/cmTC_7839b.dir/build.make CMakeFiles/cmTC_7839b.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_d94bf/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d94bf.dir/build.make CMakeFiles/cmTC_d94bf.dir/build
 make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_7839b.dir/feature_tests.cxx.o
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++     -std=c++14 -o CMakeFiles/cmTC_7839b.dir/feature_tests.cxx.o -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_7839b
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7839b.dir/link.txt --verbose=1
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++        CMakeFiles/cmTC_7839b.dir/feature_tests.cxx.o  -o cmTC_7839b -rdynamic 
+Building CXX object CMakeFiles/cmTC_d94bf.dir/feature_tests.cxx.o
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++     -std=c++14 -o CMakeFiles/cmTC_d94bf.dir/feature_tests.cxx.o -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_d94bf
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d94bf.dir/link.txt --verbose=1
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++        CMakeFiles/cmTC_d94bf.dir/feature_tests.cxx.o  -o cmTC_d94bf -rdynamic 
 make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
 
 
@@ -403,14 +403,14 @@ make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMak
 Detecting CXX [-std=c++11] compiler features compiled with the following output:
 Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_adb45/fast"
-/usr/bin/make -f CMakeFiles/cmTC_adb45.dir/build.make CMakeFiles/cmTC_adb45.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_b8b9f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_b8b9f.dir/build.make CMakeFiles/cmTC_b8b9f.dir/build
 make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_adb45.dir/feature_tests.cxx.o
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++     -std=c++11 -o CMakeFiles/cmTC_adb45.dir/feature_tests.cxx.o -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_adb45
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_adb45.dir/link.txt --verbose=1
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++        CMakeFiles/cmTC_adb45.dir/feature_tests.cxx.o  -o cmTC_adb45 -rdynamic 
+Building CXX object CMakeFiles/cmTC_b8b9f.dir/feature_tests.cxx.o
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++     -std=c++11 -o CMakeFiles/cmTC_b8b9f.dir/feature_tests.cxx.o -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_b8b9f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b8b9f.dir/link.txt --verbose=1
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++        CMakeFiles/cmTC_b8b9f.dir/feature_tests.cxx.o  -o cmTC_b8b9f -rdynamic 
 make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
 
 
@@ -476,14 +476,14 @@ make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMak
 Detecting CXX [-std=c++98] compiler features compiled with the following output:
 Change Dir: /home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_56001/fast"
-/usr/bin/make -f CMakeFiles/cmTC_56001.dir/build.make CMakeFiles/cmTC_56001.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_14b39/fast"
+/usr/bin/make -f CMakeFiles/cmTC_14b39.dir/build.make CMakeFiles/cmTC_14b39.dir/build
 make[1]: Entering directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_56001.dir/feature_tests.cxx.o
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++     -std=c++98 -o CMakeFiles/cmTC_56001.dir/feature_tests.cxx.o -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_56001
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_56001.dir/link.txt --verbose=1
-/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++        CMakeFiles/cmTC_56001.dir/feature_tests.cxx.o  -o cmTC_56001 -rdynamic 
+Building CXX object CMakeFiles/cmTC_14b39.dir/feature_tests.cxx.o
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++     -std=c++98 -o CMakeFiles/cmTC_14b39.dir/feature_tests.cxx.o -c /home/odroid/workspace/VIDrone/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_14b39
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_14b39.dir/link.txt --verbose=1
+/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-c++        CMakeFiles/cmTC_14b39.dir/feature_tests.cxx.o  -o cmTC_14b39 -rdynamic 
 make[1]: Leaving directory '/home/odroid/workspace/VIDrone/build/CMakeFiles/CMakeTmp'
 
 
