@@ -123,6 +123,8 @@ void Mavlink_Control::commands() {
                     mode = 2; i++;
                 } else if ( i == 0 && temp == "sleep" ) {
                     mode = 3; i++;
+                } else if ( i == 0 && temp == "gotonedoffset" ){
+                    mode = 4; i++;
                 } else if ( i == 0 && temp == "findgps" ) {
                     while(autopilot_interface->current_messages.gps_raw_int.eph > 120 && autopilot_interface->current_messages.local_position_ned.z > -30){
 
@@ -140,6 +142,8 @@ void Mavlink_Control::commands() {
                             param2 = stod(temp); i++;
                         } else if( i == 3 && mode == 2 ){
                             autopilot_interface->goto_positon_ned(param1,param2,stod(temp));
+                        } else if( i == 3 && mode == 4 ){
+                            autopilot_interface->goto_positon_offset_ned(param1,param2,stod(temp));
                         }
                     }
                 }

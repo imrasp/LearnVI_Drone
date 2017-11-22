@@ -1078,9 +1078,9 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     mavlink_set_position_target_local_ned_t setpoint;
     mavlink_local_position_ned_t cp = current_messages.local_position_ned;
 
-    setpoint.x = cp.x + x;
-    setpoint.y = cp.y + y;
-    setpoint.z = cp.z + z;
+    setpoint.x = x;
+    setpoint.y = y;
+    setpoint.z = z;
     setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_POSITION;
     setpoint.coordinate_frame = MAV_FRAME_LOCAL_NED;
 
@@ -1103,7 +1103,9 @@ void Autopilot_Interface::goto_positon_offset_ned(float x, float y, float z){
     printf("Goto Position\n");
     mavlink_set_position_target_local_ned_t setpoint;
     mavlink_local_position_ned_t cp = current_messages.local_position_ned;
-
+    if (x != 0) setpoint.vx = 0.1;
+    if (y != 0) setpoint.vy = 0.1;
+    if (z != 0) setpoint.vz = 0.1;
     setpoint.x = x;
     setpoint.y = y;
     setpoint.z = z;
@@ -1112,8 +1114,8 @@ void Autopilot_Interface::goto_positon_offset_ned(float x, float y, float z){
 
     update_setpoint(setpoint);
     cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z << " expected " << cp.x+x << " , " << cp.y + y << " , " << cp.z + z << endl;
-    //wait message to update
-//    while( cp.x+x != current_messages.position_target_local_ned.x && cp.y+y != current_messages.position_target_local_ned.y && cp.z+z != current_messages.position_target_local_ned.z){
+    wait message to update
+    while( cp.x+x != current_messages.position_target_local_ned.x && cp.y+y != current_messages.position_target_local_ned.y && cp.z+z != current_messages.position_target_local_ned.z){
         sleep(1);
 //    }
 
