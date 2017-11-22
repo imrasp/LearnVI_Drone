@@ -1,1 +1,0 @@
-/home/rasp/CLionProjects/LearnVI_Drone/CMakeLists.txt.xcompile

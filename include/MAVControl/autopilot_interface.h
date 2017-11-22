@@ -307,7 +307,7 @@ public:
     void updateVisionEstimationPosition(mavlink_vision_position_estimate_t vpe);
     void set_home();
     void goto_positon_ned(float x, float y, float z);
-    void goto_positon__offset_ned(float x, float y, float z);
+    void goto_positon_offset_ned(float x, float y, float z);
     bool IsInWaypointLocal( float radius);
 
 private:

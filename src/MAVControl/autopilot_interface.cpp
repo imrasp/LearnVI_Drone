@@ -414,7 +414,6 @@ read_messages()
         // give the write thread time to use the port
         if ( writing_status > false ) {
             //usleep(100); // look for components of batches at 10kHz
-            usleep(10);
         }
 
     } // end: while not received all
@@ -597,7 +596,7 @@ void
 Autopilot_Interface::
 start()
 {
-    int result;
+    int result, result2;
 
     // --------------------------------------------------------------------------
     //   CHECK SERIAL PORT
@@ -621,7 +620,6 @@ start()
 
     // now we're reading messages
     printf("\n");
-
 
     // --------------------------------------------------------------------------
     //   CHECK FOR MESSAGES
@@ -697,7 +695,6 @@ start()
 
     // we need this before starting the write thread
 
-
     // --------------------------------------------------------------------------
     //   WRITE THREAD
     // --------------------------------------------------------------------------
@@ -712,7 +709,6 @@ start()
 
     // now we're streaming setpoint commands
     printf("\n");
-
 
     // Done!
     return;
@@ -1105,7 +1101,7 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     cout << "reached! \n";
 }
 
-void Autopilot_Interface::goto_positon__offset_ned(float x, float y, float z){
+void Autopilot_Interface::goto_positon_offset_ned(float x, float y, float z){
 
     printf("Goto Position\n");
     mavlink_set_position_target_local_ned_t setpoint;
@@ -1130,7 +1126,6 @@ void Autopilot_Interface::goto_positon__offset_ned(float x, float y, float z){
     }
     cout << "reached! \n";
 }
-
 
 // Request MSG streaming rate
 // param 1 = message ID and param 2 = interval in microseconds
