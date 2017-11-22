@@ -1114,10 +1114,10 @@ void Autopilot_Interface::goto_positon_offset_ned(float x, float y, float z){
 
     update_setpoint(setpoint);
     cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z << " expected " << cp.x+x << " , " << cp.y + y << " , " << cp.z + z << endl;
-    wait message to update
+    //wait message to update
     while( cp.x+x != current_messages.position_target_local_ned.x && cp.y+y != current_messages.position_target_local_ned.y && cp.z+z != current_messages.position_target_local_ned.z){
         sleep(1);
-//    }
+    }
 
     while(!IsInWaypointLocal(0.5)){
         //cout << "current x is " << current_messages.local_position_ned.x << " expect " << current_messages.position_target_local_ned.x << endl;
