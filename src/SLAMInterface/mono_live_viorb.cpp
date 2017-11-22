@@ -234,7 +234,8 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     pitchc = current_pose.ygyro;
     yawc = current_pose.zgyro;
 
-    //cout << "roll pitch yaw : " << rollc << ", " << pitchc << ", " << yawc << endl;
+    //cout << "roll pitch ya
+    // w : " << rollc << ", " << pitchc << ", " << yawc << endl;
     ax = current_pose.xacc;
     ay = current_pose.yacc;
     az = current_pose.zacc;

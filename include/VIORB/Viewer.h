@@ -57,6 +57,8 @@ public:
 
     void Release();
 
+    bool bRunViewer;
+
 private:
 
     bool Stop();
