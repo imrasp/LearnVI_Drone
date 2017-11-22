@@ -1030,9 +1030,9 @@ void Autopilot_Interface::enable_land()
 {
     printf("Mode land\n");
     mavlink_set_position_target_local_ned_t setpoint;
-//    setpoint.vx = 0;
-//    setpoint.vy = 0;
-//    setpoint.vz = 0.5;
+    setpoint.vx = 0;
+    setpoint.vy = 0;
+    setpoint.vz = 0.5;
     setpoint.z = 0.00;
     setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_LAND;
     setpoint.coordinate_frame = MAV_FRAME_LOCAL_NED;
@@ -1043,8 +1043,7 @@ void Autopilot_Interface::enable_land()
     while(0.0 != current_messages.position_target_local_ned.z){
         sleep(0.1);
     }
-    while(current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_ON_GROUND || current_messages.local_position_ned.z < 0.005)
-//    while(current_messages.local_position_ned.z <= -0.05)
+    while(current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_ON_GROUND || current_messages.local_position_ned.z <= -0.005)
     {
         cout << " current landing z is " << current_messages.local_position_ned.z << endl;
         sleep(0.1);
