@@ -1015,7 +1015,7 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
 
     //wait message to update
     while(-height != current_messages.position_target_local_ned.z){
-        cout << "current expected h " << current_messages.position_target_local_ned.z << endl;
+        cout << "want h = " << -height << " current expected h " << current_messages.position_target_local_ned.z << endl;
         sleep(0.1);
     }
 
