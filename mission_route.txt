@@ -1,4 +1,4 @@
 arm 
 takeoff 
-gotoned 10.0 10.0 0.0
+gotooffsetned 10.0 10.0 0.0
 sleep 60
