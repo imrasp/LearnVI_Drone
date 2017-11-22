@@ -1,2 +1,3 @@
+arm 
 takeoff 
 sleep 60
