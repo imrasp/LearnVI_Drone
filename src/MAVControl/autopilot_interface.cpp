@@ -1108,8 +1108,7 @@ void Autopilot_Interface::goto_positon_offset_ned(float x, float y, float z){
     setpoint.x = x;
     setpoint.y = y;
     setpoint.z = z;
-    setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_POSITION &
-                         MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_VELOCITY;
+    setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_POSITION;
     setpoint.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
 
     update_setpoint(setpoint);
