@@ -1102,9 +1102,9 @@ void Autopilot_Interface::goto_positon_offset_ned(float x, float y, float z){
     printf("Goto Position\n");
     mavlink_set_position_target_local_ned_t setpoint;
     mavlink_local_position_ned_t cp = current_messages.local_position_ned;
-    if (x != 0) setpoint.vx = 0.1;
-    if (y != 0) setpoint.vy = 0.1;
-    if (z != 0) setpoint.vz = 0.1;
+    if (x != 0) setpoint.vx = x / fabs(x);
+    if (y != 0) setpoint.vy = y / fabs(y);
+    if (z != 0) setpoint.vz = z / fabs(z);
     setpoint.x = x;
     setpoint.y = y;
     setpoint.z = z;
