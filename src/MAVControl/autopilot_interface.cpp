@@ -1015,10 +1015,9 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
 
     //wait message to update
     while(-height != current_messages.position_target_local_ned.z){
-        cout << "want h = " << sp_target.z << " current expected h " << current_messages.position_target_local_ned.z << endl;
         sleep(1);
     }
-    cout << "after waitting loop want h = " << sp_target.z << " current expected h " << current_messages.position_target_local_ned.z << endl;
+    cout << "after waitting loop want h = " << sp_target.z << " current expected h " << current_messages.position_target_local_ned.z  << " diff to current : " << fabs(current_messages.local_position_ned.z - current_messages.position_target_local_ned.z) << endl;
     while((current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_IN_AIR)
           && ( fabs(current_messages.local_position_ned.z - current_messages.position_target_local_ned.z) < precision_distance ))
     {
