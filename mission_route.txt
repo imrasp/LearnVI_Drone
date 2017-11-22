@@ -1,1 +1,2 @@
+takeoff 
 sleep 60
