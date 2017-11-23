@@ -10,8 +10,8 @@ ssh vgl-gpu1 'cp /home/teera/workspace/rasp/LearnVI_Drone/CMakeLists.txt.xcompil
 rm -rf /tmp/Thirdparty
 ssh vgl-gpu1 'rm -rf /home/odroid/workspace/VIDrone/Thirdparty/g2o/build'
 ssh vgl-gpu1 'rm -rf /home/odroid/workspace/VIDrone/Thirdparty/DBoW2/build'
-rsync -a odroid@$ODROID_IP:/home/odroid/workspace/VIDrone/Thirdparty /tmp/
+rsync -av odroid@$ODROID_IP:/home/odroid/workspace/VIDrone/Thirdparty /tmp/
 rsync -a /tmp/Thirdparty vgl-gpu1:/home/teera/workspace/rasp/LearnVI_Drone/
 ssh vgl-gpu1 '/home/teera/workspace/rasp/run_docker_odroidx_fast.sh'
 rsync -a vgl-gpu1:/home/teera/workspace/rasp/LearnVI_Drone/build/. /home/rasp/CLionProjects/LearnVI_Drone/odroid_build/ && \
-rsync -a /home/rasp/CLionProjects/LearnVI_Drone/odroid_build/. odroid@$ODROID_IP:/home/odroid/workspace/VIDrone/build/
+rsync -a /home/rasp/CLionProjects/LearnVI_Drone/odroid_build/. odroid@$ODROID_IP:/home/odroid/workspace/VIDrone/xbuild/

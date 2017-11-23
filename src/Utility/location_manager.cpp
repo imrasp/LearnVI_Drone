@@ -9,36 +9,31 @@ namespace geodetic_converter {
     static double kSecondEccentricitySquared = 6.73949674228 * 0.001;
     static double kFlattening = 1 / 298.257223563;
 
-    class GeodeticConverter
-    {
+    class GeodeticConverter {
     public:
         Eigen::Matrix3d ecef_to_ned_matrix_;
         Eigen::Matrix3d ned_to_ecef_matrix_;
-        GeodeticConverter()
-        {
+
+        GeodeticConverter() {
             haveReference_ = false;
         }
 
-        ~GeodeticConverter()
-        {
+        ~GeodeticConverter() {
         }
 
         // Default copy constructor and assignment operator are OK.
 
-        bool isInitialised()
-        {
+        bool isInitialised() {
             return haveReference_;
         }
 
-        void getReference(double* latitude, double* longitude, double* altitude)
-        {
+        void getReference(double *latitude, double *longitude, double *altitude) {
             *latitude = initial_latitude_;
             *longitude = initial_longitude_;
             *altitude = initial_altitude_;
         }
 
-        void initialiseReference(const double latitude, const double longitude, const double altitude)
-        {
+        void initialiseReference(const double latitude, const double longitude, const double altitude) {
             // Save NED origin
             initial_latitude_ = deg2Rad(latitude);
             initial_longitude_ = deg2Rad(longitude);
@@ -56,9 +51,8 @@ namespace geodetic_converter {
             haveReference_ = true;
         }
 
-        void geodetic2Ecef(const double latitude, const double longitude, const double altitude, double* x,
-                           double* y, double* z)
-        {
+        void geodetic2Ecef(const double latitude, const double longitude, const double altitude, double *x,
+                           double *y, double *z) {
             // Convert geodetic coordinates to ECEF.
             // http://code.google.com/p/pysatel/source/browse/trunk/coord.py?r=22
             double lat_rad = deg2Rad(latitude);
@@ -69,9 +63,8 @@ namespace geodetic_converter {
             *z = (kSemimajorAxis / xi * (1 - kFirstEccentricitySquared) + altitude) * sin(lat_rad);
         }
 
-        void ecef2Geodetic(const double x, const double y, const double z, double* latitude,
-                           double* longitude, double* altitude)
-        {
+        void ecef2Geodetic(const double x, const double y, const double z, double *latitude,
+                           double *longitude, double *altitude) {
             // Convert ECEF coordinates to geodetic coordinates.
             // J. Zhu, "Conversion of Earth-centered Earth-fixed coordinates
             // to geodetic coordinates," IEEE Transactions on Aerospace and
@@ -98,9 +91,8 @@ namespace geodetic_converter {
             *longitude = rad2Deg(atan2(y, x));
         }
 
-        void ecef2Ned(const double x, const double y, const double z, double* north, double* east,
-                      double* down)
-        {
+        void ecef2Ned(const double x, const double y, const double z, double *north, double *east,
+                      double *down) {
             // Converts ECEF coordinate position into local-tangent-plane NED.
             // Coordinates relative to given ECEF coordinate frame.
 
@@ -114,9 +106,8 @@ namespace geodetic_converter {
             *down = -ret(2);
         }
 
-        void ned2Ecef(const double north, const double east, const double down, double* x, double* y,
-                      double* z)
-        {
+        void ned2Ecef(const double north, const double east, const double down, double *x, double *y,
+                      double *z) {
             // NED (north/east/down) to ECEF coordinates
             Eigen::Vector3d ned, ret;
             ned(0) = north;
@@ -129,17 +120,15 @@ namespace geodetic_converter {
         }
 
         void geodetic2Ned(const double latitude, const double longitude, const double altitude,
-                          double* north, double* east, double* down)
-        {
+                          double *north, double *east, double *down) {
             // Geodetic position to local NED frame
             double x, y, z;
             geodetic2Ecef(latitude, longitude, altitude, &x, &y, &z);
             ecef2Ned(x, y, z, north, east, down);
         }
 
-        void ned2Geodetic(const double north, const double east, const double down, double* latitude,
-                          double* longitude, double* altitude)
-        {
+        void ned2Geodetic(const double north, const double east, const double down, double *latitude,
+                          double *longitude, double *altitude) {
             // Local NED position to geodetic coordinates
             double x, y, z;
             ned2Ecef(north, east, down, &x, &y, &z);
@@ -147,8 +136,7 @@ namespace geodetic_converter {
         }
 
         void geodetic2Enu(const double latitude, const double longitude, const double altitude,
-                          double* east, double* north, double* up)
-        {
+                          double *east, double *north, double *up) {
             // Geodetic position to local ENU frame
             double x, y, z;
             geodetic2Ecef(latitude, longitude, altitude, &x, &y, &z);
@@ -161,9 +149,8 @@ namespace geodetic_converter {
             *up = -aux_down;
         }
 
-        void enu2Geodetic(const double east, const double north, const double up, double* latitude,
-                          double* longitude, double* altitude)
-        {
+        void enu2Geodetic(const double east, const double north, const double up, double *latitude,
+                          double *longitude, double *altitude) {
             // Local ENU position to geodetic coordinates
 
             const double aux_north = north;
@@ -175,8 +162,7 @@ namespace geodetic_converter {
         }
 
     private:
-        inline Eigen::Matrix3d nRe(const double lat_radians, const double lon_radians)
-        {
+        inline Eigen::Matrix3d nRe(const double lat_radians, const double lon_radians) {
             const double sLat = sin(lat_radians);
             const double sLon = sin(lon_radians);
             const double cLat = cos(lat_radians);
@@ -197,14 +183,12 @@ namespace geodetic_converter {
         }
 
         inline
-        double rad2Deg(const double radians)
-        {
+        double rad2Deg(const double radians) {
             return (radians / M_PI) * 180.0;
         }
 
         inline
-        double deg2Rad(const double degrees)
-        {
+        double deg2Rad(const double degrees) {
             return (degrees / 180.0) * M_PI;
         }
 
@@ -226,6 +210,7 @@ namespace geodetic_converter {
 
 using namespace geodetic_converter;
 GeodeticConverter *geodeticConverter;
+
 Location_Manager::~Location_Manager() {}
 
 Location_Manager::Location_Manager(System_Log *system_log_)
@@ -234,23 +219,24 @@ Location_Manager::Location_Manager(System_Log *system_log_)
     bStartSLAM = false;
 }
 
-Location_Manager::Location_Manager(System_Log *system_log_, Mono_Live_VIORB *mono_live_viorb_, Mono_Record_VIORB *mono_record_viorb_)
+Location_Manager::Location_Manager(System_Log *system_log_, Mono_Live_VIORB *mono_live_viorb_,
+                                   Mono_Record_VIORB *mono_record_viorb_)
         : system_log(system_log_), mono_live_viorb(mono_live_viorb_), mono_record_viorb(mono_record_viorb_) {
-    if(mono_live_viorb) bLiveMode = true;
-    if(mono_record_viorb) bRecordMode = true;
+    if (mono_live_viorb) bLiveMode = true;
+    if (mono_record_viorb) bRecordMode = true;
 
     initializePosedata();
 //    estimate_vision_pose = Mat::zeros(3, 3, CV_64F);
     bStartSLAM = false;
-   geodeticConverter = new GeodeticConverter();
+    geodeticConverter = new GeodeticConverter();
     SLAMTrackingStage = -1; // SYSTEM_NOT_READY
 }
 
-void Location_Manager::activateSLAM(){
+void Location_Manager::activateSLAM() {
     bStartSLAM = true;
 }
 
-void Location_Manager::initializePosedata(){
+void Location_Manager::initializePosedata() {
     current_pose.xacc = 0;
     current_pose.yacc = 0;
     current_pose.zacc = 0;
@@ -282,18 +268,18 @@ void Location_Manager::initializePosedata(){
     current_pose.gpszacc = 0;
 
     counter = 0;
-    current_estimate_vision_pose = Mat::zeros(4,4,CV_32F);
+    current_estimate_vision_pose = Mat::zeros(4, 4, CV_32F);
     bisInitialized = false;
     bUpdateGPSPoseToMavlink = false;
-    bUpdateVisionPoseToMavlink = false;
+    bUpdateVisionPoseToMavlink = true;
     bNotFirstEstimatedPose = false;
 }
 
-void Location_Manager::setMavlinkControl(Mavlink_Control *mavlink_control_){
+void Location_Manager::setMavlinkControl(Mavlink_Control *mavlink_control_) {
     mavlink_control = mavlink_control_;
 }
 
-void Location_Manager::setInitialEstimateVisionPose(posedata pose){
+void Location_Manager::setInitialEstimateVisionPose(posedata pose) {
     pEstimatedVisionPose = pose;
 
     double Rxangle = (pEstimatedVisionPose.roll * M_PI) / 180;
@@ -320,27 +306,27 @@ void Location_Manager::setInitialEstimateVisionPose(posedata pose){
             0, 0, -1, 0,
             1, 0, 0, 0,
             0, 0, 0, 1;
-     // Your Transformation IMU to body Matrix
+    // Your Transformation IMU to body Matrix
     Tnb.setIdentity();   // Set to Identity to make bottom row of Matrix 0,0,0,1
-    Tnb.block(0,0,3,3) << Rt;
+    Tnb.block(0, 0, 3, 3) << Rt;
     Tnb.rightCols(1) << T;
 
 }
 
-void Location_Manager::setEstimatedVisionPose(Mat pose,posedata apose){
+void Location_Manager::setEstimatedVisionPose(Mat pose, posedata apose) {
 
     //Pose Matrices
     Eigen::Matrix3d mRcw;
-    mRcw << pose.at<double>(0,0), pose.at<double>(0,1), pose.at<double>(0,2),
-            pose.at<double>(1,0), pose.at<double>(1,1), pose.at<double>(1,2),
-            pose.at<double>(2,0), pose.at<double>(2,1), pose.at<double>(2,2);
+    mRcw << pose.at<double>(0, 0), pose.at<double>(0, 1), pose.at<double>(0, 2),
+            pose.at<double>(1, 0), pose.at<double>(1, 1), pose.at<double>(1, 2),
+            pose.at<double>(2, 0), pose.at<double>(2, 1), pose.at<double>(2, 2);
     Eigen::Matrix3d mRwc = mRcw.transpose();
     Eigen::Vector3d mtcw;
-    mtcw << pose.at<double>(0,3), pose.at<double>(1,3), pose.at<double>(2,3);
+    mtcw << pose.at<double>(0, 3), pose.at<double>(1, 3), pose.at<double>(2, 3);
     // position in camera coordinate (z:forward x:left y:down)
-    Eigen::Vector3d mOw = -mRcw.transpose()*mtcw;
+    Eigen::Vector3d mOw = -mRcw.transpose() * mtcw;
     Eigen::Vector4d mOw4d;
-     mOw4d << mOw, 1;
+    mOw4d << mOw, 1;
 
     float roll, pitch, yaw;
 
@@ -351,32 +337,34 @@ void Location_Manager::setEstimatedVisionPose(Mat pose,posedata apose){
     Eigen::Vector4d pNED = Tnb * pIMU;
 
     // update scale via gps
-    if(apose.gpstime - apose.highres_imu_time <= 200) {
+    if (apose.gpstime - apose.highres_imu_time <= 200) {
         dScaleX = apose.gpsx / pNED(1);
         dScaleY = apose.gpsy / pNED(2);
         dScaleZ = apose.gpsz / pNED(3);
     }
 
     system_log->write2visionEstimatePositionLog(pose);
-    system_log->write2visionEstimate2IMULog(pNED(0)*dScaleX,pNED(1)*dScaleY,pNED(2)*dScaleZ);
-        if(bUpdateVisionPoseToMavlink) {
-            mavlink_control->setVisionEstimatedPosition(pNED(0)*dScaleX,pNED(1)*dScaleY,pNED(2)*dScaleZ, 0, 0, 0 , pEstimatedVisionPose.highres_imu_time);
-        }
+    system_log->write2visionEstimate2IMULog(pNED(0) * dScaleX, pNED(1) * dScaleY, pNED(2) * dScaleZ);
+    if (bUpdateVisionPoseToMavlink) {
+        mavlink_control->setVisionEstimatedPosition(pNED(0) * dScaleX, pNED(1) * dScaleY, pNED(2) * dScaleZ, 0, 0, 0,
+                                                    pEstimatedVisionPose.highres_imu_time);
+    }
 
 }
-void Location_Manager::setUpdateVisionPoseToMavlink(bool update){
+
+void Location_Manager::setUpdateVisionPoseToMavlink(bool update) {
     bUpdateVisionPoseToMavlink = update;
 }
 
-bool Location_Manager::getUpdateVisionPoseToMavlink(){
+bool Location_Manager::getUpdateVisionPoseToMavlink() {
     return bUpdateVisionPoseToMavlink;
 }
 
-void Location_Manager::setUpdateGPSPoseToMavlink(bool update){
+void Location_Manager::setUpdateGPSPoseToMavlink(bool update) {
     bUpdateGPSPoseToMavlink = update;
 }
 
-bool Location_Manager::getUpdateGPSPoseToMavlink(){
+bool Location_Manager::getUpdateGPSPoseToMavlink() {
     return bUpdateGPSPoseToMavlink;
 }
 
@@ -394,10 +382,9 @@ void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
 
     //cout << "HIGHRES_IMU (accel): " << highres_imu.xacc << ", " << highres_imu.yacc << ", " << highres_imu.zacc << endl;
 //    cout << "HIGHRES_IMU (gyro2): " << current_pose.xgyro << ", " << current_pose.ygyro << ", " << current_pose.zgyro << endl;
-    if(bStartSLAM)
-    {
-        if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
-        if(mono_record_viorb) mono_record_viorb->getPoseData("highres_imu", current_pose);
+    if (bStartSLAM) {
+        if (mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
+        if (mono_record_viorb) mono_record_viorb->getPoseData("highres_imu", current_pose);
     }
 
 }
@@ -408,10 +395,9 @@ void Location_Manager::setPose(mavlink_attitude_t attitude) {
     current_pose.yaw = attitude.yaw;
     current_pose.attitude_time = attitude.time_boot_ms;
 
-    if(bStartSLAM)
-    {
+    if (bStartSLAM) {
         //if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
-        if(mono_record_viorb) mono_record_viorb->getPoseData("attitude",current_pose);
+        if (mono_record_viorb) mono_record_viorb->getPoseData("attitude", current_pose);
     }
 }
 
@@ -426,17 +412,19 @@ void Location_Manager::setPose(mavlink_global_position_int_t global_pos) {
     current_pose.gpstime = global_pos.time_boot_ms;
 
     // initialize 1st gps position with ned
-    if(!geodeticConverter->isInitialised()){
-        if(current_pose.x != 0){
+    if (!geodeticConverter->isInitialised()) {
+        if (current_pose.x != 0) {
             init_nedx = current_pose.x;
             init_nedy = current_pose.y;
             init_nedz = current_pose.z;
-            geodeticConverter->initialiseReference(global_pos.lat/10e7, global_pos.lon/10e7, global_pos.lat/10e7 - global_pos.lat/10e7);
+            geodeticConverter->initialiseReference(global_pos.lat / 10e7, global_pos.lon / 10e7,
+                                                   global_pos.lat / 10e7 - global_pos.lat / 10e7);
         }
 
-    }
-    else {
-        geodeticConverter->geodetic2Ned(global_pos.lat/10e7, global_pos.lon/10e7, global_pos.lat/10e7 - global_pos.lat/10e7, &current_pose.gpsx, &current_pose.gpsy, &current_pose.gpsz);
+    } else {
+        geodeticConverter->geodetic2Ned(global_pos.lat / 10e7, global_pos.lon / 10e7,
+                                        global_pos.lat / 10e7 - global_pos.lat / 10e7, &current_pose.gpsx,
+                                        &current_pose.gpsy, &current_pose.gpsz);
 
         current_pose.gpsx = current_pose.gpsx + init_nedx;
         current_pose.gpsy = current_pose.gpsy + init_nedy;
@@ -445,8 +433,9 @@ void Location_Manager::setPose(mavlink_global_position_int_t global_pos) {
         current_pose.yaw = (global_pos.hdg * M_PI) / 180;
 
         //update to mavlink
-        if(bUpdateGPSPoseToMavlink){
-            mavlink_control->setVisionEstimatedPosition(current_pose.gpsx,current_pose.gpsy,current_pose.gpsz, 0, 0, 0 , global_pos.time_boot_ms*1000);
+        if (bUpdateGPSPoseToMavlink) {
+            mavlink_control->setVisionEstimatedPosition(current_pose.gpsx, current_pose.gpsy, current_pose.gpsz, 0, 0,
+                                                        0, global_pos.time_boot_ms * 1000);
         }
 
         double dx = current_pose.x - current_pose.gpsx; //cout << "dx : " << dx <<endl;
@@ -456,25 +445,38 @@ void Location_Manager::setPose(mavlink_global_position_int_t global_pos) {
         //cout << "DRMS error : "  << sqrt(dx*dx + dy*dy + dz*dz) << endl;
         //cout << "99% SphericalAccuracyStandard error : "  << 1.122*( dx + dy + dz ) << endl;
 
-        if (bisInitialized){
+        if (bisInitialized) {
             Mat result = geodetic2NED(global_pos);
             double dx_original = current_pose.x - result.at<float>(0); //cout << "dx_original : " << dx_original <<endl;
             double dy_original = current_pose.y - result.at<float>(1); //cout << "dy_original : " << dy_original <<endl;
             double dz_original = current_pose.z - result.at<float>(2); //cout << "dz_original : " << dz_original <<endl;
 
-            system_log->write2origps(current_pose.nedtime, current_pose.x, current_pose.y, current_pose.z, current_pose.gpstime, current_pose.lat, current_pose.lon, current_pose.alt, current_pose.gpsx, current_pose.gpsy, current_pose.gpsz, sqrt(dx_original*dx_original + dy_original*dy_original + dz_original*dz_original), 1.122*( dx_original + dy_original + dz_original ));
+            system_log->write2origps(current_pose.nedtime, current_pose.x, current_pose.y, current_pose.z,
+                                     current_pose.gpstime, current_pose.lat, current_pose.lon, current_pose.alt,
+                                     current_pose.gpsx, current_pose.gpsy, current_pose.gpsz,
+                                     sqrt(dx_original * dx_original + dy_original * dy_original +
+                                          dz_original * dz_original),
+                                     1.122 * (dx_original + dy_original + dz_original));
         }
 
-        system_log->write2gps(current_pose.nedtime, current_pose.x, current_pose.y, current_pose.z, current_pose.gpstime, current_pose.lat, current_pose.lon, current_pose.alt, current_pose.gpsx, current_pose.gpsy, current_pose.gpsz, sqrt(dx*dx + dy*dy + dz*dz), 1.122*( dx + dy + dz ));
+        system_log->write2gps(current_pose.nedtime, current_pose.x, current_pose.y, current_pose.z,
+                              current_pose.gpstime, current_pose.lat, current_pose.lon, current_pose.alt,
+                              current_pose.gpsx, current_pose.gpsy, current_pose.gpsz,
+                              sqrt(dx * dx + dy * dy + dz * dz), 1.122 * (dx + dy + dz));
 
-        system_log->write2gpsaccsample(current_pose.nedtime, current_pose.x, current_pose.y, current_pose.z, current_pose.vx, current_pose.vy, current_pose.vz, current_pose.gpstime, current_pose.lat, current_pose.lon, current_pose.alt, current_pose.gpsvx, current_pose.gpsvy, current_pose.gpsvz, current_pose.highres_imu_time, current_pose.xacc, current_pose.yacc, current_pose.zacc, current_pose.xgyro, current_pose.ygyro, current_pose.zgyro, current_pose.attitude_time, current_pose.roll, current_pose.pitch, current_pose.yaw);
+        system_log->write2gpsaccsample(current_pose.nedtime, current_pose.x, current_pose.y, current_pose.z,
+                                       current_pose.vx, current_pose.vy, current_pose.vz, current_pose.gpstime,
+                                       current_pose.lat, current_pose.lon, current_pose.alt, current_pose.gpsvx,
+                                       current_pose.gpsvy, current_pose.gpsvz, current_pose.highres_imu_time,
+                                       current_pose.xacc, current_pose.yacc, current_pose.zacc, current_pose.xgyro,
+                                       current_pose.ygyro, current_pose.zgyro, current_pose.attitude_time,
+                                       current_pose.roll, current_pose.pitch, current_pose.yaw);
 
     }
 
-    if(bStartSLAM)
-    {
+    if (bStartSLAM) {
         //if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
-        if(mono_record_viorb) mono_record_viorb->getPoseData("global_position_int", current_pose);
+        if (mono_record_viorb) mono_record_viorb->getPoseData("global_position_int", current_pose);
     }
 
 }
@@ -488,10 +490,9 @@ void Location_Manager::setPose(mavlink_local_position_ned_t local_pos) {
     current_pose.vz = local_pos.vz;
     current_pose.nedtime = local_pos.time_boot_ms;
 
-    if(bStartSLAM)
-    {
+    if (bStartSLAM) {
         //if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
-        if(mono_record_viorb) mono_record_viorb->getPoseData("local_position_ned", current_pose);
+        if (mono_record_viorb) mono_record_viorb->getPoseData("local_position_ned", current_pose);
     }
 }
 
@@ -499,18 +500,18 @@ void Location_Manager::setPose(mavlink_gps_raw_int_t gps_raw) {
     current_pose.satellites_visible = gps_raw.satellites_visible;
     current_pose.hdop = gps_raw.eph;
 
-    if(bStartSLAM)
-    {
+    if (bStartSLAM) {
         //if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
-        if(mono_record_viorb) mono_record_viorb->getPoseData("gps_raw_int", current_pose);
+        if (mono_record_viorb) mono_record_viorb->getPoseData("gps_raw_int", current_pose);
     }
 }
 
-bool Location_Manager::isInitialized(){
+bool Location_Manager::isInitialized() {
     return bisInitialized;
 }
 
-void Location_Manager::initialize_coordinate(mavlink_global_position_int_t global_pos, mavlink_local_position_ned_t local_pos) {
+void Location_Manager::initialize_coordinate(mavlink_global_position_int_t global_pos,
+                                             mavlink_local_position_ned_t local_pos) {
     init_local_position = local_pos;
     init_global_position = global_pos;
     bisInitialized = true;
@@ -557,18 +558,18 @@ float radians2degrees(float radians) {
     return (radians * 180) / M_PI;
 }
 
-void Location_Manager::setSLAMTrackingStage(int stage){
+void Location_Manager::setSLAMTrackingStage(int stage) {
     SLAMTrackingStage = stage;
 }
 
-int Location_Manager::getSALMTrackingStage(){
+int Location_Manager::getSALMTrackingStage() {
     return SLAMTrackingStage;
 }
 
 //https://github.com/mavlink/c_library_v1/blob/master/mavlink_conversions.h
-void Location_Manager::getRotationTranslation(Mat mtransformation, float *roll, float *pitch, float *yaw){
-    float a[3][3] = {mtransformation.at<float>(0,0) , mtransformation.at<float>(0,1), mtransformation.at<float>(0,2),
-                     mtransformation.at<float>(1,0) , mtransformation.at<float>(1,1), mtransformation.at<float>(1,2),
-                     mtransformation.at<float>(2,0) , mtransformation.at<float>(2,1), mtransformation.at<float>(2,2)};
+void Location_Manager::getRotationTranslation(Mat mtransformation, float *roll, float *pitch, float *yaw) {
+    float a[3][3] = {mtransformation.at<float>(0, 0), mtransformation.at<float>(0, 1), mtransformation.at<float>(0, 2),
+                     mtransformation.at<float>(1, 0), mtransformation.at<float>(1, 1), mtransformation.at<float>(1, 2),
+                     mtransformation.at<float>(2, 0), mtransformation.at<float>(2, 1), mtransformation.at<float>(2, 2)};
     mavlink_dcm_to_euler(a, roll, pitch, yaw);
 }

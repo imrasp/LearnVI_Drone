@@ -24,6 +24,10 @@ void Mono_Live_VIORB::setLocationManager(Location_Manager *location_manager_) {
 }
 
 void Mono_Live_VIORB::start(char *&vocabulary, char *&setting) {
+    findCamera();
+    cout << "Start Camera thread..." << endl;
+    boost::thread threadCamera = boost::thread(&Mono_Live_VIORB::cameraLoop, this);
+
     cout << "Starting SLAM..." << endl;
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
@@ -33,9 +37,7 @@ void Mono_Live_VIORB::start(char *&vocabulary, char *&setting) {
     imageMsgDelaySec = config->GetImageDelayToIMU();
     // ORBVIO::MsgSynchronizer msgsync(imageMsgDelaySec);
     bAccMultiply98 = config->GetAccMultiply9p8();
-    findCamera();
-    cout << "Start Camera thread..." << endl;
-    boost::thread threadCamera = boost::thread(&Mono_Live_VIORB::cameraLoop, this);
+
 
     cout << "Start SLAM thread..." << endl;
     boost::thread threadSLAM = boost::thread(&Mono_Live_VIORB::grabFrameData, this);
