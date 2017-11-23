@@ -78,8 +78,8 @@ void Mono_Live_VIORB::grabFrameData() {
 
         frameDiff = 0;
 
-        //if (!getFirstFrame)
-        if(matFrameForwardLast.rows < 0 )
+//        if (!getFirstFrame)
+        if(matFrameForwardLast.rows <= 0 || matFrameForwardLast.cols <= 0 )
             continue;
         else
             frameDiff = frameDifference(matFrameForward, matFrameForwardLast);
