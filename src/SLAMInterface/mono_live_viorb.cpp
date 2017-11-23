@@ -39,6 +39,7 @@ void Mono_Live_VIORB::start(char *&vocabulary, char *&setting) {
 
     cout << "Start SLAM thread..." << endl;
     boost::thread threadSLAM = boost::thread(&Mono_Live_VIORB::grabFrameData, this);
+    displayAndChange(threadSLAM);
 
 }
 
@@ -252,4 +253,46 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
 
 int Mono_Live_VIORB::getTrackingStage() {
     return SLAM->getTrackingStage();
+}
+
+void displayAndChange(boost::thread& daThread)
+{
+    int retcode;
+    int policy;
+
+    pthread_t threadID = (pthread_t) daThread.native_handle();
+
+    struct sched_param param;
+
+    if ((retcode = pthread_getschedparam(threadID, &policy, &param)) != 0)
+    {
+        errno = retcode;
+        perror("pthread_getschedparam");
+        exit(EXIT_FAILURE);
+    }
+
+    std::cout << "INHERITED: ";
+    std::cout << "policy=" << ((policy == SCHED_FIFO)  ? "SCHED_FIFO" :
+                               (policy == SCHED_RR)    ? "SCHED_RR" :
+                               (policy == SCHED_OTHER) ? "SCHED_OTHER" :
+                               "???")
+              << ", priority=" << param.sched_priority << std::endl;
+
+
+    policy = SCHED_FIFO;
+    param.sched_priority = 4;
+
+    if ((retcode = pthread_setschedparam(threadID, policy, &param)) != 0)
+    {
+        errno = retcode;
+        perror("pthread_setschedparam");
+        exit(EXIT_FAILURE);
+    }
+
+    std::cout << "  CHANGED: ";
+    std::cout << "policy=" << ((policy == SCHED_FIFO)  ? "SCHED_FIFO" :
+                               (policy == SCHED_RR)    ? "SCHED_RR" :
+                               (policy == SCHED_OTHER) ? "SCHED_OTHER" :
+                               "???")
+              << ", priority=" << param.sched_priority << std::endl;
 }

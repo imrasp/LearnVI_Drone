@@ -15,6 +15,8 @@
 #include "VIORB/IMU/imudata.h"
 #include "VIORB/IMU/configparam.h"
 
+void displayAndChange(boost::thread& daThread);
+
 class Location_Manager;
 
 typedef struct posedata {
