@@ -1,2 +1,4 @@
-sleep 60
+arm
+takeoff
+disarm
 
