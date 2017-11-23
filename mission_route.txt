@@ -1,4 +1,2 @@
-arm 
 sleep 60
-disarm
 
