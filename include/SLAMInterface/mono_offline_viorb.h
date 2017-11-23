@@ -57,7 +57,7 @@ private:
     double frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious);
 
     void getIMUdata();
-    std::vector<ORB_SLAM2::IMUData> vimuData;
+    ORB_SLAM2::IMUData::vector_t vimuData;
     void resetvIMUdata();
 
     void calAvgProcessingTime(double time);

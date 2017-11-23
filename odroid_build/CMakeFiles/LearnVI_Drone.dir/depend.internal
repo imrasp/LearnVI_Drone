@@ -5948,6 +5948,7 @@ CMakeFiles/LearnVI_Drone.dir/src/VIORB/IMU/imudata.cpp.o
  /usr/local/include/eigen3/Eigen/LU
  /usr/local/include/eigen3/Eigen/QR
  /usr/local/include/eigen3/Eigen/SVD
+ /usr/local/include/eigen3/Eigen/StdVector
  /usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h
  /usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h
  /usr/local/include/eigen3/Eigen/src/Cholesky/LLT_MKL.h
@@ -6129,6 +6130,8 @@ CMakeFiles/LearnVI_Drone.dir/src/VIORB/IMU/imudata.cpp.o
  /usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD.h
  /usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD_MKL.h
  /usr/local/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h
+ /usr/local/include/eigen3/Eigen/src/StlSupport/StdVector.h
+ /usr/local/include/eigen3/Eigen/src/StlSupport/details.h
  /usr/local/include/eigen3/Eigen/src/misc/Image.h
  /usr/local/include/eigen3/Eigen/src/misc/Kernel.h
  /usr/local/include/eigen3/Eigen/src/misc/Solve.h

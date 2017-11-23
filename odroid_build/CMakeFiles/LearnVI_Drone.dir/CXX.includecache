@@ -829,6 +829,8 @@ VIORB/IMU/NavState.h
 -
 VIORB/IMU/IMUPreintegrator.h
 -
+Eigen/StdVector
+-
 
 ../include/VIORB/FrameDrawer.h
 Tracking.h
@@ -846,6 +848,8 @@ mutex
 
 ../include/VIORB/IMU/IMUPreintegrator.h
 Eigen/Dense
+-
+Eigen/StdVector
 -
 VIORB/IMU/imudata.h
 ../include/VIORB/IMU/VIORB/IMU/imudata.h
@@ -885,6 +889,10 @@ g2o/g2o/types/types_six_dof_expmap.h
 ../include/VIORB/IMU/imudata.h
 Eigen/Dense
 -
+Eigen/StdVector
+-
+vector
+-
 
 ../include/VIORB/IMU/so3.h
 Eigen/Core
@@ -923,6 +931,8 @@ IMU/NavState.h
 ../include/VIORB/IMU/NavState.h
 IMU/IMUPreintegrator.h
 ../include/VIORB/IMU/IMUPreintegrator.h
+Eigen/StdVector
+-
 
 ../include/VIORB/KeyFrameDatabase.h
 vector
@@ -1053,6 +1063,8 @@ Frame.h
 ../include/VIORB/Frame.h
 g2o/g2o/types/types_seven_dof_expmap.h
 ../include/VIORB/g2o/g2o/types/types_seven_dof_expmap.h
+Eigen/StdVector
+-
 
 ../include/VIORB/PnPsolver.h
 opencv2/core/core.hpp
@@ -1132,6 +1144,8 @@ IMU/imudata.h
 IMU/configparam.h
 ../include/VIORB/IMU/configparam.h
 mutex
+-
+Eigen/StdVector
 -
 
 ../include/VIORB/Viewer.h
@@ -1881,6 +1895,8 @@ mutex
 -
 VIORB/Converter.h
 /home/odroid/workspace/VIDrone/src/VIORB/VIORB/Converter.h
+Eigen/StdVector
+-
 
 /home/odroid/workspace/VIDrone/src/VIORB/LoopClosing.cc
 VIORB/LoopClosing.h

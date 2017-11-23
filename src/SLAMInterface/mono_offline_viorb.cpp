@@ -56,7 +56,7 @@ cout << "Starting Offline SLAM..." << endl;
     size_t pos = 0;
     string token;
     int splitpos, splitframepos;
-    std::vector<ORB_SLAM2::IMUData> vimuData;
+    ORB_SLAM2::IMUData::vector_t vimuData;
 
     while ( frame.good() ) {
         //calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
@@ -178,7 +178,7 @@ void Mono_Offline_VIORB::grabFrameData()
     int fno = 1, countimu;
     Mat matFrameForward;
     double roll,pitch,yaw,ax,ay,az,timestamp, ftimestamp, previousroll;
-    std::vector<ORB_SLAM2::IMUData> vimuData;
+    ORB_SLAM2::IMUData::vector_t vimuData;
 
     ifstream imufile ("../sample_data/"+foldername+"/imulog.txt");
     ifstream framefile ("../sample_data/"+foldername+"/tframe.txt");
