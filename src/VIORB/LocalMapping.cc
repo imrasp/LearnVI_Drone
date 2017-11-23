@@ -174,8 +174,8 @@ void LocalMapping::VINSInitThread()
                 bool tmpbool = TryInitVIO();
                 if(tmpbool)
                 {
-                    //SetFirstVINSInited(true);
-                    //SetVINSInited(true);
+                    SetFirstVINSInited(true);
+                    SetVINSInited(true);
                     break;
                 }
             }
