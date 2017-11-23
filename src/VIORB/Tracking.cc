@@ -2070,15 +2070,15 @@ bool Tracking::Relocalization()
 
 void Tracking::Reset()
 {
-    if(mpViewer->bRunViewer) {
+//    if(mpViewer->bRunViewer) {
         mpViewer->RequestStop();
 
         cout << "System Reseting" << endl;
         while (!mpViewer->isStopped()) {
-            cout << "mpViewer stop?" << mpViewer->isStopped() << endl;
+//            cout << "mpViewer stop?" << mpViewer->isStopped() << endl;
             usleep(3000);
         }
-    }
+//    }
     // Reset Local Mapping
     cout << "Reseting Local Mapper...";
     mpLocalMapper->RequestReset();
