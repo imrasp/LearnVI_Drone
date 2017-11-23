@@ -215,11 +215,23 @@ OpenCV_LIB_DIR_OPT:PATH=
 //The directory containing a CMake configuration file for Pangolin.
 Pangolin_DIR:PATH=/usr/local/lib/cmake/Pangolin
 
+//The directory containing a CMake configuration file for Qt5Concurrent.
+Qt5Concurrent_DIR:PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/lib/arm-linux-gnueabihf/cmake/Qt5Concurrent
+
 //The directory containing a CMake configuration file for Qt5Core.
 Qt5Core_DIR:PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/lib/arm-linux-gnueabihf/cmake/Qt5Core
 
 //The directory containing a CMake configuration file for Qt5Gui.
 Qt5Gui_DIR:PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/lib/arm-linux-gnueabihf/cmake/Qt5Gui
+
+//The directory containing a CMake configuration file for Qt5OpenGL.
+Qt5OpenGL_DIR:PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/lib/arm-linux-gnueabihf/cmake/Qt5OpenGL
+
+//The directory containing a CMake configuration file for Qt5Test.
+Qt5Test_DIR:PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/lib/arm-linux-gnueabihf/cmake/Qt5Test
+
+//The directory containing a CMake configuration file for Qt5Widgets.
+Qt5Widgets_DIR:PATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/lib/arm-linux-gnueabihf/cmake/Qt5Widgets
 
 //Path to a library.
 SUITESPARSECONFIG_LIBRARY:FILEPATH=/apps/gcc-linaro-toolchain/4.9.4/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/lib/arm-linux-gnueabihf/libsuitesparseconfig.a
