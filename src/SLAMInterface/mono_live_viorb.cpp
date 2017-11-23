@@ -39,7 +39,7 @@ void Mono_Live_VIORB::start(char *&vocabulary, char *&setting) {
 
     cout << "Start SLAM thread..." << endl;
     boost::thread threadSLAM = boost::thread(&Mono_Live_VIORB::grabFrameData, this);
-    displayAndChange(threadSLAM);
+//    displayAndChange(threadSLAM);
 
 }
 
