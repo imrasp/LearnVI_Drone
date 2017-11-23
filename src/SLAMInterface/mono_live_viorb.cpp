@@ -106,7 +106,7 @@ void Mono_Live_VIORB::grabFrameData() {
                 if(trackingStage == 1){
                     location_manager->setInitialEstimateVisionPose(initial_slam_pose);
                 } else if (trackingStage == 2){
-                    location_manager->setEstimatedVisionPose(vision_estimated_pose,initial_slam_pose.highres_imu_time);
+                    location_manager->setEstimatedVisionPose(vision_estimated_pose,initial_slam_pose);
                 }
                 system_log->write2txt("Estimated_Position (SLAM Frame " + to_string(ni) + "(" + to_string(camFrame) + ")) ", vision_estimated_pose);
                 system_log->write2visionEstimatePositionLog(vision_estimated_pose);

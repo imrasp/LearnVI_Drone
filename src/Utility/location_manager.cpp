@@ -327,11 +327,7 @@ void Location_Manager::setInitialEstimateVisionPose(posedata pose){
 
 }
 
-//void Location_Manager::updateScaleSLAMtoNED(){
-//
-//}
-
-void Location_Manager::setEstimatedVisionPose(Mat pose,float ms){
+void Location_Manager::setEstimatedVisionPose(Mat pose,posedata apose){
 
     //Pose Matrices
     Eigen::Matrix3d mRcw;
@@ -354,10 +350,17 @@ void Location_Manager::setEstimatedVisionPose(Mat pose,float ms){
     Eigen::Vector4d pIMU = Tbc * mOw4d;
     Eigen::Vector4d pNED = Tnb * pIMU;
 
+    // update scale via gps
+    if(apose.gpstime - apose.highres_imu_time <= 200) {
+        dScaleX = apose.gpsx / pNED(1);
+        dScaleY = apose.gpsy / pNED(2);
+        dScaleZ = apose.gpsz / pNED(3);
+    }
+
     system_log->write2visionEstimatePositionLog(pose);
-    system_log->write2visionEstimate2IMULog(pNED(0),pNED(1),pNED(2));
+    system_log->write2visionEstimate2IMULog(pNED(0)*dScaleX,pNED(1)*dScaleY,pNED(2)*dScaleZ);
         if(bUpdateVisionPoseToMavlink) {
-            mavlink_control->setVisionEstimatedPosition(pNED(0),pNED(1),pNED(2), 0, 0, 0 , pEstimatedVisionPose.highres_imu_time);
+            mavlink_control->setVisionEstimatedPosition(pNED(0)*dScaleX,pNED(1)*dScaleY,pNED(2)*dScaleZ, 0, 0, 0 , pEstimatedVisionPose.highres_imu_time);
         }
 
 }

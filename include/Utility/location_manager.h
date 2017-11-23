@@ -45,7 +45,7 @@ public:
     void activateSLAM();
 
     void setInitialEstimateVisionPose(posedata pose);
-    void setEstimatedVisionPose(Mat pose,float ms);
+    void setEstimatedVisionPose(Mat pose,posedata apose);
     void setUpdateVisionPoseToMavlink(bool update);
     bool getUpdateVisionPoseToMavlink();
     void setUpdateGPSPoseToMavlink(bool update);
@@ -82,7 +82,7 @@ private:
     void getRotationTranslation(Mat mtransformation, float *roll, float *pitch, float *yaw);
 
     int counter;
-
+double dScaleX, dScaleY,dScaleZ;
     //Transformation from camera to ned
     Eigen::Matrix4d Tnb, Tbc;
 
