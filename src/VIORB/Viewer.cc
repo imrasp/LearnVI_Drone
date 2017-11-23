@@ -183,10 +183,8 @@ namespace ORB_SLAM2 {
 
     void Viewer::RequestStop_no_view() {
         unique_lock<mutex> lock(mMutexStop);
-        if (!mbStopped) {
-            mbStopRequested = true;
-        }
-        Stop();
+        mbStopped = true;
+        mbStopRequested = false;
     }
 
     bool Viewer::isStopped() {

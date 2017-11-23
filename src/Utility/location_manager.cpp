@@ -327,6 +327,10 @@ void Location_Manager::setInitialEstimateVisionPose(posedata pose){
 
 }
 
+//void Location_Manager::updateScaleSLAMtoNED(){
+//
+//}
+
 void Location_Manager::setEstimatedVisionPose(Mat pose,float ms){
 
     //Pose Matrices
