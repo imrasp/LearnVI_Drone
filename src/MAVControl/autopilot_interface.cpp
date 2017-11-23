@@ -1004,9 +1004,9 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
     printf("Mode TAKEOFF\n");
     float precision_distance = 0.1; // [m]
     mavlink_set_position_target_local_ned_t sp_target;
-//    sp_target.vx = 0;
-//    sp_target.vy = 0;
-//    sp_target.vz = -velocity;
+    sp_target.vx = 0;
+    sp_target.vy = 0;
+    sp_target.vz = -velocity;
     sp_target.z = -height;
     sp_target.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_TAKEOFF;
     sp_target.coordinate_frame = MAV_FRAME_LOCAL_NED;
@@ -1077,16 +1077,16 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     mavlink_set_position_target_local_ned_t setpoint;
     mavlink_local_position_ned_t cp = current_messages.local_position_ned;
 
-    setpoint.x = x;
-    setpoint.y = y;
-    setpoint.z = z;
+    setpoint.x = cp.x+x;
+    setpoint.y = cp.y+y;
+    setpoint.z = cp.z+z;
     setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_POSITION;
     setpoint.coordinate_frame = MAV_FRAME_LOCAL_NED;
 
     update_setpoint(setpoint);
     cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z << " expected " << cp.x+x << " , " << cp.y + y << " , " << cp.z + z << endl;
     //wait message to update
-    while( x != current_messages.position_target_local_ned.x && y != current_messages.position_target_local_ned.y && z != current_messages.position_target_local_ned.z){
+    while(cp.x+x != current_messages.position_target_local_ned.x && cp.y+y != current_messages.position_target_local_ned.y && cp.z+z != current_messages.position_target_local_ned.z){
         sleep(0.1);
     }
 
