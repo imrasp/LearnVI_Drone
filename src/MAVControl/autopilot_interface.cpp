@@ -1009,7 +1009,7 @@ void Autopilot_Interface::enable_takeoff(float height,float velocity)
     sp_target.vz = -velocity;
     sp_target.z = -height;
     sp_target.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_TAKEOFF;
-    sp_target.coordinate_frame = MAV_FRAME_LOCAL_NED;
+    sp_target.coordinate_frame = MAV_FRAME_LOCAL_OFFSET_NED;
 
     update_setpoint(sp_target);
 
@@ -1041,12 +1041,12 @@ void Autopilot_Interface::enable_land()
 
     //wait message to update
     while(0.0 != current_messages.position_target_local_ned.z){
-        sleep(0.1);
+        sleep(1);
     }
     while(current_messages.extended_sys_state.landed_state != MAV_LANDED_STATE_ON_GROUND || current_messages.local_position_ned.z <= -0.05)
     {
 //        cout << " current landing z is " << current_messages.local_position_ned.z << endl;
-        sleep(0.1);
+        sleep(1);
     }
     cout << "landed complete!\n" << endl;
 }
@@ -1065,7 +1065,7 @@ void Autopilot_Interface::enable_hold(double sec)
 
     //wait message to update
     while(0.0 != current_messages.position_target_local_ned.vx || 0.0 != current_messages.position_target_local_ned.vy || 0.0 != current_messages.position_target_local_ned.vz){
-        sleep(0.1);
+        sleep(1);
     }
     sleep(sec);
     cout << "Time up for holding!\n";
@@ -1087,7 +1087,7 @@ void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
     cout << "current position : " << cp.x << " , " << cp.y << " , " << cp.z << " expected " << cp.x+x << " , " << cp.y + y << " , " << cp.z + z << endl;
     //wait message to update
     while(cp.x+x != current_messages.position_target_local_ned.x && cp.y+y != current_messages.position_target_local_ned.y && cp.z+z != current_messages.position_target_local_ned.z){
-        sleep(0.1);
+        sleep(1);
     }
 
     while(!IsInWaypointLocal(0.5)){
