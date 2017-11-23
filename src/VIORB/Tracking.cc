@@ -2079,7 +2079,7 @@ void Tracking::Reset()
             usleep(3000);
         }
 //    }
-    else mpViewer->RequestStop_no_view();
+    //else mpViewer->RequestStop_no_view();
     // Reset Local Mapping
     cout << "Reseting Local Mapper...";
     mpLocalMapper->RequestReset();
