@@ -64,7 +64,7 @@ void System_Log::initialize_defaults(char *filename)
                     "highres_imu_time" + "," + "xacc" + "," + "yacc" + "," + "zacc" + "," +
                     "xgyro" + "," + "ygyro" + "," + "zgyro" + "," +
                     "\n";
-    visionEstimatePositionLog << string("x") + "," + "y" + "," + "z" + "," + "\n";
+    visionEstimatePositionLog << string("x") + "," + "y" + "," + "z" + "," + "scaled_x" + "," + "scaled_y" + "," + "scaled_z" + "\n";
 }
 
 // write log to text file
@@ -168,7 +168,9 @@ void System_Log::write2visionEstimatePositionLog(Mat mat_pos)
     visionEstimatePositionLog << mat_pos.at<double>(0,3) << ',' << mat_pos.at<double>(1,3) << ',' << mat_pos.at<double>(2,3) << ',' <<  '\n';
 }
 
-void System_Log::write2visionEstimate2IMULog(double x, double y, double z)
+void System_Log::write2visionEstimate2IMULog(double x, double y, double z, double xs, double ys, double zs)
 {
-    visionEstimate2IMULog << x << ',' << y << ',' << z << ',' <<  '\n';
+    visionEstimate2IMULog << x << ',' << y << ',' << z << ',' << xs << ',' << ys << ',' << zs <<  '\n';
 }
+
+

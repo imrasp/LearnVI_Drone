@@ -271,7 +271,7 @@ void Location_Manager::initializePosedata() {
     current_estimate_vision_pose = Mat::zeros(4, 4, CV_32F);
     bisInitialized = false;
     bUpdateGPSPoseToMavlink = false;
-    bUpdateVisionPoseToMavlink = true;
+    bUpdateVisionPoseToMavlink = false;
     bNotFirstEstimatedPose = false;
 }
 
@@ -344,7 +344,7 @@ void Location_Manager::setEstimatedVisionPose(Mat pose, posedata apose) {
     }
 
     system_log->write2visionEstimatePositionLog(pose);
-    system_log->write2visionEstimate2IMULog(pNED(0) * dScaleX, pNED(1) * dScaleY, pNED(2) * dScaleZ);
+    system_log->write2visionEstimate2IMULog(pNED(0), pNED(1), pNED(2), pNED(0) * dScaleX, pNED(1) * dScaleY, pNED(2) * dScaleZ);
     if (bUpdateVisionPoseToMavlink) {
         mavlink_control->setVisionEstimatedPosition(pNED(0) * dScaleX, pNED(1) * dScaleY, pNED(2) * dScaleZ, 0, 0, 0,
                                                     pEstimatedVisionPose.highres_imu_time);
