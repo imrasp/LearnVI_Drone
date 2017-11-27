@@ -40,6 +40,7 @@ set(SOURCE_FILES
 
         src/Utility/system_log.cpp
         src/Utility/location_manager.cpp
+        src/Utility/systemConfigParam.cpp
 
         src/SLAMInterface/mono_offline_viorb.cpp
         src/SLAMInterface/mono_live_viorb.cpp
@@ -85,7 +86,10 @@ set(SOURCE_FILES
 
         include/VIORB/IMU/g2otypes.h
         src/VIORB/IMU/g2otypes.cpp
+
+        src/VIORB/GPS/gpsdata.cpp
         )
+
 set(HEADER_FILES
         include/MAVControl/autopilot_interface.h
         include/MAVControl/mavlink_control.h
@@ -97,6 +101,9 @@ set(HEADER_FILES
 
         include/Utility/system_log.h
         include/Utility/location_manager.h
+        include/Utility/systemConfigParam.h
+
+        include/VIORB/GPS/gpsdata.h
         )
 add_executable(LearnVI_Drone ${SOURCE_FILES} ${HEADER_FILES})
 

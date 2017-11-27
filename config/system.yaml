@@ -1,0 +1,10 @@
+system.baudrate: 921600
+system.uart_name: /dev/ttyUSB0
+system.vocabulary: /home/rasp/CLionProjects/LearnVI_Drone/Vocabulary/ORBvoc.txt
+system.setting: /home/rasp/CLionProjects/LearnVI_Drone/config/mobius.yaml
+system.mode: LIVERECORD
+system.gui: ENABLE
+system.folder_name: /home/rasp/CLionProjects/LearnVI_Drone
+system.fps: 10
+system.mission_route: /home/rasp/CLionProjects/LearnVI_Drone/mission_route.txt
+system.camerano: 1

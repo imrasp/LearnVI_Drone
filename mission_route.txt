@@ -1,4 +1,5 @@
 arm
-sleep 20
+takeoff
+land
 disarm
 

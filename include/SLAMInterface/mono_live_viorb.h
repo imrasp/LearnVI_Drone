@@ -14,6 +14,7 @@
 #include "VIORB/System.h"
 #include "VIORB/IMU/imudata.h"
 #include "VIORB/IMU/configparam.h"
+#include "Utility/systemConfigParam.h"
 
 
 class Location_Manager;
@@ -38,15 +39,14 @@ typedef struct posedata {
 
 class Mono_Live_VIORB {
 public:
-    Mono_Live_VIORB(System_Log *system_log_, bool bUseView);
+    Mono_Live_VIORB(System_Log *system_log_, SystemConfigParam *configParam_);
     ~Mono_Live_VIORB();
 
-    void start(char *&vocabulary, char *&setting);
+    void start();
     void stop();
     void grabFrameData();
-    void findCamera();
-    int findACamera(int max);
     void cameraLoop();
+    void recordData();
     void getIMUdata(posedata current_pose_);
     int getTrackingStage();
     void setLocationManager(Location_Manager *location_manager_);
@@ -57,28 +57,23 @@ public:
     double rollc,pitchc,yawc;
     double timestampc, firstTimestamp;
     double ax, ay, az;
-    posedata current_pose, initial_slam_pose;
+    posedata current_pose, slam_last_pose;
 
 private:
-
+    SystemConfigParam *configParam;
     System_Log *system_log;
     VideoCapture stream1, stream2;
     Location_Manager *location_manager;
-
-    bool bUseView;
+    ofstream limugps, lframe;
 
     bool time_to_exit;
-
-    vector<float> vTimesTrack;
-    double ttrack;
 
     ORB_SLAM2::System *SLAM;
     ORB_SLAM2::ConfigParam *config;
     double imageMsgDelaySec;
 
     double frameDiff;
-    bool getFirstFrame, isFirstFrame, first_estimate_vision_pose;
-    int camFrame;
+    int iFrame;
 
     double frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious);
 
@@ -90,7 +85,8 @@ private:
     double avgTime;
     double maxPTime, minPTime;
     int frameNo;
-    int trackingStage;
+    int latestTrackingStage;
+    int iRecordedFrame;
 
     // 3dm imu output per g. 1g=9.80665 according to datasheet
     const double g3dm = 9.80665;

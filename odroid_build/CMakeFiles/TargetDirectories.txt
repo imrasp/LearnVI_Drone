@@ -1,3 +1,0 @@
-/home/odroid/workspace/VIDrone/build/CMakeFiles/rebuild_cache.dir
-/home/odroid/workspace/VIDrone/build/CMakeFiles/edit_cache.dir
-/home/odroid/workspace/VIDrone/build/CMakeFiles/LearnVI_Drone.dir

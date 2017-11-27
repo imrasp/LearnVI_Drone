@@ -4,9 +4,7 @@ Mavlink_Control::Mavlink_Control() {
 
 }
 
-Mavlink_Control::Mavlink_Control(int baudrate, char *&uart_name, System_Log *system_log_,
-                                 Location_Manager *location_manager_, char *mission_route_) : location_manager(
-        location_manager_), system_log(system_log_), mission_route(mission_route_) {
+Mavlink_Control::Mavlink_Control(System_Log *system_log_, Location_Manager *location_manager_, SystemConfigParam *configParam_) : location_manager(location_manager_), system_log(system_log_), configParam(configParam_) {
 
     // --------------------------------------------------------------------------
     //   PORT and THREAD STARTUP
@@ -22,7 +20,7 @@ Mavlink_Control::Mavlink_Control(int baudrate, char *&uart_name, System_Log *sys
      * pthread mutex lock.
      *
      */
-    serial_port = new Serial_Port(uart_name, baudrate);
+    serial_port = new Serial_Port(configParam->getUart_name().c_str(), configParam->getBaudrate());
 
 
     /*
@@ -117,6 +115,14 @@ void Mavlink_Control::commands() {
                     autopilot_interface->disarm_control();
                 } else if ( i == 0 && temp == "land" ){
                     autopilot_interface->enable_land();
+                } else if ( i == 0 && temp == "update_GPS_pose" ){
+                    location_manager->setUpdateGPSPoseToMavlink(true);
+                } else if ( i == 0 && temp == "disable_update_GPS_pose" ){
+                    location_manager->setUpdateGPSPoseToMavlink(false);
+                } else if ( i == 0 && temp == "update_SLAM_pose" ){
+                    location_manager->setUpdateGPSPoseToMavlink(true);
+                } else if ( i == 0 && temp == "disable_update_SLAM_pose" ){
+                    location_manager->setUpdateGPSPoseToMavlink(true);
                 } else if ( i == 0 && temp == "hold" ){
                     mode = 1; i++;
                 } else if ( i == 0 && temp == "gotoned" ){

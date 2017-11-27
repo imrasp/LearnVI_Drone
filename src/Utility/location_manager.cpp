@@ -219,14 +219,11 @@ Location_Manager::Location_Manager(System_Log *system_log_)
     bStartSLAM = false;
 }
 
-Location_Manager::Location_Manager(System_Log *system_log_, Mono_Live_VIORB *mono_live_viorb_,
-                                   Mono_Record_VIORB *mono_record_viorb_)
-        : system_log(system_log_), mono_live_viorb(mono_live_viorb_), mono_record_viorb(mono_record_viorb_) {
-    if (mono_live_viorb) bLiveMode = true;
-    if (mono_record_viorb) bRecordMode = true;
+Location_Manager::Location_Manager(System_Log *system_log_, Mono_Live_VIORB *mono_live_viorb_)
+        : system_log(system_log_), mono_live_viorb(mono_live_viorb_) {
 
     initializePosedata();
-//    estimate_vision_pose = Mat::zeros(3, 3, CV_64F);
+
     bStartSLAM = false;
     geodeticConverter = new GeodeticConverter();
     SLAMTrackingStage = -1; // SYSTEM_NOT_READY
@@ -273,10 +270,6 @@ void Location_Manager::initializePosedata() {
     bUpdateGPSPoseToMavlink = false;
     bUpdateVisionPoseToMavlink = false;
     bNotFirstEstimatedPose = false;
-}
-
-void Location_Manager::setMavlinkControl(Mavlink_Control *mavlink_control_) {
-    mavlink_control = mavlink_control_;
 }
 
 void Location_Manager::setInitialEstimateVisionPose(posedata pose) {
@@ -352,20 +345,24 @@ void Location_Manager::setEstimatedVisionPose(Mat pose, posedata apose) {
 
 }
 
-void Location_Manager::setUpdateVisionPoseToMavlink(bool update) {
-    bUpdateVisionPoseToMavlink = update;
-}
-
-bool Location_Manager::getUpdateVisionPoseToMavlink() {
-    return bUpdateVisionPoseToMavlink;
-}
-
 void Location_Manager::setUpdateGPSPoseToMavlink(bool update) {
     bUpdateGPSPoseToMavlink = update;
 }
 
 bool Location_Manager::getUpdateGPSPoseToMavlink() {
     return bUpdateGPSPoseToMavlink;
+}
+
+void Location_Manager::setMavlinkControl(Mavlink_Control *mavlink_control_) {
+    mavlink_control = mavlink_control_;
+}
+
+void Location_Manager::setUpdateVisionPoseToMavlink(bool update){
+    bUpdateVisionPoseToMavlink = update;
+}
+
+bool Location_Manager::getUpdateVisionPoseToMavlink(){
+    return bUpdateVisionPoseToMavlink;
 }
 
 void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
@@ -384,7 +381,6 @@ void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
 //    cout << "HIGHRES_IMU (gyro2): " << current_pose.xgyro << ", " << current_pose.ygyro << ", " << current_pose.zgyro << endl;
     if (bStartSLAM) {
         if (mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
-        if (mono_record_viorb) mono_record_viorb->getPoseData("highres_imu", current_pose);
     }
 
 }
@@ -395,10 +391,6 @@ void Location_Manager::setPose(mavlink_attitude_t attitude) {
     current_pose.yaw = attitude.yaw;
     current_pose.attitude_time = attitude.time_boot_ms;
 
-    if (bStartSLAM) {
-        //if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
-        if (mono_record_viorb) mono_record_viorb->getPoseData("attitude", current_pose);
-    }
 }
 
 void Location_Manager::setPose(mavlink_global_position_int_t global_pos) {
@@ -475,8 +467,7 @@ void Location_Manager::setPose(mavlink_global_position_int_t global_pos) {
     }
 
     if (bStartSLAM) {
-        //if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
-        if (mono_record_viorb) mono_record_viorb->getPoseData("global_position_int", current_pose);
+        //if(mono_live_viorb) mono_live_viorb->getGPSdata(current_pose);
     }
 
 }
@@ -492,7 +483,6 @@ void Location_Manager::setPose(mavlink_local_position_ned_t local_pos) {
 
     if (bStartSLAM) {
         //if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
-        if (mono_record_viorb) mono_record_viorb->getPoseData("local_position_ned", current_pose);
     }
 }
 
@@ -502,7 +492,6 @@ void Location_Manager::setPose(mavlink_gps_raw_int_t gps_raw) {
 
     if (bStartSLAM) {
         //if(mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);
-        if (mono_record_viorb) mono_record_viorb->getPoseData("gps_raw_int", current_pose);
     }
 }
 
@@ -573,3 +562,4 @@ void Location_Manager::getRotationTranslation(Mat mtransformation, float *roll, 
                      mtransformation.at<float>(2, 0), mtransformation.at<float>(2, 1), mtransformation.at<float>(2, 2)};
     mavlink_dcm_to_euler(a, roll, pitch, yaw);
 }
+

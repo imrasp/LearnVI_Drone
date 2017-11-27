@@ -21,6 +21,7 @@
 #include "serial_port.h"
 #include "Utility/location_manager.h"
 #include "Utility/system_log.h"
+#include "Utility/systemConfigParam.h"
 
 using std::string;
 using namespace std;
@@ -49,7 +50,7 @@ class Mavlink_Control{
 public:
     Mavlink_Control();
     Mavlink_Control(int baudrate, char *&uart_name);
-    Mavlink_Control(int baudrate, char *&uart_name, System_Log *system_log_, Location_Manager *location_manager_, char *mission_route);
+    Mavlink_Control( System_Log *system_log_, Location_Manager *location_manager_, SystemConfigParam *configParam_);
     ~Mavlink_Control();
 
     void setVisionEstimatedPosition(float x, float y, float z, float roll, float pitch, float yaw, float time);
@@ -80,6 +81,7 @@ private:
     Serial_Port *serial_port_quit;
     void quit_handler( int sig );
 
+    SystemConfigParam *configParam;
     System_Log *system_log;
     Location_Manager *location_manager;
     Serial_Port *serial_port;

@@ -26,10 +26,10 @@ class System_Log
 public:
     // Con/De structors
     System_Log();
-    System_Log(char *filename);
+    System_Log(string record_path);
     ~System_Log();
 
-    void initialize_defaults(char *filename);
+    void initialize_defaults(string record_path);
 
     // write log to text file
     void write2txt(string text, mavlink_global_position_int_t global_position);

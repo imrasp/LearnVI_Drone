@@ -1065,7 +1065,8 @@ void Autopilot_Interface::enable_hold(double sec)
     update_setpoint(setpoint);
 
     //wait message to update
-    while(0.0 != current_messages.position_target_local_ned.vx || 0.0 != current_messages.position_target_local_ned.vy || 0.0 != current_messages.position_target_local_ned.vz){
+    //while(0.0 != current_messages.position_target_local_ned.vx || 0.0 != current_messages.position_target_local_ned.vy || 0.0 != current_messages.position_target_local_ned.vz){
+    while(current_messages.position_target_local_ned.type_mask != MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_ALT_HOLD) {
         sleep(1);
     }
     sleep(sec);

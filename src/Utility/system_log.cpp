@@ -8,9 +8,9 @@ System_Log::System_Log()
 {
     //initialize_defaults();
 }
-System_Log::System_Log(char *filename)
+System_Log::System_Log(string record_path)
 {
-    initialize_defaults(filename);
+    initialize_defaults(record_path);
 }
 System_Log::~System_Log()
 {
@@ -22,9 +22,9 @@ System_Log::~System_Log()
     gpsaccsample.close();
 }
 
-void System_Log::initialize_defaults(char *filename)
+void System_Log::initialize_defaults(string record_path)
 {
-    boost::filesystem::path dir("/home/odroid/workspace/VIDrone/sample_data/" + string(filename));
+    boost::filesystem::path dir(record_path);
     if (!(boost::filesystem::exists(dir))) {
         std::cout << "Doesn't Exists" << std::endl;
 
@@ -39,13 +39,13 @@ void System_Log::initialize_defaults(char *filename)
     strftime(csvfilename,80,"%Y-%m-%d_%H:%M:%S.csv",now);
 
 
-    txtlog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/" + string(txtfilename));
-    csvlog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/" + string(csvfilename));
-    gpslog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/gpsdata.csv");
-    gpsorilog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/gpsdata_original_coonversion.csv");
-    gpsaccsample.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/gps_acc_sample_data.csv");
-    visionEstimatePositionLog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/visionEstimatePositionLog.csv");
-    visionEstimate2IMULog.open("/home/odroid/workspace/VIDrone/sample_data/" + string(filename) + "/visionEstimate2IMULog.csv");
+    txtlog.open(record_path + string(txtfilename));
+    csvlog.open(record_path + string(csvfilename));
+    gpslog.open(record_path + "gpsdata.csv");
+    gpsorilog.open(record_path + "gpsdata_original_coonversion.csv");
+    gpsaccsample.open(record_path + "/gps_acc_sample_data.csv");
+    visionEstimatePositionLog.open(record_path + "visionEstimatePositionLog.csv");
+    visionEstimate2IMULog.open(record_path + "visionEstimate2IMULog.csv");
 
     gpslog << string("ned_time")  + "," + "x" + "," + "y" + "," + "z" + "," +
               "gps_time" + "," + "lat" + "," + "lon" + "," + "alt" + "," +
