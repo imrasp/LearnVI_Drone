@@ -1,5 +1,5 @@
 system.baudrate: 921600
-system.uart_name: /dev/ttyUSB0
+system.uart_name: /dev/ttySAC0
 system.vocabulary: /home/rasp/CLionProjects/LearnVI_Drone/Vocabulary/ORBvoc.txt
 system.setting: /home/rasp/CLionProjects/LearnVI_Drone/config/mobius.yaml
 system.mode: LIVERECORD
