@@ -35,28 +35,28 @@ public:
     static bool bLiveSLAM;
     static bool bMAVonly;
 
-//    SystemConfigParam();
+    SystemConfigParam();
     SystemConfigParam(int argc, char **argv);
 
-//    ~SystemConfigParam();
+    ~SystemConfigParam();
 
     void readParams();
 
-    int getCamera1();
-    int getFps();
-    int getTimespace();
-    int getBaudrate();
-    string getUart_name();
-    string getVocabulary();
-    string getSetting();
-    string getConfig();
-    string getMode();
-    string getGui();
-    string getRecord_path();
-    string getMission_route();
-    bool isBRecordSLAM();
-    bool isBLiveSLAM();
-    bool isBMAVonly();
+    static int getCamera1();
+    static int getFps();
+    static int getTimespace();
+    static int getBaudrate();
+    static string getUart_name();
+    static string getVocabulary();
+    static string getSetting();
+    static string getConfig();
+    static string getMode();
+    static string getGui();
+    static string getRecord_path();
+    static string getMission_route();
+    static bool isBRecordSLAM();
+    static bool isBLiveSLAM();
+    static bool isBMAVonly();
 
 private:
     void fps2Timespace(int fps);

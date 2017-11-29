@@ -3,7 +3,7 @@
 #include "MAVControl/mavlink_control.h"
 #include "SLAMInterface/mono_live_viorb.h"
 #include "SLAMInterface/mono_offline_viorb.h"
-#include "include/Utility/systemConfigParam.h"
+#include "Utility/systemConfigParam.h"
 
 using namespace std;
 

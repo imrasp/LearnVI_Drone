@@ -33,6 +33,7 @@
 #include <opencv2/opencv.hpp>
 
 #include <VIORB/IMU/imudata.h>
+#include <VIORB/GPS/gpsdata.h>
 #include <VIORB/IMU/NavState.h>
 #include <VIORB/IMU/IMUPreintegrator.h>
 
@@ -52,7 +53,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     // Constructor for Monocular VI
-    Frame(const cv::Mat &imGray, const double &timeStamp, const IMUData::vector_t &vimu, ORBextractor* extractor,ORBVocabulary* voc,
+    Frame(const cv::Mat &imGray, const double &timeStamp, const IMUData::vector_t &vimu, const GPSData &gpsData, ORBextractor* extractor,ORBVocabulary* voc,
           cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, KeyFrame* pLastKF=NULL);
 
     void ComputeIMUPreIntSinceLastFrame(const Frame* pLastF, IMUPreintegrator& imupreint) const;

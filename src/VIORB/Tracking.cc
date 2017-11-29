@@ -461,7 +461,7 @@ IMUPreintegrator Tracking::GetIMUPreIntSinceLastFrame(Frame* pCurF, Frame* pLast
 }
 
 
-cv::Mat Tracking::GrabImageMonoVI(const cv::Mat &im, const IMUData::vector_t &vimu, const double &timestamp)
+cv::Mat Tracking::GrabImageMonoVI(const cv::Mat &im, const IMUData::vector_t &vimu, const GPSData &gpsData, const double &timestamp)
 {
     mvIMUSinceLastKF.insert(mvIMUSinceLastKF.end(), vimu.begin(),vimu.end());
     mImGray = im;
@@ -482,9 +482,9 @@ cv::Mat Tracking::GrabImageMonoVI(const cv::Mat &im, const IMUData::vector_t &vi
     }
 
     if(mState==NOT_INITIALIZED || mState==NO_IMAGES_YET)
-        mCurrentFrame = Frame(mImGray,timestamp,vimu,mpIniORBextractor,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth);
+        mCurrentFrame = Frame(mImGray,timestamp,vimu,gpsData,mpIniORBextractor,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth);
     else
-        mCurrentFrame = Frame(mImGray,timestamp,vimu,mpORBextractorLeft,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth,mpLastKeyFrame);
+        mCurrentFrame = Frame(mImGray,timestamp,vimu,gpsData,mpORBextractorLeft,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth,mpLastKeyFrame);
 
     Track();
 

@@ -140,7 +140,7 @@ void Frame::SetNavState(const NavState& ns)
     mNavState = ns;
 }
 
-Frame::Frame(const cv::Mat &imGray, const double &timeStamp, const IMUData::vector_t &vimu, ORBextractor* extractor,ORBVocabulary* voc,
+Frame::Frame(const cv::Mat &imGray, const double &timeStamp, const IMUData::vector_t &vimu, const GPSData &gpsData, ORBextractor* extractor,ORBVocabulary* voc,
              cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, KeyFrame* pLastKF)
     :mpORBvocabulary(voc),mpORBextractorLeft(extractor),mpORBextractorRight(static_cast<ORBextractor*>(NULL)),
      mTimeStamp(timeStamp), mK(K.clone()),mDistCoef(distCoef.clone()), mbf(bf), mThDepth(thDepth)

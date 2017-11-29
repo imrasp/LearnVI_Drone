@@ -13,6 +13,7 @@
 //#include "Utility/location_manager.h"
 #include "VIORB/System.h"
 #include "VIORB/IMU/imudata.h"
+#include "VIORB/GPS/gpsdata.h"
 #include "VIORB/IMU/configparam.h"
 #include "Utility/systemConfigParam.h"
 
@@ -20,7 +21,7 @@
 class Location_Manager;
 
 typedef struct posedata {
-    float timestampms, timestampns;
+    float timestampunix, timestampms, timestampns;
     float gpstime, nedtime, highres_imu_time, attitude_time;
     float x, y, z;
     double gpsx, gpsy, gpsz;
@@ -48,6 +49,7 @@ public:
     void cameraLoop();
     void recordData();
     void getIMUdata(posedata current_pose_);
+    void getGPSdata(posedata current_pose_);
     int getTrackingStage();
     void setLocationManager(Location_Manager *location_manager_);
 
@@ -57,7 +59,7 @@ public:
     double rollc,pitchc,yawc;
     double timestampc, firstTimestamp;
     double ax, ay, az;
-    posedata current_pose, slam_last_pose;
+    posedata current_pose, slam_last_pose, gps_pose, slam_gps_pose;
 
 private:
     SystemConfigParam *configParam;
