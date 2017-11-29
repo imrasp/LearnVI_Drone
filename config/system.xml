@@ -1,5 +1,3 @@
-%YAML:1.0
-
 system.baudrate: 921600
 system.uart_name: /dev/ttySAC0
 system.vocabulary: /home/rasp/CLionProjects/LearnVI_Drone/Vocabulary/ORBvoc.txt
