@@ -159,8 +159,10 @@ double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, Mat &matFrameP
 void Mono_Live_VIORB::cameraLoop() {
 
     stream1 = VideoCapture(configParam->camera1);
+    cout << "open a Forward camera \n";
     if(configParam->camera2 > 0){
         stream2 = VideoCapture(configParam->camera2);
+        cout << "open a Downward camera \n";
     }
 
 
