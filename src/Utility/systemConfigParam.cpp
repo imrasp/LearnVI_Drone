@@ -29,7 +29,7 @@ SystemConfigParam::SystemConfigParam()
 }
 SystemConfigParam::SystemConfigParam(int argc, char **argv)
 {
-    initialization();
+    //initialization();
     parse_commandline(argc, argv);
     readParams();
 // string for command line usage
