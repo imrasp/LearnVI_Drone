@@ -10,4 +10,4 @@ system.record_path: /home/odroid/workspace/VIDrone/Recorded_Datasets
 system.fps: 10
 system.mission_route: /home/odroid/workspace/VIDrone/mission_route.txt
 system.camera1: 0
-system.camera2: 1
+system.camera2: -1

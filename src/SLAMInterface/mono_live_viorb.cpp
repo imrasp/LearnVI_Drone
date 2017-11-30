@@ -159,12 +159,17 @@ double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, Mat &matFrameP
 void Mono_Live_VIORB::cameraLoop() {
 
     stream1 = VideoCapture(configParam->camera1);
-    stream2 = VideoCapture(configParam->camera2);
+    if(configParam->camera2 > 0){
+        stream2 = VideoCapture(configParam->camera2);
+    }
+
 
     while (!time_to_exit) {
         timestampc = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
         stream1.read(matFrameForward);
-        stream2.read(matFrameDownward);
+        if(configParam->camera2 > 0){
+            stream2.read(matFrameDownward);
+        }
         iFrame++;
     }
 }
