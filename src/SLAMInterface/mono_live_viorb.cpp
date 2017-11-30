@@ -76,7 +76,7 @@ void Mono_Live_VIORB::grabFrameData() {
         timestampc = (timestampc - firstTimestamp) / 1000;
 
         frameDiff = 0;
-        if (matFrameForwardLast.rows <= 0 || matFrameForwardLast.cols <= 0)
+        if (matFrameForward.rows <= 0 || matFrameForward.cols <= 0)
             continue;
         else
             frameDiff = frameDifference(matFrameForward, matFrameForwardLast);
