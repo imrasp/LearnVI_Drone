@@ -5,7 +5,7 @@ system.uart_name: /dev/ttySAC0
 system.vocabulary: /home/odroid/workspace/VIDrone/Vocabulary/ORBvoc.txt
 system.setting: /home/odroid/workspace/VIDrone/config/mobius.yaml
 system.mode: LIVERECORD
-system.gui: ENABLE
+system.gui: DISABLE
 system.record_path: /home/odroid/workspace/VIDrone/Recorded_Datasets
 system.fps: 10
 system.mission_route: /home/odroid/workspace/VIDrone/mission_route.txt
