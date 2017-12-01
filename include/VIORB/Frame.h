@@ -205,7 +205,7 @@ public:
 
     // Scale pyramid info.
     int mnScaleLevels;
-    float e;
+    float mfScaleFactor;
     float mfLogScaleFactor;
     vector<float> mvScaleFactors;
     vector<float> mvInvScaleFactors;
