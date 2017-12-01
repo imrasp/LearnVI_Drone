@@ -54,7 +54,7 @@ public:
     void setLocationManager(Location_Manager *location_manager_);
 
     cv::Mat vision_estimated_pose, lastest_vision_estimated_pose, accumulate_vision_estimated_pose;
-    cv::Mat matFrame, matFrameForward, matFrameForwardLast, matFrameDownward;
+    cv::Mat matFrame, matFrameForward, matFrameForwardLast, matFrameDownward,matFrameCurrentForward;
     double xc,yc,zc;
     double rollc,pitchc,yawc;
     double timestampc, firstTimestamp;

@@ -69,8 +69,8 @@ void Mono_Live_VIORB::grabFrameData() {
         cout << "Checkpoint 1.0 " << endl;
         calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
         cout << "Checkpoint 1.1 " << endl;
-        matFrameForwardLast = matFrameForward.clone();
-        matFrameForward = matFrame.clone();
+        matFrameForwardLast = matFrameCurrentForward.clone();
+        matFrameCurrentForward = matFrameForward.clone();
         cout << "Checkpoint 1.2 " << endl;
         if (iSLAMFrame == 1) firstTimestamp = timestampc;
         timestampc = (timestampc - firstTimestamp) / 1000;
@@ -173,11 +173,13 @@ void Mono_Live_VIORB::cameraLoop() {
     iFrame = 1;
     while (!time_to_exit) {
         timestampc = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-        cout << "get frame " << iFrame << endl;
+//        cout << "get frame " << iFrame << endl;
         stream1.read(matFrameForward);
         if(configParam->camera2 > 0){
             stream2.read(matFrameDownward);
         }
+
+        cout  << "get frame " << iFrame  << ": frame size [" << matFrameForward.size() << endl;
         iFrame++;
     }
 }
