@@ -89,7 +89,8 @@ void Mavlink_Control::commands() {
     printf(" CURRENT POSITION XYZ = [ % .4f , % .4f , % .4f ] \n", pos.x, pos.y, pos.z);
     sleep(1);
 
-    ifstream input(configParam->getMission_route());
+    cout << "read route from " << configParam->mission_route << endl;
+    ifstream input(configParam->mission_route);
     string line, temp;
     double param1, param2;
 
