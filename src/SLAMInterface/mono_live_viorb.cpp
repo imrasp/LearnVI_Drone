@@ -85,6 +85,7 @@ void Mono_Live_VIORB::grabFrameData() {
             cout << "SKIPPING DUPLICATE FRAME" << endl;
             continue;
         } else {
+            cout << "Checkpoint 1 " << endl;
             if (vimuData.size() < 10) {
                 cout << "Skipping this frame (waiting for more IMUs)!" << endl;
                 //cout << "Skipping this frame (Specially if before initializing)!" << endl;
@@ -101,11 +102,13 @@ void Mono_Live_VIORB::grabFrameData() {
 //                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
 //            }
 //            else{
+            cout << "Checkpoint 1.1 " << endl;
                 ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
                 // Pass the image to the SLAM system
+            cout << "Checkpoint 2 " << endl;
                 vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
 //            }
-            
+            cout << "Checkpoint 3 " << endl;
             // Pass the image to the SLAM system
 //            vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
 
