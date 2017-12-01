@@ -66,15 +66,15 @@ void Mono_Live_VIORB::grabFrameData() {
 
     int iSLAMFrame = 1;
     while (!time_to_exit) {
-        cout << "Checkpoint 1.0 " << endl;
+
         calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
-        cout << "Checkpoint 1.1 " << endl;
+
         matFrameForwardLast = matFrameCurrentForward.clone();
         matFrameCurrentForward = matFrameForward.clone();
-        cout << "Checkpoint 1.2 " << endl;
+
         if (iSLAMFrame == 1) firstTimestamp = timestampc;
         timestampc = (timestampc - firstTimestamp) / 1000;
-        cout << "Checkpoint 1.3 " << endl;
+
         frameDiff = 0;
         if (matFrameForwardLast.rows <= 0 || matFrameForwardLast.cols <= 0)
             continue;
@@ -85,7 +85,6 @@ void Mono_Live_VIORB::grabFrameData() {
             cout << "SKIPPING DUPLICATE FRAME" << endl;
             continue;
         } else {
-            cout << "Checkpoint 1.4 " << endl;
             if (vimuData.size() < 10) {
                 cout << "Skipping this frame (waiting for more IMUs)!" << endl;
                 //cout << "Skipping this frame (Specially if before initializing)!" << endl;
@@ -94,21 +93,21 @@ void Mono_Live_VIORB::grabFrameData() {
 
             slam_last_pose = current_pose;
 
-//            if((gps_pose.timestampunix - (std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1))) < 500){
-//                if (firstTimestamp == 0) firstTimestamp = gps_pose.timestampunix;
-//                double timestamp = (gps_pose.timestampunix - firstTimestamp) / 1000;
-//                ORB_SLAM2::GPSData gpsdata(gps_pose.lat, gps_pose.lon, gps_pose.alt, gps_pose.gpsx, gps_pose.gpsy, gps_pose.gpsz, timestamp);
-//                // Pass the image to the SLAM system
-//                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
-//            }
-//            else{
-            cout << "Checkpoint 1.5 " << endl;
+            if((gps_pose.timestampunix - (std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1))) < 500){
+                if (firstTimestamp == 0) firstTimestamp = gps_pose.timestampunix;
+                double timestamp = (gps_pose.timestampunix - firstTimestamp) / 1000;
+                ORB_SLAM2::GPSData gpsdata(gps_pose.lat, gps_pose.lon, gps_pose.alt, gps_pose.gpsx, gps_pose.gpsy, gps_pose.gpsz, timestamp);
+                // Pass the image to the SLAM system
+                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
+            }
+            else{
+
                 ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
                 // Pass the image to the SLAM system
-            cout << "Checkpoint 2 " << endl;
+
                 vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
-//            }
-            cout << "Checkpoint 3 " << endl;
+            }
+
             // Pass the image to the SLAM system
 //            vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
 
@@ -141,7 +140,7 @@ void Mono_Live_VIORB::grabFrameData() {
 
 double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious) {
     double diff = 0.0;
-     cout << "matFrameCurrent size : " << matFrameCurrent.size() <<  " matFramePrevious : " << matFramePrevious.size() << endl;
+//     cout << "matFrameCurrent size : " << matFrameCurrent.size() <<  " matFramePrevious : " << matFramePrevious.size() << endl;
     assert(matFrameCurrent.rows > 0 && matFrameCurrent.cols > 0);
     assert(
             matFrameCurrent.rows == matFramePrevious.rows
@@ -173,13 +172,12 @@ void Mono_Live_VIORB::cameraLoop() {
     iFrame = 1;
     while (!time_to_exit) {
         timestampc = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-//        cout << "get frame " << iFrame << endl;
         stream1.read(matFrameForward);
         if(configParam->camera2 > 0){
             stream2.read(matFrameDownward);
         }
 
-        cout  << "get frame " << iFrame  << ": frame size [" << matFrameForward.size() << endl;
+//        cout  << "get frame " << iFrame  << ": frame size [" << matFrameForward.size() << endl;
         iFrame++;
     }
 }

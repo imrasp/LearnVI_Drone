@@ -1,5 +1,1 @@
-arm
-takeoff
-land
-disarm
-
+sleep 60

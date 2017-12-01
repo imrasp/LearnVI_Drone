@@ -84,7 +84,7 @@ void Mavlink_Control::commands() {
 
     //autopilot_interface->set_message_interval(105,500); // msg_id,interval in microseconds, HIGHRES_IMU = 105
     autopilot_interface->enable_offboard_control(); usleep(100);
-    cout << "checkpoint 1 \n";
+
     mavlink_local_position_ned_t pos = autopilot_interface->current_messages.local_position_ned;
     printf(" CURRENT POSITION XYZ = [ % .4f , % .4f , % .4f ] \n", pos.x, pos.y, pos.z);
     sleep(1);
