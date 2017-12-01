@@ -12,6 +12,7 @@ Mono_Live_VIORB::Mono_Live_VIORB(System_Log *system_log_, SystemConfigParam *con
     avgTime = 0;
     frameNo = 0;
     firstTimestamp = 0;
+    gps_pose.timestampunix = 0;
 }
 
 Mono_Live_VIORB::~Mono_Live_VIORB() {}
