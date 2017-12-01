@@ -168,6 +168,7 @@ void Mono_Live_VIORB::cameraLoop() {
     iFrame = 1;
     while (!time_to_exit) {
         timestampc = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+        cout << "get frame " << iFrame << endl;
         stream1.read(matFrameForward);
         if(configParam->camera2 > 0){
             stream2.read(matFrameDownward);
