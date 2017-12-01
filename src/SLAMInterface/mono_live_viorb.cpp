@@ -93,18 +93,19 @@ void Mono_Live_VIORB::grabFrameData() {
 
             slam_last_pose = current_pose;
 
-            if((gps_pose.timestampunix - (std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1))) < 500){
-                if (firstTimestamp == 0) firstTimestamp = gps_pose.timestampunix;
-                double timestamp = (gps_pose.timestampunix - firstTimestamp) / 1000;
-                ORB_SLAM2::GPSData gpsdata(gps_pose.lat, gps_pose.lon, gps_pose.alt, gps_pose.gpsx, gps_pose.gpsy, gps_pose.gpsz, timestamp);
-                // Pass the image to the SLAM system
-                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
-            }
-            else{
+//            if((gps_pose.timestampunix - (std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1))) < 500){
+//                if (firstTimestamp == 0) firstTimestamp = gps_pose.timestampunix;
+//                double timestamp = (gps_pose.timestampunix - firstTimestamp) / 1000;
+//                ORB_SLAM2::GPSData gpsdata(gps_pose.lat, gps_pose.lon, gps_pose.alt, gps_pose.gpsx, gps_pose.gpsy, gps_pose.gpsz, timestamp);
+//                // Pass the image to the SLAM system
+//                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
+//            }
+//            else{
                 ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
                 // Pass the image to the SLAM system
                 vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
-            }
+//            }
+            
             // Pass the image to the SLAM system
 //            vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
 
