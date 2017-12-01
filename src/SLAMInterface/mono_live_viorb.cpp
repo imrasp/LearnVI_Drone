@@ -76,7 +76,7 @@ void Mono_Live_VIORB::grabFrameData() {
         timestampc = (timestampc - firstTimestamp) / 1000;
         cout << "Checkpoint 1.3 " << endl;
         frameDiff = 0;
-        if (matFrameForward.rows <= 0 || matFrameForward.cols <= 0)
+        if (matFrameForwardLast.rows <= 0 || matFrameForwardLast.cols <= 0)
             continue;
         else
             frameDiff = frameDifference(matFrameForward, matFrameForwardLast);
@@ -141,7 +141,7 @@ void Mono_Live_VIORB::grabFrameData() {
 
 double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious) {
     double diff = 0.0;
-    // cout << "matFrameCurrent size : " << matFrameCurrent.size() <<  " matFramePrevious : " << matFramePrevious.size() << endl;
+     cout << "matFrameCurrent size : " << matFrameCurrent.size() <<  " matFramePrevious : " << matFramePrevious.size() << endl;
     assert(matFrameCurrent.rows > 0 && matFrameCurrent.cols > 0);
     assert(
             matFrameCurrent.rows == matFramePrevious.rows
