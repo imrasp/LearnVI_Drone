@@ -42,7 +42,6 @@ void Mono_Live_VIORB::start() {
         cout << "Stard Record thread..." << endl;
         boost::thread threadRecord = boost::thread(&Mono_Live_VIORB::recordData, this);
     }
-
 }
 
 void Mono_Live_VIORB::stop() {
@@ -86,13 +85,14 @@ void Mono_Live_VIORB::grabFrameData() {
             continue;
         } else {
             if (vimuData.size() < 10) {
+                cout << "Skipping this frame (waiting for more IMUs)!" << endl;
                 //cout << "Skipping this frame (Specially if before initializing)!" << endl;
                 continue;
             }
 
             slam_last_pose = current_pose;
 
-            if((gps_pose.timestampunix - (std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1))) < 500){
+            if((gps_pose && gps_pose.timestampunix - (std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1))) < 500){
                 if (firstTimestamp == 0) firstTimestamp = gps_pose.timestampunix;
                 double timestamp = (gps_pose.timestampunix - firstTimestamp) / 1000;
                 ORB_SLAM2::GPSData gpsdata(gps_pose.lat, gps_pose.lon, gps_pose.alt, gps_pose.gpsx, gps_pose.gpsy, gps_pose.gpsz, timestamp);
