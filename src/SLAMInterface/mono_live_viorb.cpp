@@ -82,11 +82,10 @@ void Mono_Live_VIORB::grabFrameData() {
             frameDiff = frameDifference(matFrameForward, matFrameForwardLast);
 
         if (frameDiff == 0) {
-            cout << "SKIPPING DUPLICATE FRAME" << endl;
+//            cout << "SKIPPING DUPLICATE FRAME" << endl;
             continue;
         } else {
             if (vimuData.size() < 10) {
-                cout << "Skipping this frame (waiting for more IMUs)!" << endl;
                 //cout << "Skipping this frame (Specially if before initializing)!" << endl;
                 continue;
             }
