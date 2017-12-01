@@ -66,15 +66,15 @@ void Mono_Live_VIORB::grabFrameData() {
 
     int iSLAMFrame = 1;
     while (!time_to_exit) {
-
+        cout << "Checkpoint 1.0 " << endl;
         calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
-
+        cout << "Checkpoint 1.1 " << endl;
         matFrameForwardLast = matFrameForward.clone();
         matFrameForward = matFrame.clone();
-
+        cout << "Checkpoint 1.2 " << endl;
         if (iSLAMFrame == 1) firstTimestamp = timestampc;
         timestampc = (timestampc - firstTimestamp) / 1000;
-
+        cout << "Checkpoint 1.3 " << endl;
         frameDiff = 0;
         if (matFrameForward.rows <= 0 || matFrameForward.cols <= 0)
             continue;
@@ -85,7 +85,7 @@ void Mono_Live_VIORB::grabFrameData() {
             cout << "SKIPPING DUPLICATE FRAME" << endl;
             continue;
         } else {
-            cout << "Checkpoint 1 " << endl;
+            cout << "Checkpoint 1.4 " << endl;
             if (vimuData.size() < 10) {
                 cout << "Skipping this frame (waiting for more IMUs)!" << endl;
                 //cout << "Skipping this frame (Specially if before initializing)!" << endl;
@@ -102,7 +102,7 @@ void Mono_Live_VIORB::grabFrameData() {
 //                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
 //            }
 //            else{
-            cout << "Checkpoint 1.1 " << endl;
+            cout << "Checkpoint 1.5 " << endl;
                 ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
                 // Pass the image to the SLAM system
             cout << "Checkpoint 2 " << endl;
