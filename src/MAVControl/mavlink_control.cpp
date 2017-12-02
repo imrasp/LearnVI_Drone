@@ -109,8 +109,8 @@ void Mavlink_Control::commands() {
             while(s>> temp) {
                 cout << i << " : mode " << mode << " : " << temp << endl;
                 if ( i == 0 && temp == "takeoff" ){
-                    //autopilot_interface->enable_takeoff(10.0, 0.5);
-                    mode = "takeoff";
+                    autopilot_interface->enable_takeoff(10.0, 0.5);
+                    //mode = "takeoff";
                 } else if ( i == 0 && temp == "arm" ){
                     autopilot_interface->arm_control();
                 } else if ( i == 0 && temp == "disarm" ){
@@ -147,7 +147,7 @@ void Mavlink_Control::commands() {
                         param1 = stod(temp); i++;
                     } else if (i != 1 ){
                         if( i == 2 && mode == "takeoff") {
-                            autopilot_interface->enable_takeoff(param1,stod(temp));
+//                            autopilot_interface->enable_takeoff(param1,stod(temp));
                         } else if( i == 2){
                             param2 = stod(temp); i++;
                         } else if( i == 3 && mode == "gotoned" ){
