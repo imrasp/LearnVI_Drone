@@ -23,6 +23,7 @@ string SystemConfigParam::mission_route;
 bool SystemConfigParam::bRecordSLAM;
 bool SystemConfigParam::bLiveSLAM;
 bool SystemConfigParam::bMAVonly;
+bool SystemConfigParam::bOffline;
 
 SystemConfigParam::SystemConfigParam()
 {

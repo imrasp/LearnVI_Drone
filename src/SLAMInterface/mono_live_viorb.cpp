@@ -181,21 +181,6 @@ void Mono_Live_VIORB::cameraLoop() {
     }
 }
 
-void Mono_Live_VIORB::recordFrame(){
-    rFrame = 0;
-    string cam1Name, cam2Name;
-    while (!time_to_exit) {
-        cam1Name = configParam->record_path + "/Camera1/" + to_string(rFrame) + ".jpg";
-        imwrite(cam1Name, matFrameForward);
-        if (configParam->camera2 > 0)
-            cam2Name = configParam->record_path + "/Camera2/" + to_string(rFrame) + ".jpg";
-            imwrite(cam2Name, matFrameDownward);
-        lframe << string("Frame,") << sep << rFrame << sep <<std:: chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)  << "\n";
-        usleep(configParam->timespace);
-        rFrame++;
-    }
-}
-
 void Mono_Live_VIORB::recordData() {
     //initialize Record folder
     boost::filesystem::path dir(configParam->record_path);
@@ -256,9 +241,9 @@ void Mono_Live_VIORB::recordData() {
     iRecordedFrame = 1;
     while (!time_to_exit) {
         imwrite(configParam->record_path + "/Camera1/" + to_string(iRecordedFrame) + ".jpg", matFrameForward);
-        imwrite(configParam->record_path + "/Camera2/" + to_string(iRecordedFrame) + ".jpg", matFrameDownward);
+        if(configParam->camera2 > 0){ imwrite(configParam->record_path + "/Camera2/" + to_string(iRecordedFrame) + ".jpg", matFrameDownward);}
 
-        lframe << string("Frame,") + to_string(iRecordedFrame) + "," + to_string(timestampc) + "," + "\n";
+        lframe << iRecordedFrame << sep << timestampc << "\n";
         usleep(configParam->timespace); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
 
         iRecordedFrame++;
@@ -283,8 +268,8 @@ void Mono_Live_VIORB::calAvgProcessingTime(double time) {
 void Mono_Live_VIORB::getGPSdata(posedata current_pose_){
 
     gps_pose = current_pose_;
-    lgps << iRecordedFrame << sep << gps_pose.timestampunix << sep << current_pose.highres_imu_time << sep << current_pose.lat
-         << sep << current_pose.lon << sep << current_pose.alt << "\n";
+    lgps << iRecordedFrame << sep << gps_pose.timestampunix << sep << current_pose.gpstime << sep << current_pose.lat
+         << sep << current_pose.lon << sep << current_pose.alt << sep << current_pose.gpsx << sep << current_pose.gpsy << sep << current_pose.gpsz << "\n";
 }
 void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     current_pose = current_pose_;
