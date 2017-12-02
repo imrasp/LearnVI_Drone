@@ -181,6 +181,16 @@ void Mono_Live_VIORB::cameraLoop() {
     }
 }
 
+void Mono_Live_VIORB::recordFrame(){
+    int rFrame;
+    while (!time_to_exit) {
+        imwrite(configParam->record_path + "/Camera1/" + rFrame + ".jpg", matFrameForward);
+        if (configParam->camera2 > 0)
+            imwrite(configParam->record_path + "/Camera2/" + rFrame + ".jpg", matFrameDownward);
+        lframe << string("Frame,") << sep << rFrame << sep <<std:: chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)  << "\n";
+    }
+}
+
 void Mono_Live_VIORB::recordData() {
     //initialize Record folder
     boost::filesystem::path dir(configParam->record_path);
@@ -206,9 +216,10 @@ void Mono_Live_VIORB::recordData() {
     }
 
     lframe.open(configParam->record_path + "/frame.csv");
-    limugps.open(configParam->record_path + "/imugps.csv");
+    limu.open(configParam->record_path + "/imu.csv");
+    lgps.open(configParam->record_path + "/gps.csv");
 
-    limugps
+    limu
             << string("FrameNo") + ","
                + "timestamp(ns)" + ","
                + "timeboot(ms)" + ","
@@ -267,12 +278,15 @@ void Mono_Live_VIORB::calAvgProcessingTime(double time) {
 void Mono_Live_VIORB::getGPSdata(posedata current_pose_){
 
     gps_pose = current_pose_;
+    lgps << iRecordedFrame << sep << gps_pose.timestampunix << sep << current_pose.highres_imu_time << sep << current_pose.lat
+         << sep << current_pose.lon << sep << current_pose.alt << "\n";
 }
 void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     current_pose = current_pose_;
-    double timestamp = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
-    if (firstTimestamp == 0) firstTimestamp = timestamp;
-    timestamp = (timestamp - firstTimestamp) / 1000;
+
+    float timestamp;
+    if (firstTimestamp == 0) firstTimestamp = current_pose.timestampunix;
+    timestamp = (current_pose.timestampunix - firstTimestamp) / 1000;
 
     rollc = current_pose.xgyro;
     pitchc = current_pose.ygyro;
@@ -291,11 +305,10 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     ORB_SLAM2::IMUData imudata(rollc, pitchc, yawc, ax, ay, az, timestamp);
     vimuData.push_back(imudata);
 
-    string sep = ",";
-    if (configParam->bRecordSLAM && iRecordedFrame == 1) {
-        double timestamp = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
 
-        limugps << iRecordedFrame << sep << timestamp << sep << current_pose.timebootms << sep << current_pose.xgyro
+    if (configParam->bRecordSLAM && iRecordedFrame == 1) {
+
+        limu << iRecordedFrame << sep << current_pose.timestampunix << sep << current_pose.timebootms << sep << current_pose.xgyro
                 << sep << current_pose.ygyro << sep << current_pose.zgyro << sep << current_pose.xacc << sep
                 << current_pose.yacc << sep << current_pose.zacc << "\n";
 //                  + to_string(timestamp) + ","

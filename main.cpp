@@ -43,7 +43,13 @@ int main(int argc, char **argv) {
             cout << "Start Mavlink thread,..." << endl;
             mavlink_control.start();
             mavlink_control.stop();
+        } else if (configParam.isBOffline()) {
+            Mono_Offline_VIORB mono_offline_viorb(&system_log, &configParam);
+
+            cout << "Start Mavlink thread,..." << endl;
+            mono_offline_viorb.start();
         }
+
         return 0;
     }
     catch (int error) {

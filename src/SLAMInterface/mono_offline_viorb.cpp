@@ -1,7 +1,7 @@
 //#include "SLAMInterface/mono_offline_viorb.h"
 //
 //
-//Mono_Offline_VIORB::Mono_Offline_VIORB(System_Log *system_log_) : system_log(system_log_)
+//Mono_Offline_VIORB::Mono_Offline_VIORB(System_Log *system_log_, SystemConfigParam *configParam_) : system_log(system_log_), configParam(configParam_)
 //{
 //    time_to_exit = false;
 //    isFirstFrame = false;
@@ -15,26 +15,25 @@
 //Mono_Offline_VIORB::~Mono_Offline_VIORB()
 //{}
 //
-//void Mono_Offline_VIORB::start(char *&vocabulary, char *&setting, string foldername_) {
+//void Mono_Offline_VIORB::start() {
 //
 //cout << "Starting Offline SLAM..." << endl;
-//    foldername = "../sample_data/"+foldername_; //foldername_;
 //
 //    //Checking for a file
-//    boost::filesystem::path dir(foldername);
+//    boost::filesystem::path dir(configParam->record_path);
 //    if(!(boost::filesystem::exists (dir))) {
 //        std::cout << "Doesn't Exists" << std::endl;
 //    }
 //    else cout << dir << " is exist" << endl;
 //
-//    ifstream frame(foldername+"/tframe.txt");
-//    if(!frame.is_open()) std::cout << "ERROR: Cannot Open Frame File" << '\n';
-//    ifstream imu(foldername+"/posedata.csv");
-//    if(!imu.is_open()) std::cout << "ERROR: Cannot Open IMU File" << '\n';
+//    ifstream frame(configParam->record_path + "/tframe.txt");
+//    if(!frame.is_open()) throw "ERROR: Cannot Open Frame File";
+//    ifstream imu(configParam->record_path + "/posedata.csv");
+//    if(!imu.is_open()) throw "ERROR: Cannot Open IMU File";
 //
 //    // Create SLAM system. It initializes all system threads and gets ready to process frames.
-//    SLAM = new ORB_SLAM2::System(vocabulary, setting, ORB_SLAM2::System::MONOCULAR, true);
-//    config = new ORB_SLAM2::ConfigParam(setting);
+//    SLAM = new ORB_SLAM2::System(configParam->vocabulary, configParam->setting, ORB_SLAM2::System::MONOCULAR, true);
+//    config = new ORB_SLAM2::ConfigParam(configParam->setting);
 //
 //    imageMsgDelaySec = config->GetImageDelayToIMU();
 //    // ORBVIO::MsgSynchronizer msgsync(imageMsgDelaySec);
@@ -119,7 +118,7 @@
 //                    az *= g3dm;
 //                }
 //
-//                SLAM->TrackMonoVI(matFrameForward, vimuData, frametimestamp);
+//                //SLAM->TrackMonoVI(matFrameForward, vimuData, frametimestamp);
 //                vimuData.clear();
 //
 //                // angular_velocity.x, angular_velocity.y, angular_velocity.z, linear_acceleration ax, ay, az, timestamp

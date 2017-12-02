@@ -48,6 +48,7 @@ public:
     void grabFrameData();
     void cameraLoop();
     void recordData();
+    void recordFrame();
     void getIMUdata(posedata current_pose_);
     void getGPSdata(posedata current_pose_);
     int getTrackingStage();
@@ -66,7 +67,7 @@ private:
     System_Log *system_log;
     VideoCapture stream1, stream2;
     Location_Manager *location_manager;
-    ofstream limugps, lframe;
+    ofstream limu, lgps, lframe;
 
     bool time_to_exit;
 
@@ -95,6 +96,8 @@ private:
     bool bAccMultiply98;
     //1 meter/square second  =  0.101972 acceleration of gravity
     const double ms2Tog = 0.101972;
+
+    string sep = ",";
 };
 
 #endif //LEARNVI_DRONE_MONO_LIVE_VIORB_H

@@ -34,6 +34,11 @@ public:
     static bool bRecordSLAM;
     static bool bLiveSLAM;
     static bool bMAVonly;
+    static bool bOffline;
+
+    static int getCamera2();
+
+    static bool isBOffline();
 
     SystemConfigParam();
     SystemConfigParam(int argc, char **argv);

@@ -388,6 +388,7 @@ void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
 }
 
 void Location_Manager::setPose(mavlink_attitude_t attitude) {
+    current_pose.timestampunix = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
     current_pose.roll = attitude.roll;
     current_pose.pitch = attitude.pitch;
     current_pose.yaw = attitude.yaw;

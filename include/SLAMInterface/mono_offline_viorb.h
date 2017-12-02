@@ -17,13 +17,14 @@
 //#include "VIORB/GPS/gpsdata.h"
 //#include "SLAMInterface/mono_live_viorb.h"
 //#include "Utility/system_log.h"
+//#include "Utility/systemConfigParam.h"
 //
 //class Mono_Offline_VIORB {
 //public:
-//    Mono_Offline_VIORB(System_Log *system_log_);
+//    Mono_Offline_VIORB(System_Log *system_log_, SystemConfigParam *configParam_ );
 //    ~Mono_Offline_VIORB();
 //
-//    void start(char *&vocabulary, char *&setting, string foldername_);
+//    void start();
 //    void stop();
 //    void grabFrameData();
 //    void findCamera();
@@ -39,6 +40,7 @@
 //
 //private:
 //    System_Log *system_log;
+//    SystemConfigParam *configParam;
 //    VideoCapture *stream;
 //
 //    bool time_to_exit;
