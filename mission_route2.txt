@@ -1,3 +1,4 @@
 arm
 sleep 10
+takeoff 10.0 0.2
 disarm
