@@ -182,16 +182,17 @@ void Mono_Live_VIORB::cameraLoop() {
 }
 
 void Mono_Live_VIORB::recordFrame(){
-    int rFrame;
+    rFrame = 0;
     string cam1Name, cam2Name;
     while (!time_to_exit) {
-        cam1Name = configParam->record_path + "/Camera1/" + rFrame + ".jpg";
+        cam1Name = configParam->record_path + "/Camera1/" + to_string(rFrame) + ".jpg";
         imwrite(cam1Name, matFrameForward);
         if (configParam->camera2 > 0)
-            cam2Name = configParam->record_path + "/Camera2/" + rFrame + ".jpg";
+            cam2Name = configParam->record_path + "/Camera2/" + to_string(rFrame) + ".jpg";
             imwrite(cam2Name, matFrameDownward);
         lframe << string("Frame,") << sep << rFrame << sep <<std:: chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)  << "\n";
         usleep(configParam->timespace);
+        rFrame++;
     }
 }
 

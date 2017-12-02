@@ -87,7 +87,7 @@ private:
     double startTime;
     double avgTime;
     double maxPTime, minPTime;
-    int frameNo;
+    int frameNo, rFrame;
     int latestTrackingStage;
     int iRecordedFrame;
 
