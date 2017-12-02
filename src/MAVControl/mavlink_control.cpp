@@ -99,7 +99,7 @@ void Mavlink_Control::commands() {
             cout << line << endl;
             stringstream s (line);
             int i = 0;
-            int mode = 0; // 1:hold, 2:gotoned
+            string mode = "";
 
             // example : goto 9.0 8.0 7.0
             //          goto > i == 0
@@ -109,7 +109,8 @@ void Mavlink_Control::commands() {
             while(s>> temp) {
                 cout << i << " : mode " << mode << " : " << temp << endl;
                 if ( i == 0 && temp == "takeoff" ){
-                    autopilot_interface->enable_takeoff(10.0, 0.5);
+                    //autopilot_interface->enable_takeoff(10.0, 0.5);
+                    mode = "takeoff";
                 } else if ( i == 0 && temp == "arm" ){
                     autopilot_interface->arm_control();
                 } else if ( i == 0 && temp == "disarm" ){
@@ -125,31 +126,33 @@ void Mavlink_Control::commands() {
                 } else if ( i == 0 && temp == "disable_update_SLAM_pose" ){
                     location_manager->setUpdateGPSPoseToMavlink(true);
                 } else if ( i == 0 && temp == "hold" ){
-                    mode = 1; i++;
+                    mode = "hold"; i++;
                 } else if ( i == 0 && temp == "gotoned" ){
-                    mode = 2; i++;
+                    mode = "gotoned"; i++;
                 } else if ( i == 0 && temp == "sleep" ) {
-                    mode = 3; i++;
+                    mode = "sleep"; i++;
                 } else if ( i == 0 && temp == "gotonedoffset" ){
-                    mode = 4; i++;
+                    mode = "gotonedoffset"; i++;
                 } else if ( i == 0 && temp == "findgps" ) {
                     while(autopilot_interface->current_messages.gps_raw_int.eph > 120 && autopilot_interface->current_messages.local_position_ned.z > -30){
 
                     }
-                } else if ( i != 0 ) { // hold and goto
-                    if( i == 1 && mode == 1 ){
+                } else if ( i != 0 ) { // hold and goto // 1 condition
+                    if( i == 1 && mode == "hold" ){
                         autopilot_interface->enable_hold(stod(temp));
-                    } else if( i == 1 && mode == 3 ){
+                    } else if( i == 1 && mode == "sleep" ){
                         cout << "sleep for " << stod(temp) << " sec. \n";
                         sleep(stod(temp));
-                    } else if ( i == 1 && mode == 2 ){
+                    } else if ( i == 1 && (mode == "gotoned" || mode == "gotonedoffset" || mode == "takeoff")  ){
                         param1 = stod(temp); i++;
                     } else if (i != 1 ){
-                        if( i == 2 ) {
+                        if( i == 2 && mode == "takeoff") {
+                            autopilot_interface->enable_takeoff(param1,stod(temp));
+                        } else if( i == 2){
                             param2 = stod(temp); i++;
-                        } else if( i == 3 && mode == 2 ){
+                        } else if( i == 3 && mode == "gotoned" ){
                             autopilot_interface->goto_positon_ned(param1,param2,stod(temp));
-                        } else if( i == 3 && mode == 4 ){
+                        } else if( i == 3 && mode == "gotonedoffset" ){
                             autopilot_interface->goto_positon_offset_ned(param1,param2,stod(temp));
                         }
                     }
