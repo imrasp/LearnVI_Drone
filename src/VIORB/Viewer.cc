@@ -90,7 +90,7 @@ namespace ORB_SLAM2 {
         bool bLocalizationMode = false;
 
         while (1) {
-            cout << "viewer run loop" << endl;
+            //cout << "viewer run loop" << endl;
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             mpMapDrawer->GetCurrentOpenGLCameraMatrix(Twc);
@@ -141,7 +141,7 @@ namespace ORB_SLAM2 {
                 mpSystem->Reset();
                 menuReset = false;
             }
-            cout << "viewer run thread call stop." << endl;
+            //cout << "viewer run thread call stop." << endl;
             if (Stop()) {
                 while (isStopped()) {
                     usleep(3000);
@@ -193,7 +193,7 @@ namespace ORB_SLAM2 {
     }
 
     bool Viewer::Stop() {
-        cout << "call stop() in viewer" << endl;
+        //cout << "call stop() in viewer" << endl;
         unique_lock<mutex> lock(mMutexStop);
         unique_lock<mutex> lock2(mMutexFinish);
 

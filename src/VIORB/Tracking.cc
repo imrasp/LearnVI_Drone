@@ -723,6 +723,7 @@ cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp)
 
 void Tracking::Track()
 {
+//cout << "track() \n";
     if(mState==NO_IMAGES_YET)
     {
         mState = NOT_INITIALIZED;
@@ -776,6 +777,7 @@ void Tracking::Track()
 
             if(mState==OK)
             {
+                //cout << "mStage is OK in Tracking(779) \n";
                 // Local Mapping might have changed some MapPoints tracked in last frame
                 CheckReplacedInLastFrame();
 #ifdef TRACK_WITH_IMU
@@ -799,6 +801,7 @@ void Tracking::Track()
                 else
 #endif
                 {
+                    //cout << "mStage isn't OK in Tracking(803) \n";
                     if(mVelocity.empty() || mCurrentFrame.mnId<mnLastRelocFrameId+2)
                     {
                         bOK = TrackReferenceKeyFrame();
