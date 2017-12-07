@@ -49,18 +49,23 @@ void Mono_Live_VIORB::start() {
 void Mono_Live_VIORB::stop() {
     time_to_exit = true;
     cout << "SLAM shutdown..." << endl;
-    // Stop all threads
-    SLAM->Shutdown();
+    if (configParam->bLive) {
+        // Stop all threads
+        SLAM->Shutdown();
 
-    cout << "Save camera trajectory..." << endl;
-    // Save camera trajectory
-    SLAM->SaveKeyFrameTrajectoryTUM(configParam->record_path + "/KeyFrameTrajectory.txt");
-    SLAM->SaveKeyFrameTrajectoryNavState(configParam->record_path + "/KeyFrameNavStateTrajectory.txt");
+        cout << "Save camera trajectory..." << endl;
+        // Save camera trajectory
+        SLAM->SaveKeyFrameTrajectoryTUM(configParam->record_path + "/KeyFrameTrajectory.txt");
+        SLAM->SaveKeyFrameTrajectoryNavState(configParam->record_path + "/KeyFrameNavStateTrajectory.txt");
 
-    cout << "Average Processing time per frame is " << avgTime << " milliseconds = " << avgTime / 1000 << " seconds"
-         << endl
-         << "Max processing time : " << maxPTime << endl
-         << "Min processing time : " << minPTime << endl;
+        cout << "Average Processing time per frame is " << avgTime << " milliseconds = " << avgTime / 1000 << " seconds"
+             << endl
+             << "Max processing time : " << maxPTime << endl
+             << "Min processing time : " << minPTime << endl;
+    }
+    lframe.close();
+    limu.close();
+    lgps.close();
 }
 
 void Mono_Live_VIORB::grabFrameData() {
@@ -222,7 +227,7 @@ void Mono_Live_VIORB::recordData() {
                + "zacc" + "\n";
 
     iRecordedFrame = 1;
-    while (!time_to_exit) {
+    while (!time_to_exit && iFrame > 1) {
         imwrite(configParam->record_path + "/Camera1/" + to_string(iRecordedFrame) + ".jpg", matFrameForward);
         if(configParam->camera2 > 0){ imwrite(configParam->record_path + "/Camera2/" + to_string(iRecordedFrame) + ".jpg", matFrameDownward);}
 
