@@ -97,7 +97,7 @@ void SystemConfigParam::configMode(string mode_){
         bMAVonly = true;
         bOffline = false;
     } else {
-        cout << mode_ << "is not implemented (option : LIVERECORD, LIVE, MAVONLY, OFFLINE)" << endl;
+        cout << mode_ << "is not implemented (option : LIVERECORD, LIVE, MAVONLY, OFFLINE, MAVRECORD)" << endl;
         throw 1;
     }
 
