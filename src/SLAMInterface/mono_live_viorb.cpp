@@ -182,7 +182,6 @@ void Mono_Live_VIORB::cameraLoop() {
         if(configParam->camera2 > 0){
             stream2.read(matFrameDownward);
         }
-
 //        cout  << "get frame " << iFrame  << ": frame size [" << matFrameForward.size() << endl;
         iFrame++;
     }
@@ -227,14 +226,17 @@ void Mono_Live_VIORB::recordData() {
                + "zacc" + "\n";
 
     iRecordedFrame = 1;
-    while (!time_to_exit && iFrame > 1) {
-        imwrite(configParam->record_path + "/Camera1/" + to_string(iRecordedFrame) + ".jpg", matFrameForward);
-        if(configParam->camera2 > 0){ imwrite(configParam->record_path + "/Camera2/" + to_string(iRecordedFrame) + ".jpg", matFrameDownward);}
+    while (!time_to_exit) {
+        if (iFrame >1) {
+            imwrite(configParam->record_path + "/Camera1/" + to_string(iRecordedFrame) + ".jpg", matFrameForward);
+            if (configParam->camera2 > 0) {
+                imwrite(configParam->record_path + "/Camera2/" + to_string(iRecordedFrame) + ".jpg", matFrameDownward);
+            }
+            lframe << iRecordedFrame << sep << timestampcamera << "\n";
+            usleep(configParam->timespace); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
 
-        lframe << iRecordedFrame << sep << timestampcamera << "\n";
-        usleep(configParam->timespace); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
-
-        iRecordedFrame++;
+            iRecordedFrame++;
+        }
     }
 }
 
