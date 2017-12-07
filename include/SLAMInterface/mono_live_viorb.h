@@ -58,7 +58,7 @@ public:
     cv::Mat matFrame, matFrameForward, matFrameForwardLast, matFrameDownward,matFrameCurrentForward;
     double xc,yc,zc;
     double rollc,pitchc,yawc;
-    double timestampc, firstTimestamp;
+    double timestampc, firstTimestamp,timestampcamera;
     double ax, ay, az;
     posedata current_pose, slam_last_pose, gps_pose, slam_gps_pose;
 

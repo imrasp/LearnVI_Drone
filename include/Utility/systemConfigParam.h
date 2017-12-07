@@ -31,10 +31,11 @@ public:
     static string record_path;
     static string mission_route;
 
-    static bool bRecordSLAM;
-    static bool bLiveSLAM;
+    static bool bRecord;
+    static bool bLive;
     static bool bMAVonly;
     static bool bOffline;
+    static bool bMAVRecord;
 
     static int getCamera2();
 
@@ -59,14 +60,12 @@ public:
     static string getGui();
     static string getRecord_path();
     static string getMission_route();
-    static bool isBRecordSLAM();
-    static bool isBLiveSLAM();
+    static bool isBRecord();
+    static bool isBLive();
     static bool isBMAVonly();
 
 private:
     void fps2Timespace(int fps);
-    void initialization();
-    void setfps(int fps_);
     void parse_commandline(int argc, char **argv);
 
     void configMode(string mode);

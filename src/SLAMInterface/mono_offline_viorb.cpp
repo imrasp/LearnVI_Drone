@@ -25,31 +25,44 @@ void Mono_Offline_VIORB::start() {
     } else cout << dir << " is exist" << endl;
 
     ifstream frame(configParam->record_path + "/frame.csv");
-    if (!frame.is_open()) throw "ERROR: Cannot Open Frame File";
+    if (!frame.is_open()) {
+        cout << "ERROR: Cannot Open Frame File";
+        throw 1;
+    }
     ifstream imu(configParam->record_path + "/imu.csv");
-    if (!imu.is_open()) throw "ERROR: Cannot Open IMU File";
+    if (!imu.is_open()) {
+        cout << "ERROR: Cannot Open IMU File";
+        throw 1;
+    }
     ifstream gps(configParam->record_path + "/gps.csv");
-    if (!gps.is_open()) throw "ERROR: Cannot Open GPS File";
+    if (!gps.is_open()) {
+        cout << "ERROR: Cannot Open GPS File";
+        throw 1;
+    }
+    std::string str;
+    std::getline(imu, str);
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    SLAM = new ORB_SLAM2::System(configParam->vocabulary, configParam->setting, ORB_SLAM2::System::MONOCULAR, true);
+    SLAM = new ORB_SLAM2::System(configParam->vocabulary, configParam->setting, ORB_SLAM2::System::MONOCULAR,
+                                 string(configParam->gui) != "DISABLE");
     config = new ORB_SLAM2::ConfigParam(configParam->setting);
 
     imageMsgDelaySec = config->GetImageDelayToIMU();
-    // ORBVIO::MsgSynchronizer msgsync(imageMsgDelaySec);
+    // ORBVIO::MsgSynchronizer msgsync(imageMsgDe laySec);
     bAccMultiply98 = config->GetAccMultiply9p8();
 
-
-    int frameno, imuframeno, gpsframeno;
-    float timestamp, frametimestamp, firsttimestamp, imutimestamp, gpstimestamp;
-    float xgyro, ygyro, zgyro;
-    float xacc, yacc, zacc;
+    float frameno, imuframeno, gpsframeno;
+    float timestamp, frametimestamp, firsttimestamp, imutimestamp, gpstimestamp, t;
+    double xgyro, ygyro, zgyro;
+    double xacc, yacc, zacc;
     float x, y, z;
     float roll, pitch, yaw;
     float lat, lon, alt;
     float gpsx, gpsy, gpsz;
     float satellites_visible, hdop;
     string getval;
+
+    std::string::size_type sz;
 
     string line;
     string delimiter = ",";
@@ -58,39 +71,59 @@ void Mono_Offline_VIORB::start() {
     int splitpos, splitframepos;
     ORB_SLAM2::IMUData::vector_t vimuData;
 
-    while (frame.good()) {
-        //calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
+    while (frame.peek() != EOF) {
+        calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
 
         getline(frame, getval, ',');
-        frameno = stoi(getval, NULL); // Frame number
-        getline(frame, getval, ',');
+//        cout << "frame no raw = " << getval << " with a type is " << typeid(getval).name() << endl;
+        frameno = stof(getval); // Frame number
+        getline(frame, getval, '\n');
         frametimestamp = stof(getval, NULL); // timestamp od frame
+
+        cout << "Grab frame" << frameno << endl;
 
         //get frame
         filename = configParam->record_path + "/Camera1/" + to_string(frameno) + ".jpg";
         matFrameForward = imread(filename, CV_LOAD_IMAGE_COLOR);
 
+//        cout << "image loaded" << endl;
+
         //get imu data
         while (imu.good()) {
-
+//            cout << "get imu value \n";
             getline(imu, getval, ',');
-            imuframeno = stof(getval, NULL);
+//            cout << "imu no raw = " << getval << " with a type is " << typeid(getval).name() << endl;
+            imuframeno = stof(getval);
+//            cout << " imuframeno : " << imuframeno << endl;
             getline(imu, getval, ',');
+//            cout << "imutimestamp raw = " << getval << " with a type is " << typeid(getval).name() << endl;
             imutimestamp = stof(getval, NULL);
+//            cout << " imutimestamp : " << imutimestamp << endl;
+            getline(imu, getval, ',');
+//            cout << "t raw = " << getval << " with a type is " << typeid(getval).name() << endl;
+            t = stof(getval, NULL);
             getline(imu, getval, ',');
             getline(imu, getval, ',');
-            xgyro = stof(getval, NULL);
+//            cout << "xgyro raw = " << getval << " with a type is " << typeid(getval).name() << endl;
+            xgyro = stod(getval, NULL);
+//            cout << " xgyro : " << xgyro << endl;
             getline(imu, getval, ',');
-            ygyro = stof(getval, NULL);
+            ygyro = stod(getval, NULL);
+//            cout << " ygyro : " << ygyro << endl;
             getline(imu, getval, ',');
-            zgyro = stof(getval, NULL);
+            zgyro = stod(getval, NULL);
+//            cout << " zgyro : " << zgyro << endl;
             getline(imu, getval, ',');
-            xacc = stof(getval, NULL);
+            xacc = stod(getval, NULL);
+//            cout << " xacc : " << xacc << endl;
             getline(imu, getval, ',');
-            yacc = stof(getval, NULL);
-            getline(imu, getval, ',');
-            zacc = stof(getval, NULL);
+            yacc = stod(getval, NULL);
+//            cout << " yacc : " << yacc << endl;
+            getline(imu, getval, '\n');
+            zacc = stod(getval, NULL);
+//            cout << " zacc : " << zacc << endl;
 
+//            cout << "get imu for frame no " << imuframeno << endl;
             float timestamp;
             if (firstTimestamp == 0) firstTimestamp = imutimestamp;
             timestamp = (imutimestamp - firstTimestamp) / 1000;
@@ -111,44 +144,9 @@ void Mono_Offline_VIORB::start() {
                     ay *= g3dm;
                     az *= g3dm;
                 }
-                if (gps.good()) {
-                    while (gps.good()) {
-
-                        getline(gps, getval, ',');
-                        gpsframeno = stoi(getval, NULL);
-                        getline(gps, getval, ',');
-                        gpstimestamp = stof(getval, NULL);
-
-                        if (frameno != gpsframeno) {
-                            if (frametimestamp - gpstimestamp < 500) {
-                                double timestamp = (gpstimestamp - firstTimestamp) / 1000;
-                                ORB_SLAM2::GPSData gpsdata(lat, lon, alt, gpsx, gpsy, gpsz, timestamp);
-                                // Pass the image to the SLAM system
-                                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
-                            }
-                            break;
-                        }
-                        getline(gps, getval, ',');
-                        getline(gps, getval, ',');
-                        lat = stof(getval, NULL);
-                        getline(gps, getval, ',');
-                        lon = stof(getval, NULL);
-                        getline(gps, getval, ',');
-                        alt = stof(getval, NULL);
-                        getline(gps, getval, ',');
-                        gpsx = stof(getval, NULL);
-                        getline(gps, getval, ',');
-                        gpsy = stof(getval, NULL);
-                        getline(gps, getval, ',');
-                        gpsz = stof(getval, NULL);
-                    }
-                } else {
-
-                    ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
-                    // Pass the image to the SLAM system
-
-                    vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
-                }
+                ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
+                // Pass the image to the SLAM system
+                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
 
                 vimuData.clear();
                 // angular_velocity.x, angular_velocity.y, angular_velocity.z, linear_acceleration ax, ay, az, timestamp
@@ -176,22 +174,7 @@ void Mono_Offline_VIORB::start() {
     cout << "Save camera trajectory..." << endl;
     // Save camera trajectory
     SLAM->SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
-
-    cout << "Average Processing time per frame is " << avgTime << " milliseconds = " << avgTime / 1000 << " seconds"
-         << endl
-         << "Max processing time : " << maxPTime << endl
-         << "Min processing time : " << minPTime << endl;
-}
-
-void Mono_Offline_VIORB::stop() {
-    time_to_exit = true;
-    cout << "SLAM shutdown..." << endl;
-    // Stop all threads
-    SLAM->Shutdown();
-
-    cout << "Save camera trajectory..." << endl;
-    // Save camera trajectory
-    SLAM->SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
+    SLAM->SaveKeyFrameTrajectoryNavState("KeyFrameNavStateTrajectory.txt");
 
     cout << "Average Processing time per frame is " << avgTime << " milliseconds = " << avgTime / 1000 << " seconds"
          << endl

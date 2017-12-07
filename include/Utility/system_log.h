@@ -16,6 +16,7 @@
 #include <opencv2/opencv.hpp>
 #include <mavlink/v1.0/common/mavlink.h>
 #include <boost/filesystem.hpp>
+#include "Utility/systemConfigParam.h"
 
 using std::ofstream;
 using namespace std;
@@ -26,7 +27,7 @@ class System_Log
 public:
     // Con/De structors
     System_Log();
-    System_Log(string record_path);
+    System_Log(SystemConfigParam *configParam_);
     ~System_Log();
 
     void initialize_defaults(string record_path);
@@ -59,6 +60,8 @@ public:
 
 
 private:
+
+    SystemConfigParam *configParam;
 
     char datetime[40];
     char txtfilename[80];

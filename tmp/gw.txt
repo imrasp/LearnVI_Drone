@@ -1,0 +1,17 @@
+37.998000 -nan -nan nan -nan -nan -nan 
+38.705000 -nan -nan nan -nan -nan -nan 
+39.906000 -nan -nan nan -nan -nan -nan 
+41.299000 -nan -nan nan -nan -nan -nan 
+42.832000 -nan -nan nan -nan -nan -nan 
+44.237000 -nan -nan nan -nan -nan -nan 
+45.762000 -nan -nan nan -nan -nan -nan 
+47.101000 -nan -nan nan -nan -nan -nan 
+48.404000 -nan -nan nan -nan -nan -nan 
+49.930000 -nan -nan nan -nan -nan -nan 
+51.730000 -nan -nan nan -nan -nan -nan 
+52.896000 -nan -nan nan -nan -nan -nan 
+109.964000 -nan -nan nan -nan -nan -nan 
+112.166000 -nan -nan nan -nan -nan -nan 
+113.538000 -nan -nan nan -nan -nan -nan 
+115.131000 -nan -nan nan -nan -nan -nan 
+116.533000 -nan -nan nan -nan -nan -nan 

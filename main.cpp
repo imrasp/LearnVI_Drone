@@ -16,9 +16,9 @@ int main(int argc, char **argv) {
         configParam.readParams();
         cout << "Starting main in " << configParam.getMode() << " mode " << endl;
 
-        System_Log system_log(configParam.getRecord_path());
+        System_Log system_log(&configParam);
 
-        if (configParam.isBLiveSLAM()) {
+        if (configParam.bLive && configParam.bRecord) {
             // if (std::string(getResult) == "something") to compare char need to make one to be string
             Mono_Live_VIORB mono_live_viorb(&system_log, &configParam);
             Location_Manager location_manager(&system_log, &mono_live_viorb);
@@ -27,6 +27,23 @@ int main(int argc, char **argv) {
             location_manager.setMavlinkControl(&mavlink_control);
 
             cout << "Start SLAM thread,..." << endl;
+            mono_live_viorb.start();
+            location_manager.activateSLAM();
+            cout << "Start Mavlink thread,..." << endl;
+            mavlink_control.start();
+
+            //stop all thread in order
+            mono_live_viorb.stop();
+            mavlink_control.stop();
+        } else if (!configParam.bLive && configParam.bRecord) {
+            // if (std::string(getResult) == "something") to compare char need to make one to be string
+            Mono_Live_VIORB mono_live_viorb(&system_log, &configParam);
+            Location_Manager location_manager(&system_log, &mono_live_viorb);
+            mono_live_viorb.setLocationManager(&location_manager);
+            Mavlink_Control mavlink_control(&system_log, &location_manager, &configParam);
+            location_manager.setMavlinkControl(&mavlink_control);
+
+            cout << "Start Record thread,..." << endl;
             mono_live_viorb.start();
             location_manager.activateSLAM();
             cout << "Start Mavlink thread,..." << endl;
@@ -44,10 +61,8 @@ int main(int argc, char **argv) {
             mavlink_control.start();
             mavlink_control.stop();
         } else if (configParam.isBOffline()) {
-//            Mono_Offline_VIORB mono_offline_viorb(&system_log, &configParam);
-
-            cout << "Start Mavlink thread,..." << endl;
-//            mono_offline_viorb.start();
+            Mono_Offline_VIORB mono_offline_viorb(&system_log, &configParam);
+            mono_offline_viorb.start();
         }
 
         return 0;
@@ -55,5 +70,9 @@ int main(int argc, char **argv) {
     catch (int error) {
         fprintf(stderr, "threw exception %i \n", error);
         return error;
+    }
+    catch (const std::invalid_argument& e)
+    {
+        //cout << "Invalid answer : " << e << endl;
     }
 }

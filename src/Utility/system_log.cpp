@@ -8,9 +8,10 @@ System_Log::System_Log()
 {
     //initialize_defaults();
 }
-System_Log::System_Log(string record_path)
+System_Log::System_Log(SystemConfigParam *configParam_): configParam(configParam_)
 {
-    initialize_defaults(record_path);
+    if(!configParam->bOffline)
+        initialize_defaults(configParam->record_path);
 }
 System_Log::~System_Log()
 {

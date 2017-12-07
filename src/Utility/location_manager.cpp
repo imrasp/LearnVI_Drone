@@ -373,13 +373,14 @@ void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
     current_pose.yacc = highres_imu.yacc;
     current_pose.zacc = highres_imu.zacc;
 
-    current_pose.xacc = highres_imu.xgyro;
-    current_pose.yacc = highres_imu.ygyro;
-    current_pose.zacc = highres_imu.zgyro;
+    current_pose.xgyro = highres_imu.xgyro;
+    current_pose.ygyro = highres_imu.ygyro;
+    current_pose.zgyro = highres_imu.zgyro;
 
     current_pose.highres_imu_time = highres_imu.time_usec;
 
-    //cout << "HIGHRES_IMU (accel): " << highres_imu.xacc << ", " << highres_imu.yacc << ", " << highres_imu.zacc << endl;
+    cout << "HIGHRES_IMU (accel): " << highres_imu.xacc << ", " << highres_imu.yacc << ", " << highres_imu.zacc << endl;
+    cout << "HIGHRES_IMU (accel- current_pose): " << current_pose.xacc << ", " << current_pose.yacc << ", " << current_pose.zacc << endl;
 //    cout << "HIGHRES_IMU (gyro2): " << current_pose.xgyro << ", " << current_pose.ygyro << ", " << current_pose.zgyro << endl;
     if (bStartSLAM) {
         if (mono_live_viorb) mono_live_viorb->getIMUdata(current_pose);

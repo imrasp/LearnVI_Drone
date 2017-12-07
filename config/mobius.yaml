@@ -7,7 +7,7 @@ test.VINSInitTime: 1500000000000000000.0
 
 # Modify test.InitVIOTmpPath and bagfile to the correct path
 # Path to save tmp files/results
-test.InitVIOTmpPath: "./SLAM_result/"
+test.InitVIOTmpPath: "/home/rasp/CLionProjects/LearnVI_Drone/tmp/"
 
 ## For good initialization (no movement at the beginning for some bag)
 test.DiscardTime: 0
@@ -43,7 +43,7 @@ imagetopic: "/cam0/image_raw"
 Camera.delaytoimu: 0
 
 # acc=acc*9.8, if below is 1
-IMU.multiplyG: 1
+IMU.multiplyG: 0
 
 # camera-imu frame transformation, Pi = Tic * Pc
 #
@@ -70,7 +70,7 @@ Camera.Tbc:
 # Local Window size
 LocalMapping.LocalWindowSize: 20
 
-OutputFolder: "./SLAM_result/"
+OutputFolder: "/home/rasp/CLionProjects/LearnVI_Drone/tmp/"
 #./VIROB/tmp/
 #--------------------------------------------------------------------------------------------
 # Camera Parameters. Adjust them!

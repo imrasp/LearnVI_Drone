@@ -20,8 +20,8 @@ string SystemConfigParam::gui;
 string SystemConfigParam::record_path;
 string SystemConfigParam::mission_route;
 
-bool SystemConfigParam::bRecordSLAM;
-bool SystemConfigParam::bLiveSLAM;
+bool SystemConfigParam::bRecord;
+bool SystemConfigParam::bLive;
 bool SystemConfigParam::bMAVonly;
 bool SystemConfigParam::bOffline;
 
@@ -36,26 +36,6 @@ SystemConfigParam::SystemConfigParam(int argc, char **argv)
 
 SystemConfigParam::~SystemConfigParam()
 {
-}
-
-void SystemConfigParam::initialization(){
-    // Default input arguments
-#ifdef __APPLE__
-    uart_name = (char*)"/dev/tty.usbmodem1";
-#else
-    uart_name = (char *) "/dev/ttyUSB0";
-#endif
-
-    baudrate = 921600; // 57600 or 921600 px4 companion link buadrate
-    vocabulary = "../Vocabulary/ORBvoc.txt";
-    setting = "../config/mobius.yaml";
-    mode = "LIVE";
-    gui = "ENABLE";
-    record_path = "/home/odroid/workspace/VIDrone/record_data/";
-    fps = 10;
-    timespace = 1000000;
-    mission_route = "./mission_route.txt";
-    camera1 = 1;
 }
 
 void SystemConfigParam::readParams(){
@@ -86,38 +66,38 @@ void SystemConfigParam::readParams(){
     cout << "Mission route : " << mission_route << endl;
 }
 
-void SystemConfigParam::setfps(int fps_){
-    fps = fps_;
-    timespace = 10000000/fps;
-}
-
 void SystemConfigParam::fps2Timespace(int fps){
-    timespace = 10000000/fps;
+    timespace = 1000000/fps;
 }
 
 void SystemConfigParam::configMode(string mode_){
     if(string(mode_) == "LIVERECORD"){
-        bLiveSLAM = true;
-        bRecordSLAM = true;
+        bLive = true;
+        bRecord = true;
         bMAVonly = false;
         bOffline = false;
     } else if(string(mode_) == "LIVE"){
-        bLiveSLAM = true;
-        bRecordSLAM = false;
+        bLive = true;
+        bRecord = false;
         bMAVonly = false;
         bOffline = false;
     } else if(string(mode_) == "MAVONLY"){
-        bLiveSLAM = false;
-        bRecordSLAM = false;
+        bLive = false;
+        bRecord = false;
         bMAVonly = true;
         bOffline = false;
     } else if(string(mode_) == "OFFLINE"){
-        bLiveSLAM = false;
-        bRecordSLAM = false;
+        bLive = false;
+        bRecord = false;
         bMAVonly = false;
         bOffline = true;
+    } else if(string(mode_) == "MAVRECORD"){
+        bLive = false;
+        bRecord = true;
+        bMAVonly = true;
+        bOffline = false;
     } else {
-        cout << mode_ << "is not implemented (option : LIVERECORD, LIVE, MAVONLY)" << endl;
+        cout << mode_ << "is not implemented (option : LIVERECORD, LIVE, MAVONLY, OFFLINE)" << endl;
         throw 1;
     }
 
@@ -202,12 +182,12 @@ string SystemConfigParam::getMission_route() {
     return mission_route;
 }
 
-bool SystemConfigParam::isBRecordSLAM() {
-    return bRecordSLAM;
+bool SystemConfigParam::isBRecord() {
+    return bRecord;
 }
 
-bool SystemConfigParam::isBLiveSLAM() {
-    return bLiveSLAM;
+bool SystemConfigParam::isBLive() {
+    return bLive;
 }
 
 bool SystemConfigParam::isBMAVonly() {

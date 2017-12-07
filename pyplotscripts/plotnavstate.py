@@ -2,8 +2,8 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
-filepath = '/home/rasp/CLionProjects/LearnVI_Drone_Refactor/';
-filename = filepath+'KeyFrameTrajectory.txt';
+filepath = '/home/rasp/CLionProjects/LearnVI_Drone/pyplotscripts/';
+filename = filepath+'KeyFrameNavStateTrajectory.txt';
 
 NS = np.loadtxt(filename);
 

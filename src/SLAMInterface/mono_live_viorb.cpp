@@ -25,21 +25,22 @@ void Mono_Live_VIORB::start() {
     cout << "Start Camera thread..." << endl;
     boost::thread threadCamera = boost::thread(&Mono_Live_VIORB::cameraLoop, this);
 
-    cout << "Starting SLAM..." << endl;
-    // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    SLAM = new ORB_SLAM2::System(configParam->vocabulary, configParam->setting, ORB_SLAM2::System::MONOCULAR,
-                                 string(configParam->gui) != "DISABLE");
-    config = new ORB_SLAM2::ConfigParam(configParam->setting);
+    if (configParam->bLive) {
+        cout << "Starting SLAM..." << endl;
+        // Create SLAM system. It initializes all system threads and gets ready to process frames.
+        SLAM = new ORB_SLAM2::System(configParam->vocabulary, configParam->setting, ORB_SLAM2::System::MONOCULAR,
+                                     string(configParam->gui) != "DISABLE");
+        config = new ORB_SLAM2::ConfigParam(configParam->setting);
 
-    imageMsgDelaySec = config->GetImageDelayToIMU();
-    // ORBVIO::MsgSynchronizer msgsync(imageMsgDelaySec);
-    bAccMultiply98 = config->GetAccMultiply9p8();
+        imageMsgDelaySec = config->GetImageDelayToIMU();
+        // ORBVIO::MsgSynchronizer msgsync(imageMsgDe laySec);
+        bAccMultiply98 = config->GetAccMultiply9p8();
 
 
-    cout << "Start SLAM thread..." << endl;
-    boost::thread threadSLAM = boost::thread(&Mono_Live_VIORB::grabFrameData, this);
-
-    if (configParam->bRecordSLAM) {
+        cout << "Start SLAM thread..." << endl;
+        boost::thread threadSLAM = boost::thread(&Mono_Live_VIORB::grabFrameData, this);
+    }
+    if (configParam->bRecord) {
         cout << "Stard Record thread..." << endl;
         boost::thread threadRecord = boost::thread(&Mono_Live_VIORB::recordData, this);
     }
@@ -53,7 +54,8 @@ void Mono_Live_VIORB::stop() {
 
     cout << "Save camera trajectory..." << endl;
     // Save camera trajectory
-    SLAM->SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
+    SLAM->SaveKeyFrameTrajectoryTUM(configParam->record_path + "/KeyFrameTrajectory.txt");
+    SLAM->SaveKeyFrameTrajectoryNavState(configParam->record_path + "/KeyFrameNavStateTrajectory.txt");
 
     cout << "Average Processing time per frame is " << avgTime << " milliseconds = " << avgTime / 1000 << " seconds"
          << endl
@@ -72,8 +74,8 @@ void Mono_Live_VIORB::grabFrameData() {
         matFrameForwardLast = matFrameCurrentForward.clone();
         matFrameCurrentForward = matFrameForward.clone();
 
-        if (iSLAMFrame == 1) firstTimestamp = timestampc;
-        timestampc = (timestampc - firstTimestamp) / 1000;
+        if (iSLAMFrame == 1) firstTimestamp = timestampcamera;
+        timestampc = (timestampcamera - firstTimestamp) / 1000;
 
         frameDiff = 0;
         if (matFrameForwardLast.rows <= 0 || matFrameForwardLast.cols <= 0)
@@ -170,7 +172,7 @@ void Mono_Live_VIORB::cameraLoop() {
 
     iFrame = 1;
     while (!time_to_exit) {
-        timestampc = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+        timestampcamera = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
         stream1.read(matFrameForward);
         if(configParam->camera2 > 0){
             stream2.read(matFrameDownward);
@@ -209,8 +211,7 @@ void Mono_Live_VIORB::recordData() {
     limu.open(configParam->record_path + "/imu.csv");
     lgps.open(configParam->record_path + "/gps.csv");
 
-    limu
-            << string("FrameNo") + ","
+    limu << string("FrameNo") + ","
                + "timestamp(ns)" + ","
                + "timeboot(ms)" + ","
                + "xgyro" + ","
@@ -218,32 +219,14 @@ void Mono_Live_VIORB::recordData() {
                + "zgyro" + ","
                + "xacc" + ","
                + "yacc" + ","
-               + "zacc" + ","
-//               + "x" + ","
-//               + "y" + ","
-//               + "z" + ","
-//               + "roll" + ","
-//               + "pitch" + ","
-//               + "yaw" + ","
-//               //+ "satellites_visible" + ","
-//               + "hdop" + ","
-//               + "lat" + ","
-//               + "lon" + ","
-//               + "alt" + ","
-//               + "vx" + ","
-//               + "vy" + ","
-//               + "vz" + ","
-//               + "gpsxacc" + ","
-//               + "gpsyacc" + ","
-//               + "gpszacc" +
-                       "\n";
+               + "zacc" + "\n";
 
     iRecordedFrame = 1;
     while (!time_to_exit) {
         imwrite(configParam->record_path + "/Camera1/" + to_string(iRecordedFrame) + ".jpg", matFrameForward);
         if(configParam->camera2 > 0){ imwrite(configParam->record_path + "/Camera2/" + to_string(iRecordedFrame) + ".jpg", matFrameDownward);}
 
-        lframe << iRecordedFrame << sep << timestampc << "\n";
+        lframe << iRecordedFrame << sep << timestampcamera << "\n";
         usleep(configParam->timespace); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
 
         iRecordedFrame++;
@@ -268,8 +251,12 @@ void Mono_Live_VIORB::calAvgProcessingTime(double time) {
 void Mono_Live_VIORB::getGPSdata(posedata current_pose_){
 
     gps_pose = current_pose_;
-    lgps << iRecordedFrame << sep << gps_pose.timestampunix << sep << current_pose.gpstime << sep << current_pose.lat
-         << sep << current_pose.lon << sep << current_pose.alt << sep << current_pose.gpsx << sep << current_pose.gpsy << sep << current_pose.gpsz << "\n";
+    if (configParam->bRecord && iRecordedFrame > 0) {
+        lgps << iRecordedFrame << sep << gps_pose.timestampunix << sep << current_pose.gpstime << sep
+             << current_pose.lat
+             << sep << current_pose.lon << sep << current_pose.alt << sep << current_pose.gpsx << sep
+             << current_pose.gpsy << sep << current_pose.gpsz << "\n";
+    }
 }
 void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     current_pose = current_pose_;
@@ -296,37 +283,11 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     vimuData.push_back(imudata);
 
 
-    if (configParam->bRecordSLAM && iRecordedFrame == 1) {
+    if (configParam->bRecord && iRecordedFrame > 0) {
 
         limu << iRecordedFrame << sep << current_pose.timestampunix << sep << current_pose.timebootms << sep << current_pose.xgyro
                 << sep << current_pose.ygyro << sep << current_pose.zgyro << sep << current_pose.xacc << sep
                 << current_pose.yacc << sep << current_pose.zacc << "\n";
-//                  + to_string(timestamp) + ","
-//                  + to_string(current_pose.timebootms) + ","
-//                  + to_string(current_pose.xgyro) + ","
-//                  + to_string(current_pose.ygyro) + ","
-//                  + to_string(current_pose.zgyro) + ","
-//                  + to_string(current_pose.xacc) + ","
-//                  + to_string(current_pose.yacc) + ","
-//                  + to_string(current_pose.zacc) + ","
-//                  + to_string(current_pose.x) + ","
-//                  + to_string(current_pose.y) + ","
-//                  + to_string(current_pose.z) + ","
-//                  + to_string(current_pose.roll) + ","
-//                  + to_string(current_pose.pitch) + ","
-//                  + to_string(current_pose.yaw) + ","
-//                  //+ to_string(current_pose.satellites_visible) + ","
-//                  + to_string(current_pose.hdop) + ","
-//                  + to_string(current_pose.lat) + ","
-//                  + to_string(current_pose.lon) + ","
-//                  + to_string(current_pose.alt) + ","
-//                  + to_string(current_pose.vx) + ","
-//                  + to_string(current_pose.vy) + ","
-//                  + to_string(current_pose.vz) + ","
-//                  + to_string(current_pose.gpsxacc) + ","
-//                  + to_string(current_pose.gpsyacc) + ","
-//                  + to_string(current_pose.gpszacc)
-//                  + "\n";
     }
 }
 
