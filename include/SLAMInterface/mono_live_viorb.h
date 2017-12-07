@@ -8,6 +8,7 @@
 #include <boost/thread.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <opencv2/core/core.hpp>
+#include <stdio.h>
 
 #include "Utility/system_log.h"
 //#include "Utility/location_manager.h"

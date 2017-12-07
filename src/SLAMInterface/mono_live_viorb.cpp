@@ -175,7 +175,7 @@ void Mono_Live_VIORB::cameraLoop() {
         cout << "open a Downward camera \n";
     }
 
-    iFrame = 1;
+    iFrame = 0;
     while (!time_to_exit) {
         timestampcamera = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
         stream1.read(matFrameForward);
@@ -227,7 +227,8 @@ void Mono_Live_VIORB::recordData() {
 
     iRecordedFrame = 1;
     while (!time_to_exit) {
-        if (iFrame >1) {
+        cout << "";
+        if (iFrame > 0) {
             imwrite(configParam->record_path + "/Camera1/" + to_string(iRecordedFrame) + ".jpg", matFrameForward);
             if (configParam->camera2 > 0) {
                 imwrite(configParam->record_path + "/Camera2/" + to_string(iRecordedFrame) + ".jpg", matFrameDownward);
