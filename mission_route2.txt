@@ -1,6 +1,6 @@
 arm
-takeoff 10.0 0.2
+#takeoff 10.0 0.2
 sleep 10
-gotoned 5.0 5.0 0.0
-land
+#gotoned 5.0 5.0 0.0
+#land
 disarm
