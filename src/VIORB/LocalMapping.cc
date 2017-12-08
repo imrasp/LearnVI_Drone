@@ -516,6 +516,8 @@ bool LocalMapping::TryInitVIO(void)
         mbFirstTry = false;
         mnStartTime = mpCurrentKeyFrame->mTimeStamp;
     }
+
+    cout << "pNewestKF->mTimeStamp ("<<pNewestKF->mTimeStamp<<") - mnStartTime("<<mnStartTime<<") = " << pNewestKF->mTimeStamp - mnStartTime << "(ConfigParam::GetVINSInitTime() is " <<ConfigParam::GetVINSInitTime() << " ) \n";
     if(pNewestKF->mTimeStamp - mnStartTime >= ConfigParam::GetVINSInitTime())
     {
         bVIOInited = true;
@@ -962,11 +964,13 @@ void LocalMapping::Run()
                 {
                     if(!GetVINSInited())
                     {
+                        cout << "1--------------------------- LocalBundleAdjustment ---------------------------";
                         //Optimizer::LocalBundleAdjustment(mpCurrentKeyFrame,mlLocalKeyFrames,&mbAbortBA, mpMap, this);
                         Optimizer::LocalBundleAdjustment(mpCurrentKeyFrame,&mbAbortBA,mpMap,this);
                     }
                     else
                     {
+                        cout << "2--------------------------- LocalBAPRVIDP ---------------------------";
                         //Optimizer::LocalBundleAdjustmentNavStatePRV(mpCurrentKeyFrame,mlLocalKeyFrames,&mbAbortBA, mpMap, mGravityVec, this);
                         Optimizer::LocalBAPRVIDP(mpCurrentKeyFrame,mlLocalKeyFrames,&mbAbortBA, mpMap, mGravityVec, this);
                     }

@@ -22,7 +22,7 @@
 class Location_Manager;
 
 typedef struct posedata {
-    float timestampunix, timestampms, timestampns;
+    int timestampunix, timestampms, timestampns;
     float gpstime, nedtime, highres_imu_time, attitude_time;
     float x, y, z;
     double gpsx, gpsy, gpsz;
@@ -32,7 +32,7 @@ typedef struct posedata {
     float vx,vy,vz;
     double gpsvx, gpsvy, gpsvz;
     float gpsxacc, gpsyacc, gpszacc;
-    float timebootms;
+    int timebootms;
 
     uint8_t satellites_visible;
     uint16_t hdop;
@@ -59,7 +59,7 @@ public:
     cv::Mat matFrame, matFrameForward, matFrameForwardLast, matFrameDownward,matFrameCurrentForward;
     double xc,yc,zc;
     double rollc,pitchc,yawc;
-    double timestampc, firstTimestamp,timestampcamera;
+    int timestampc, firstTimestamp,timestampcamera;
     double ax, ay, az;
     posedata current_pose, slam_last_pose, gps_pose, slam_gps_pose;
 
@@ -77,7 +77,7 @@ private:
     double imageMsgDelaySec;
 
     double frameDiff;
-    int iFrame;
+    int iFrame, imu_counter;
 
     double frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious);
 

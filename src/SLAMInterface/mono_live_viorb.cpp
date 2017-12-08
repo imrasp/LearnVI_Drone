@@ -101,7 +101,7 @@ void Mono_Live_VIORB::grabFrameData() {
 
             if((gps_pose.timestampunix - (std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1))) < 500){
                 if (firstTimestamp == 0) firstTimestamp = gps_pose.timestampunix;
-                double timestamp = (gps_pose.timestampunix - firstTimestamp) / 1000;
+                int timestamp = (gps_pose.timestampunix - firstTimestamp) / 1000;
                 ORB_SLAM2::GPSData gpsdata(gps_pose.lat, gps_pose.lon, gps_pose.alt, gps_pose.gpsx, gps_pose.gpsy, gps_pose.gpsz, timestamp);
                 // Pass the image to the SLAM system
                 vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
@@ -219,7 +219,7 @@ void Mono_Live_VIORB::recordData() {
                + "timestamp(ns)" + ","
                + "timeboot(ms)" + ","
                + "xgyro" + ","
-               + "xyyro" + ","
+               + "ygyro" + ","
                + "zgyro" + ","
                + "xacc" + ","
                + "yacc" + ","
@@ -269,7 +269,7 @@ void Mono_Live_VIORB::getGPSdata(posedata current_pose_){
 void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     current_pose = current_pose_;
 
-    float timestamp;
+    int timestamp;
     if (firstTimestamp == 0) firstTimestamp = current_pose.timestampunix;
     timestamp = (current_pose.timestampunix - firstTimestamp) / 1000;
 

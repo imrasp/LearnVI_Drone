@@ -51,7 +51,7 @@ void Mono_Offline_VIORB::start() {
     // ORBVIO::MsgSynchronizer msgsync(imageMsgDe laySec);
     bAccMultiply98 = config->GetAccMultiply9p8();
 
-    float frameno, imuframeno, gpsframeno;
+    int frameno, imuframeno, gpsframeno;
     float timestamp, frametimestamp, firsttimestamp, imutimestamp, gpstimestamp, t;
     double xgyro, ygyro, zgyro;
     double xacc, yacc, zacc;
@@ -62,6 +62,7 @@ void Mono_Offline_VIORB::start() {
     float satellites_visible, hdop;
     string getval;
 
+
     std::string::size_type sz;
 
     string line;
@@ -71,62 +72,60 @@ void Mono_Offline_VIORB::start() {
     int splitpos, splitframepos;
     ORB_SLAM2::IMUData::vector_t vimuData;
 
-    while (frame.peek() != EOF) {
+    while (frame.good()) {
         calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
-
+cout << "current time is " << std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+        double td = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+        float tf = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+        int ti = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+        float taf= ti/1000;
+        cout << " equal to " << tf << " in float and " << td << " in double and " << ti << " in int and "<<taf<<"\n";
         getline(frame, getval, ',');
-//        cout << "frame no raw = " << getval << " with a type is " << typeid(getval).name() << endl;
-        frameno = stof(getval); // Frame number
+        frameno = atoi(getval.c_str()); // Frame number
         getline(frame, getval, '\n');
-        frametimestamp = stof(getval, NULL); // timestamp od frame
+        frametimestamp = atof(getval.c_str()); // timestamp od frame
 
-        cout << "Grab frame" << frameno << endl;
+//        cout << "Grab frame" << frameno << endl;
 
         //get frame
         filename = configParam->record_path + "/Camera1/" + to_string(frameno) + ".jpg";
         matFrameForward = imread(filename, CV_LOAD_IMAGE_COLOR);
-
 //        cout << "image loaded" << endl;
 
         //get imu data
         while (imu.good()) {
 //            cout << "get imu value \n";
             getline(imu, getval, ',');
-//            cout << "imu no raw = " << getval << " with a type is " << typeid(getval).name() << endl;
-            imuframeno = stof(getval);
+            imuframeno = atoi(getval.c_str());
 //            cout << " imuframeno : " << imuframeno << endl;
             getline(imu, getval, ',');
-//            cout << "imutimestamp raw = " << getval << " with a type is " << typeid(getval).name() << endl;
-            imutimestamp = stof(getval, NULL);
+            imutimestamp = atof(getval.c_str());
 //            cout << " imutimestamp : " << imutimestamp << endl;
             getline(imu, getval, ',');
-//            cout << "t raw = " << getval << " with a type is " << typeid(getval).name() << endl;
-            t = stof(getval, NULL);
+//            t = stof(getval, NULL);
             getline(imu, getval, ',');
-            getline(imu, getval, ',');
-//            cout << "xgyro raw = " << getval << " with a type is " << typeid(getval).name() << endl;
-            xgyro = stod(getval, NULL);
+            xgyro = atof(getval.c_str());
 //            cout << " xgyro : " << xgyro << endl;
             getline(imu, getval, ',');
-            ygyro = stod(getval, NULL);
+            ygyro = atof(getval.c_str());
 //            cout << " ygyro : " << ygyro << endl;
             getline(imu, getval, ',');
-            zgyro = stod(getval, NULL);
+            zgyro = atof(getval.c_str());
 //            cout << " zgyro : " << zgyro << endl;
             getline(imu, getval, ',');
-            xacc = stod(getval, NULL);
+            xacc = atof(getval.c_str());
 //            cout << " xacc : " << xacc << endl;
             getline(imu, getval, ',');
-            yacc = stod(getval, NULL);
+            yacc = atof(getval.c_str());
 //            cout << " yacc : " << yacc << endl;
             getline(imu, getval, '\n');
-            zacc = stod(getval, NULL);
+            zacc = atof(getval.c_str());
 //            cout << " zacc : " << zacc << endl;
 
 //            cout << "get imu for frame no " << imuframeno << endl;
             float timestamp;
             if (firstTimestamp == 0) firstTimestamp = imutimestamp;
-            timestamp = (imutimestamp - firstTimestamp) / 1000;
+            timestamp = (imutimestamp - firstTimestamp);
 
             if (bAccMultiply98) {
                 xacc *= g3dm;
@@ -135,9 +134,9 @@ void Mono_Offline_VIORB::start() {
             }
 
             if (frameno != imuframeno) {
-                std::cout << "Frame No: " << frameno << '\n';
-                std::cout << "Total Number of IMU: " << vimuData.size() << '\n';
-                std::cout << "-------------------" << '\n';
+//                std::cout << "Frame No: " << frameno << '\n';
+//                std::cout << "Total Number of IMU: " << vimuData.size() << '\n';
+//                std::cout << "-------------------" << '\n';
 
                 if (bAccMultiply98) {
                     ax *= g3dm;
@@ -146,7 +145,7 @@ void Mono_Offline_VIORB::start() {
                 }
                 ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
                 // Pass the image to the SLAM system
-                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
+                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, (frametimestamp-firstTimestamp)/1000);
 
                 vimuData.clear();
                 // angular_velocity.x, angular_velocity.y, angular_velocity.z, linear_acceleration ax, ay, az, timestamp
@@ -158,9 +157,9 @@ void Mono_Offline_VIORB::start() {
             // angular_velocity.x, angular_velocity.y, angular_velocity.z, linear_acceleration ax, ay, az, timestamp
             ORB_SLAM2::IMUData imudata(xgyro, ygyro, zgyro, xacc, yacc, zacc, timestamp);
             vimuData.push_back(imudata);
-
         }
         calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
+
     }
 
     frame.close();

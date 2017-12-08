@@ -3,7 +3,7 @@
 # 1: realtime, 0: non-realtime
 test.RealTime: 1
 # Time for visual-inertial initialization
-test.VINSInitTime: 1500000000000000000.0
+test.VINSInitTime: 15
 
 # Modify test.InitVIOTmpPath and bagfile to the correct path
 # Path to save tmp files/results
@@ -43,7 +43,7 @@ imagetopic: "/cam0/image_raw"
 Camera.delaytoimu: 0
 
 # acc=acc*9.8, if below is 1
-IMU.multiplyG: 0
+IMU.multiplyG: 1
 
 # camera-imu frame transformation, Pi = Tic * Pc
 #

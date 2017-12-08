@@ -100,6 +100,7 @@ void System::SaveKeyFrameTrajectoryNavState(const string &filename)
 
 cv::Mat System::TrackMonoVI(const cv::Mat &im, const IMUData::vector_t &vimu, const GPSData &gpsData, const double &timestamp)
 {
+
     if(mSensor!=MONOCULAR)
     {
         cerr << "ERROR: you called TrackMonocular but input sensor was not set to Monocular." << endl;

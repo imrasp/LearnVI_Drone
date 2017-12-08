@@ -18,6 +18,7 @@
 #include "SLAMInterface/mono_live_viorb.h"
 #include "Utility/system_log.h"
 #include "Utility/systemConfigParam.h"
+#include <typeinfo>
 
 class Mono_Offline_VIORB {
 public:

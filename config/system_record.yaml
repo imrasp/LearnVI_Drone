@@ -5,7 +5,7 @@ system.uart_name: /dev/ttyUSB0
 system.vocabulary: /home/rasp/CLionProjects/LearnVI_Drone/Vocabulary/ORBvoc.txt
 system.setting: /home/rasp/CLionProjects/LearnVI_Drone/config/mobius.yaml
 system.mode: MAVRECORD
-system.gui: DISABLE
+system.gui: ENABLE
 system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/Recorded_Datasets
 system.fps: 10
 system.mission_route: /home/rasp/CLionProjects/LearnVI_Drone/mission_route2.txt
