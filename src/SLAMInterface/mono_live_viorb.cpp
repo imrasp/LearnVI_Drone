@@ -79,8 +79,9 @@ void Mono_Live_VIORB::grabFrameData() {
         matFrameForwardLast = matFrameCurrentForward.clone();
         matFrameCurrentForward = matFrameForward.clone();
 
-        if (iSLAMFrame == 1) firstTimestamp = timestampcamera;
-        timestampc = (timestampcamera - firstTimestamp) / 1000;
+//        if (iSLAMFrame == 1) firstTimestamp = timestampcamera;
+//        timestampc = (timestampcamera - firstTimestamp) / 1000;
+        timestampc = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
         frameDiff = 0;
         if (matFrameForwardLast.rows <= 0 || matFrameForwardLast.cols <= 0)
@@ -100,9 +101,9 @@ void Mono_Live_VIORB::grabFrameData() {
             slam_last_pose = current_pose;
 
             if((gps_pose.timestampunix - (std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1))) < 500){
-                if (firstTimestamp == 0) firstTimestamp = gps_pose.timestampunix;
-                int timestamp = (gps_pose.timestampunix - firstTimestamp) / 1000;
-                ORB_SLAM2::GPSData gpsdata(gps_pose.lat, gps_pose.lon, gps_pose.alt, gps_pose.gpsx, gps_pose.gpsy, gps_pose.gpsz, timestamp);
+//                if (firstTimestamp == 0) firstTimestamp = gps_pose.timestampunix;
+//                int timestamp = (gps_pose.timestampunix - firstTimestamp) / 1000;
+                ORB_SLAM2::GPSData gpsdata(gps_pose.lat, gps_pose.lon, gps_pose.alt, gps_pose.gpsx, gps_pose.gpsy, gps_pose.gpsz, gps_pose.timestampunix);
                 // Pass the image to the SLAM system
                 vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
             }
@@ -177,7 +178,8 @@ void Mono_Live_VIORB::cameraLoop() {
 
     iFrame = 0;
     while (!time_to_exit) {
-        timestampcamera = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+
+        timestampcamera = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
         stream1.read(matFrameForward);
         if(configParam->camera2 > 0){
             stream2.read(matFrameDownward);
@@ -233,7 +235,7 @@ void Mono_Live_VIORB::recordData() {
             if (configParam->camera2 > 0) {
                 imwrite(configParam->record_path + "/Camera2/" + to_string(iRecordedFrame) + ".jpg", matFrameDownward);
             }
-            lframe << iRecordedFrame << sep << timestampcamera << "\n";
+            lframe << iRecordedFrame << sep << to_string(timestampcamera) << "\n";
             usleep(configParam->timespace); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
 
             iRecordedFrame++;
@@ -269,9 +271,9 @@ void Mono_Live_VIORB::getGPSdata(posedata current_pose_){
 void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     current_pose = current_pose_;
 
-    int timestamp;
-    if (firstTimestamp == 0) firstTimestamp = current_pose.timestampunix;
-    timestamp = (current_pose.timestampunix - firstTimestamp) / 1000;
+//    int timestamp;
+//    if (firstTimestamp == 0) firstTimestamp = current_pose.timestampunix;
+//    timestamp = (current_pose.timestampunix - firstTimestamp) / 1000;
 
     rollc = current_pose.xgyro;
     pitchc = current_pose.ygyro;
@@ -287,7 +289,7 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
         az *= g3dm;
     }
     // angular_velocity.x, angular_velocity.y, angular_velocity.z, linear_acceleration ax, ay, az, timestamp
-    ORB_SLAM2::IMUData imudata(rollc, pitchc, yawc, ax, ay, az, timestamp);
+    ORB_SLAM2::IMUData imudata(rollc, pitchc, yawc, ax, ay, az, current_pose.timestampunix);
     vimuData.push_back(imudata);
 
 

@@ -71,15 +71,19 @@ void Mono_Offline_VIORB::start() {
     string token;
     int splitpos, splitframepos;
     ORB_SLAM2::IMUData::vector_t vimuData;
+    boost::posix_time::ptime const referencedTime(boost::gregorian::date(2015, 1, 1));
 
     while (frame.good()) {
         calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
-cout << "current time is " << std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-        double td = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-        float tf = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-        int ti = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-        float taf= ti/1000;
-        cout << " equal to " << tf << " in float and " << td << " in double and " << ti << " in int and "<<taf<<"\n";
+
+        auto ms = (boost::posix_time::microsec_clock::local_time() - referencedTime).total_milliseconds();
+        double oms = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()); //std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+        string sms = to_string(ms);
+        double fms = stod(sms);
+        float fmsboost = (float) boost::lexical_cast<double>(oms);
+        cout.precision(20);
+        cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() << " | oms = " << oms <<" | oms to string = " << to_string(oms) << " | oms to long = " << static_cast<long>(100 * stof(to_string(oms)))  << " | boost::lexical_cast<double> = " << boost::lexical_cast<double>(oms) << " | double to float = " << fmsboost << endl;
+
         getline(frame, getval, ',');
         frameno = atoi(getval.c_str()); // Frame number
         getline(frame, getval, '\n');

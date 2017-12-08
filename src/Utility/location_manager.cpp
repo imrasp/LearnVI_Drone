@@ -367,7 +367,7 @@ bool Location_Manager::getUpdateVisionPoseToMavlink(){
 
 void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
     system_log->write2csv("imu", highres_imu);
-    current_pose.timestampunix = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
+    current_pose.timestampunix = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
     current_pose.xacc = highres_imu.xacc;
     current_pose.yacc = highres_imu.yacc;
@@ -389,7 +389,7 @@ void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
 }
 
 void Location_Manager::setPose(mavlink_attitude_t attitude) {
-    current_pose.timestampunix = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
+    current_pose.timestampunix = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
     current_pose.roll = attitude.roll;
     current_pose.pitch = attitude.pitch;
     current_pose.yaw = attitude.yaw;
@@ -399,7 +399,7 @@ void Location_Manager::setPose(mavlink_attitude_t attitude) {
 
 void Location_Manager::setPose(mavlink_global_position_int_t global_pos) {
     system_log->write2csv("gps", global_pos);
-    current_pose.timestampunix = std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1);
+    current_pose.timestampunix = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
     current_pose.timebootms = global_pos.time_boot_ms;
     current_pose.lat = global_pos.lat;
