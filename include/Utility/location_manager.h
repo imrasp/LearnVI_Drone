@@ -37,6 +37,8 @@ public:
     Mat geodetic2NED(mavlink_gps_raw_int_t gps_pos);
     bool isInitialized();
 
+    void setPixhawkTimeReference(mavlink_system_time_t system_time);
+
     void setPose(mavlink_highres_imu_t highres_imu);
     void setPose(mavlink_global_position_int_t global_pos);
     void setPose(mavlink_attitude_t attitude);
@@ -84,6 +86,10 @@ private:
 double dScaleX, dScaleY,dScaleZ;
     //Transformation from camera to ned
     Eigen::Matrix4d Tnb, Tbc;
+
+    uint64_t ipixhawk_time_unix_usec;
+    uint32_t ipixhawk_time_boot_ms;
+    bool bpixhawk_time_reference, bget_ref_time;
 
 };
 

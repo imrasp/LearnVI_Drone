@@ -5,14 +5,13 @@
 #include "SLAMInterface/mono_live_viorb.h"
 #include "Utility/location_manager.h"
 
-Mono_Live_VIORB::Mono_Live_VIORB(System_Log *system_log_, SystemConfigParam *configParam_) : system_log(system_log_),
-                                                                                             configParam(configParam_) {
+Mono_Live_VIORB::Mono_Live_VIORB(System_Log *system_log_, SystemConfigParam *configParam_) : system_log(system_log_), configParam(configParam_) {
     time_to_exit = false;
     startCalprocessingTime = true;
     avgTime = 0;
     frameNo = 0;
     firstTimestamp = 0;
-    gps_pose.timestampunix = 0;
+    gps_pose.timestampunix_ns = 0;
 }
 
 Mono_Live_VIORB::~Mono_Live_VIORB() {}
@@ -21,15 +20,75 @@ void Mono_Live_VIORB::setLocationManager(Location_Manager *location_manager_) {
     location_manager = location_manager_;
 }
 
+void Mono_Live_VIORB::initializeCamera(){
+
+    stream1 = VideoCapture(configParam->camera1);
+    cout << "open a Forward camera \n";
+    if(configParam->camera2 > 0){
+        stream2 = VideoCapture(configParam->camera2);
+        cout << "open a Downward camera \n";
+    }
+    query_maximum_resolution(&stream1, max_width, max_height);
+//    max_width = 1280; max_height = 720;
+//    max_width = 640; max_height = 480;
+//    max_width = 848; max_height = 480;
+
+    //initialize Record folder
+    boost::filesystem::path dir(configParam->record_path);
+    boost::filesystem::path dir4(configParam->record_path + "/dataset-dir");
+    boost::filesystem::path dir5(configParam->record_path + "/dataset-dir/cam0");
+    boost::filesystem::path dir6(configParam->record_path + "/dataset-dir/cam1");
+
+    if (!(boost::filesystem::exists(dir))) {
+        std::cout << "Doesn't Exists" << std::endl;
+
+        if (boost::filesystem::create_directory(dir)) {
+            std::cout << "....Successfully Created Main Directory!" << std::endl;
+        }
+    }
+    if (!(boost::filesystem::exists(dir4))) {
+        std::cout << "Doesn't Exists" << std::endl;
+        if (boost::filesystem::create_directory(dir4))
+            std::cout << "....Successfully Created dataset-dir Directory!" << std::endl;
+    }
+    if (!(boost::filesystem::exists(dir5))) {
+        std::cout << "Doesn't Exists" << std::endl;
+        if (boost::filesystem::create_directory(dir5))
+            std::cout << "....Successfully Created /dataset-dir/cam0 Directory!" << std::endl;
+    }
+    if (!(boost::filesystem::exists(dir6))) {
+        std::cout << "Doesn't Exists" << std::endl;
+        if (boost::filesystem::create_directory(dir6))
+            std::cout << "....Successfully Created /dataset-dir/cam1 Directory!" << std::endl;
+    }
+
+    lframe.open(configParam->record_path + "/frame.csv");
+    lgps.open(configParam->record_path + "/gps.csv");
+    ldatasetimu.open(configParam->record_path + "/dataset-dir/imu0.csv");
+
+    lframe << "timestamp" << "\n";
+    ldatasetimu << "timestamp" << ","  << "omega_x" << "," << "omega_y" << "," << "omega_z" << "," << "alpha_x" << "," << "alpha_y" << "," << "alpha_z" << "\n";
+    lgps << "timestamp" << "," << "lat" << "," << "lon" << "," << "alt" << "\n";
+}
+
 void Mono_Live_VIORB::start() {
-    cout << "Start Camera thread..." << endl;
-    boost::thread threadCamera = boost::thread(&Mono_Live_VIORB::cameraLoop, this);
+
+    initializeCamera();
+
+    if(configParam->bCamera) {
+        cout << "Start Camera thread..." << endl;
+        threadCamera = boost::thread(&Mono_Live_VIORB::cameraLoop, this);
+    }
+
+    if (configParam->bRecord) {
+        cout << "Stard Record thread..." << endl;
+        threadRecord = boost::thread(&Mono_Live_VIORB::recordData, this);
+    }
 
     if (configParam->bLive) {
         cout << "Starting SLAM..." << endl;
         // Create SLAM system. It initializes all system threads and gets ready to process frames.
-        SLAM = new ORB_SLAM2::System(configParam->vocabulary, configParam->setting, ORB_SLAM2::System::MONOCULAR,
-                                     string(configParam->gui) != "DISABLE");
+        SLAM = new ORB_SLAM2::System(configParam->vocabulary, configParam->setting, ORB_SLAM2::System::MONOCULAR, string(configParam->gui) != "DISABLE");
         config = new ORB_SLAM2::ConfigParam(configParam->setting);
 
         imageMsgDelaySec = config->GetImageDelayToIMU();
@@ -40,15 +99,11 @@ void Mono_Live_VIORB::start() {
         cout << "Start SLAM thread..." << endl;
         boost::thread threadSLAM = boost::thread(&Mono_Live_VIORB::grabFrameData, this);
     }
-    if (configParam->bRecord) {
-        cout << "Stard Record thread..." << endl;
-        boost::thread threadRecord = boost::thread(&Mono_Live_VIORB::recordData, this);
-    }
 }
 
 void Mono_Live_VIORB::stop() {
-    time_to_exit = true;
     cout << "SLAM shutdown..." << endl;
+
     if (configParam->bLive) {
         // Stop all threads
         SLAM->Shutdown();
@@ -63,9 +118,15 @@ void Mono_Live_VIORB::stop() {
              << "Max processing time : " << maxPTime << endl
              << "Min processing time : " << minPTime << endl;
     }
+
+    time_to_exit = true;
+
+    threadCamera.join();
+    threadRecord.join();
+
     lframe.close();
-    limu.close();
     lgps.close();
+    ldatasetimu.close();
 }
 
 void Mono_Live_VIORB::grabFrameData() {
@@ -76,12 +137,8 @@ void Mono_Live_VIORB::grabFrameData() {
 
         calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1));
 
-        matFrameForwardLast = matFrameCurrentForward.clone();
-        matFrameCurrentForward = matFrameForward.clone();
-
-//        if (iSLAMFrame == 1) firstTimestamp = timestampcamera;
-//        timestampc = (timestampcamera - firstTimestamp) / 1000;
-        timestampc = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+        matFrameCurrentForward.copyTo(matFrameForwardLast);
+        matFrameForward.copyTo(matFrameCurrentForward);
 
         frameDiff = 0;
         if (matFrameForwardLast.rows <= 0 || matFrameForwardLast.cols <= 0)
@@ -100,23 +157,9 @@ void Mono_Live_VIORB::grabFrameData() {
 
             slam_last_pose = current_pose;
 
-            if((gps_pose.timestampunix - (std::chrono::system_clock::now().time_since_epoch() / std::chrono::nanoseconds(1))) < 500){
-//                if (firstTimestamp == 0) firstTimestamp = gps_pose.timestampunix;
-//                int timestamp = (gps_pose.timestampunix - firstTimestamp) / 1000;
-                ORB_SLAM2::GPSData gpsdata(gps_pose.lat, gps_pose.lon, gps_pose.alt, gps_pose.gpsx, gps_pose.gpsy, gps_pose.gpsz, gps_pose.timestampunix);
-                // Pass the image to the SLAM system
-                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
-            }
-            else{
-
-                ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
-                // Pass the image to the SLAM system
-
-                vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc);
-            }
-
+            ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
             // Pass the image to the SLAM system
-//            vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, timestampc);
+            vision_estimated_pose = SLAM->TrackMonoVI(matFrameForward, vimuData, gpsdata, timestampc/1000);
 
             cout << iFrame << " :: " << iSLAMFrame << " :: vimuData size : " << vimuData.size() << endl;
             cout << "Tracking status : " << getTrackingStage() << endl;
@@ -131,15 +174,13 @@ void Mono_Live_VIORB::grabFrameData() {
                 }
                 system_log->write2visionEstimatePositionLog(vision_estimated_pose);
             }
-
             latestTrackingStage = getTrackingStage();
 
             vimuData.clear();
             //while(!SLAM->bLocalMapAcceptKF()) {
             //}
         }
-        calAvgProcessingTime(
-                std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)); // stop
+        calAvgProcessingTime(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)); // stop
         iSLAMFrame++;
     }
 
@@ -167,79 +208,99 @@ double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, Mat &matFrameP
     return diff;
 }
 
+void Mono_Live_VIORB::query_maximum_resolution(cv::VideoCapture* camera, int &max_width, int &max_height)
+{
+  // Save current resolution
+  const int current_width  = static_cast<int>(camera->get(CV_CAP_PROP_FRAME_WIDTH));
+  const int current_height = static_cast<int>(camera->get(CV_CAP_PROP_FRAME_HEIGHT));
+
+  // Get maximum resolution
+  camera->set(CV_CAP_PROP_FRAME_WIDTH,  10000);
+  camera->set(CV_CAP_PROP_FRAME_HEIGHT, 10000);
+  max_width  = static_cast<int>(camera->get(CV_CAP_PROP_FRAME_WIDTH));
+  max_height = static_cast<int>(camera->get(CV_CAP_PROP_FRAME_HEIGHT));
+
+  // Restore resolution
+  camera->set(CV_CAP_PROP_FRAME_WIDTH,  current_width);
+  camera->set(CV_CAP_PROP_FRAME_HEIGHT, current_height);
+}
+
 void Mono_Live_VIORB::cameraLoop() {
 
-    stream1 = VideoCapture(configParam->camera1);
-    cout << "open a Forward camera \n";
-    if(configParam->camera2 > 0){
-        stream2 = VideoCapture(configParam->camera2);
-        cout << "open a Downward camera \n";
-    }
-
     iFrame = 0;
-    while (!time_to_exit) {
 
+    stream1.set(CV_CAP_PROP_FRAME_WIDTH,  max_width);
+    stream1.set(CV_CAP_PROP_FRAME_HEIGHT, max_height);
+//    cout << "max_width is " << max_width << ", max_height is " << max_height << endl;
+//    cout << "get image width is " << stream1.get(CV_CAP_PROP_FRAME_WIDTH) << endl;
+//    cout << "get image height is " << stream1.get(CV_CAP_PROP_FRAME_HEIGHT) << endl;
+
+    cout << " time_to_exit is " << time_to_exit << endl;
+    while (!time_to_exit) {
+        cout << "in the loop!" << endl;
+        timestampcamera_ns = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+        cout << "timestampcamera_ns = " <<timestampcamera_ns << endl;
         timestampcamera = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-        stream1.read(matFrameForward);
-        if(configParam->camera2 > 0){
-            stream2.read(matFrameDownward);
+        cout << "timestampcamera_ms = " <<timestampcamera << endl;
+
+//        pthread_mutex_lock(&_pmutexFrameCam1Last);
+        _mutexFrameCam1Last.lock();
+        cout << "grab frame \n";
+        stream1 >> matFrameForward;
+        _mutexFrameCam1Last.unlock();
+//        pthread_mutex_unlock(&_pmutexFrameCam1Last);
+        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
+
+        if(configParam->camera2 > 0) {
+            pthread_mutex_lock(&_pmutexFrameCam2Last);
+            stream2 >> matFrameDownward;
+            pthread_mutex_unlock(&_pmutexFrameCam2Last);
         }
-//        cout  << "get frame " << iFrame  << ": frame size [" << matFrameForward.size() << endl;
+
+//        cv::imshow("Camera", matFrameForward);
+//        if (cv::waitKey(1) >= 0) break;
+        usleep(8000);
         iFrame++;
     }
+    cout << "out the loop!" << endl;
 }
 
 void Mono_Live_VIORB::recordData() {
-    //initialize Record folder
-    boost::filesystem::path dir(configParam->record_path);
-    boost::filesystem::path dir2(configParam->record_path + "/Camera1");
-    boost::filesystem::path dir3(configParam->record_path + "/Camera2");
 
-    if (!(boost::filesystem::exists(dir))) {
-        std::cout << "Doesn't Exists" << std::endl;
+    int totalRecord = 0;
+    cv::Mat recFrameForward, recFrameDownward;
 
-        if (boost::filesystem::create_directory(dir)) {
-            std::cout << "....Successfully Created Main Directory!" << std::endl;
+    while(!time_to_exit){
+//        cout << "in the record loop \n";
+        cout << "matFrameForward.cols is " << matFrameForward.cols << endl;
+        if(matFrameForward.cols != max_width) continue;
+
+        cout << "in the record loop 2 \n";
+//        pthread_mutex_lock(&_pmutexFrameCam1Last);
+        _mutexFrameCam1Last.lock();
+        cout << "copy frame \n";
+        matFrameForward.copyTo(recFrameForward);
+        _mutexFrameCam1Last.unlock();
+//        pthread_mutex_unlock(&_pmutexFrameCam1Last);
+        if (configParam->camera2 > 0) {
+            pthread_mutex_lock(&_pmutexFrameCam2Last);
+            matFrameDownward.copyTo(recFrameDownward);
+            pthread_mutex_unlock(&_pmutexFrameCam2Last);
         }
-    }
-    if (!(boost::filesystem::exists(dir2))) {
-        std::cout << "Doesn't Exists" << std::endl;
-        if (boost::filesystem::create_directory(dir2))
-            std::cout << "....Successfully Created Forward Directory!" << std::endl;
-    }
-    if (!(boost::filesystem::exists(dir3))) {
-        std::cout << "Doesn't Exists" << std::endl;
-        if (boost::filesystem::create_directory(dir3))
-            std::cout << "....Successfully Created Downward Directory!" << std::endl;
-    }
 
-    lframe.open(configParam->record_path + "/frame.csv");
-    limu.open(configParam->record_path + "/imu.csv");
-    lgps.open(configParam->record_path + "/gps.csv");
-
-    limu << string("FrameNo") + ","
-               + "timestamp(ns)" + ","
-               + "timeboot(ms)" + ","
-               + "xgyro" + ","
-               + "ygyro" + ","
-               + "zgyro" + ","
-               + "xacc" + ","
-               + "yacc" + ","
-               + "zacc" + "\n";
-
-    iRecordedFrame = 1;
-    while (!time_to_exit) {
-        cout << "";
-        if (iFrame > 0) {
-            imwrite(configParam->record_path + "/Camera1/" + to_string(iRecordedFrame) + ".jpg", matFrameForward);
-            if (configParam->camera2 > 0) {
-                imwrite(configParam->record_path + "/Camera2/" + to_string(iRecordedFrame) + ".jpg", matFrameDownward);
-            }
-            lframe << iRecordedFrame << sep << to_string(timestampcamera) << "\n";
-            usleep(configParam->timespace); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
-
-            iRecordedFrame++;
+        if(totalRecord > 0) {
+                imwrite(configParam->record_path + "/dataset-dir/cam0/" + std::to_string(timestampcamera_ns) + ".png", recFrameForward);
+                if (configParam->camera2 > 0) {
+                    imwrite(configParam->record_path + "/dataset-dir/cam1/" +to_string(timestampcamera_ns) + ".png", recFrameDownward);
+                }
+                lframe << timestampcamera_ns << "\n";
+                totalRecord++;
         }
+        else{
+            totalRecord++;
+        }
+        usleep(configParam->timespace); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
+        std::cout << "total record is " << totalRecord << std::endl;
     }
 }
 
@@ -262,7 +323,7 @@ void Mono_Live_VIORB::getGPSdata(posedata current_pose_){
 
     gps_pose = current_pose_;
     if (configParam->bRecord && iRecordedFrame > 0) {
-        lgps << iRecordedFrame << sep << gps_pose.timestampunix << sep << current_pose.gpstime << sep
+        lgps << iRecordedFrame << sep << to_string(gps_pose.timestampunix_ns) << sep << current_pose.gpstime << sep
              << current_pose.lat
              << sep << current_pose.lon << sep << current_pose.alt << sep << current_pose.gpsx << sep
              << current_pose.gpsy << sep << current_pose.gpsz << "\n";
@@ -289,15 +350,19 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
         az *= g3dm;
     }
     // angular_velocity.x, angular_velocity.y, angular_velocity.z, linear_acceleration ax, ay, az, timestamp
-    ORB_SLAM2::IMUData imudata(rollc, pitchc, yawc, ax, ay, az, current_pose.timestampunix);
+    ORB_SLAM2::IMUData imudata(rollc, pitchc, yawc, ax, ay, az, current_pose.timestampunix_s);
     vimuData.push_back(imudata);
 
 
-    if (configParam->bRecord && iRecordedFrame > 0) {
+    if ((configParam->bRecord) && iRecordedFrame > 0) {
 
-        limu << iRecordedFrame << sep << current_pose.timestampunix << sep << current_pose.timebootms << sep << current_pose.xgyro
-                << sep << current_pose.ygyro << sep << current_pose.zgyro << sep << current_pose.xacc << sep
-                << current_pose.yacc << sep << current_pose.zacc << "\n";
+        limu << std::setprecision(10) << iRecordedFrame << sep << current_pose.timestampunix_ns << sep << current_pose.timebootms
+             << sep << current_pose.xgyro << sep << current_pose.ygyro << sep << current_pose.zgyro
+             << sep << current_pose.xacc << sep << current_pose.yacc << sep << current_pose.zacc << "\n";
+
+        ldatasetimu << std::setprecision(10)<< current_pose.timestampunix_ns
+                    << sep << current_pose.xgyro << sep << current_pose.ygyro << sep << current_pose.zgyro
+                    << sep << current_pose.xacc << sep << current_pose.yacc << sep << current_pose.zacc << "\n";
     }
 }
 

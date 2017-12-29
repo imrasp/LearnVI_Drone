@@ -264,12 +264,18 @@ void Location_Manager::initializePosedata() {
     current_pose.gpsyacc = 0;
     current_pose.gpszacc = 0;
 
+    current_pose.timestampunix_ms = 0;
+    current_pose.timestampunix_ns = 0;
+    current_pose.timestampunix_s = 0;
+
     counter = 0;
     current_estimate_vision_pose = Mat::zeros(4, 4, CV_32F);
     bisInitialized = false;
     bUpdateGPSPoseToMavlink = false;
     bUpdateVisionPoseToMavlink = false;
     bNotFirstEstimatedPose = false;
+    bpixhawk_time_reference = false;
+    bget_ref_time = false;
 }
 
 void Location_Manager::setInitialEstimateVisionPose(posedata pose) {
@@ -365,10 +371,31 @@ bool Location_Manager::getUpdateVisionPoseToMavlink(){
     return bUpdateVisionPoseToMavlink;
 }
 
+void Location_Manager::setPixhawkTimeReference(mavlink_system_time_t system_time){
+    uint64_t current_unix_time = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+    system_log->write2systemTimeLog(system_time, current_unix_time);
+//    cout << "current_unix_time - system_time.time_unix_usec is " <<current_unix_time - system_time.time_unix_usec <<endl;
+    if(!bget_ref_time && current_unix_time - system_time.time_unix_usec < 100000000) {
+        ipixhawk_time_boot_ms = system_time.time_boot_ms; //millisecond
+        ipixhawk_time_unix_usec = system_time.time_unix_usec; // microseconds
+//        cout << std::fixed << "set Time : ipixhawk_time_boot_ms = " << ipixhawk_time_boot_ms << " ipixhawk_time_unix_usec " << ipixhawk_time_unix_usec << "\n";
+        bpixhawk_time_reference = true;
+        bget_ref_time = true;
+    }
+}
+
 void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
     system_log->write2csv("imu", highres_imu);
-    current_pose.timestampunix = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-
+    if(bpixhawk_time_reference)
+    {
+        current_pose.timestampunix_ms = ipixhawk_time_unix_usec + (highres_imu.time_usec - (ipixhawk_time_boot_ms*1000));
+        current_pose.timestampunix_ns = current_pose.timestampunix_ms * 1000;
+        current_pose.timestampunix_s = static_cast<double>(current_pose.timestampunix_ms / 1000000);
+    }
+    uint64_t current_unix_time = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+//    cout << std::fixed << "imu time = " << highres_imu.time_usec << " timestampunix_ns = " << current_pose.timestampunix_ns << endl;
+    system_log->write2IMUTimeLog(highres_imu.time_usec, current_pose.timestampunix_ms, current_pose.timestampunix_ns, current_pose.timestampunix_s, current_unix_time);
+    current_pose.highres_imu_time = highres_imu.time_usec; // microseconds, time since system boot
     current_pose.xacc = highres_imu.xacc;
     current_pose.yacc = highres_imu.yacc;
     current_pose.zacc = highres_imu.zacc;
@@ -389,7 +416,12 @@ void Location_Manager::setPose(mavlink_highres_imu_t highres_imu) {
 }
 
 void Location_Manager::setPose(mavlink_attitude_t attitude) {
-    current_pose.timestampunix = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+    if(bpixhawk_time_reference)
+    {
+        current_pose.timestampunix_ms = ipixhawk_time_boot_ms + ((attitude.time_boot_ms - ipixhawk_time_boot_ms)*1000);
+        current_pose.timestampunix_ns = current_pose.timestampunix_ms * 1000;
+        current_pose.timestampunix_s = static_cast<double>(current_pose.timestampunix_ms / 1000000);
+    }
     current_pose.roll = attitude.roll;
     current_pose.pitch = attitude.pitch;
     current_pose.yaw = attitude.yaw;
@@ -399,7 +431,12 @@ void Location_Manager::setPose(mavlink_attitude_t attitude) {
 
 void Location_Manager::setPose(mavlink_global_position_int_t global_pos) {
     system_log->write2csv("gps", global_pos);
-    current_pose.timestampunix = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+    if(bpixhawk_time_reference)
+    {
+        current_pose.timestampunix_ms = ipixhawk_time_boot_ms + ((global_pos.time_boot_ms - ipixhawk_time_boot_ms) * 1000);
+        current_pose.timestampunix_ns = current_pose.timestampunix_ms * 1000;
+        current_pose.timestampunix_s = static_cast<double>(current_pose.timestampunix_ms / 1000000);
+    }
 
     current_pose.timebootms = global_pos.time_boot_ms;
     current_pose.lat = global_pos.lat;

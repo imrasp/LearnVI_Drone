@@ -36,6 +36,8 @@ public:
     static bool bMAVonly;
     static bool bOffline;
     static bool bMAVRecord;
+    static bool bCamera;
+    static bool bMAVIMURecord;
 
     static int getCamera2();
 

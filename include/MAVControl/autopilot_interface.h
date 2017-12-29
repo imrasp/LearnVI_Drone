@@ -60,6 +60,7 @@
 #include <signal.h>
 #include <time.h>
 #include <sys/time.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "mavlink/v1.0/common/mavlink.h"
 #include "serial_port.h"
@@ -159,6 +160,7 @@ struct Time_Stamps
     uint64_t attitude;
     uint64_t home_position;
     uint64_t gps_raw_int;
+    uint64_t system_time;
 
     void
     reset_timestamps()
@@ -175,6 +177,7 @@ struct Time_Stamps
         attitude = 0;
         home_position =0;
         gps_raw_int =0;
+        system_time = 0;
     }
 
 };
@@ -225,6 +228,11 @@ struct Mavlink_Messages {
 
     //gps_raw_int
     mavlink_gps_raw_int_t gps_raw_int;
+
+    //system_time
+    mavlink_system_time_t system_time;
+
+
     // System Parameters?
 
 
@@ -303,6 +311,7 @@ public:
     void enable_takeoff(float height,float velocity);
     void enable_land();
     void enable_hold(double sec);
+    void enable_idle(double sec);
     void set_message_interval( int msg_id, int hz );
     void updateVisionEstimationPosition(mavlink_vision_position_estimate_t vpe);
     void set_home();
@@ -331,6 +340,8 @@ System_Log *system_log;
 Location_Manager *location_manager;
 
 int toggle_arm_control( bool flag );
+
+    uint64_t max_delay_ms;
 
 
 };

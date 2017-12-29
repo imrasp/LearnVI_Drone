@@ -176,8 +176,8 @@ void LocalMapping::VINSInitThread()
                 bool tmpbool = TryInitVIO();
                 if(tmpbool)
                 {
-                    SetFirstVINSInited(true);
-                    SetVINSInited(true);
+//                    SetFirstVINSInited(true);
+//                    SetVINSInited(true);
                     break;
                 }
             }
@@ -872,6 +872,7 @@ void LocalMapping::AddToLocalWindow(KeyFrame* pKF)
             pKF0 = pKF0->GetPrevKeyFrame();
             if(pKF0->mnId != 0) //newly added
             mlLocalKeyFrames.push_front(pKF0);
+//            pKF0 = pKF0->GetPrevKeyFrame();
         }
     }
 }

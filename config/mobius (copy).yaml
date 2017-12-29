@@ -77,22 +77,22 @@ OutputFolder: "/home/rasp/CLionProjects/LearnVI_Drone/tmp/"
 #--------------------------------------------------------------------------------------------
 
 # Camera calibration and distortion parameters (OpenCV) 
-Camera.fx: 890.075305745835
-Camera.fy: 1003.03890630689
-Camera.cx: 935.593285443884
-Camera.cy: 563.291997129915
+Camera.fx: 595.0863
+Camera.fy: 671.7171
+Camera.cx: 660.1657
+Camera.cy: 388.9364
 
-Camera.k1: -0.38339686070143
-Camera.k2: 0.229036905099609
-Camera.k3: -0.0959181355234616
-Camera.p1: 0.000281868599274158
-Camera.p2: 0.000486922496864555
+Camera.k1: -0.3737
+Camera.k2: 0.1869
+Camera.k3: -0.0541
+Camera.p1: -0.0029
+Camera.p2: -0.0029
 
-Camera.width: 1080
-Camera.height: 1920
+Camera.width: 1280
+Camera.height: 720
 
 # Camera frames per second 
-Camera.fps: 60.0
+Camera.fps: 10.0
 
 # IR projector baseline times fx (aprox.)
 Camera.bf: 40.0

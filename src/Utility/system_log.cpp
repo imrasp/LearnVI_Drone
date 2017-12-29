@@ -47,6 +47,8 @@ void System_Log::initialize_defaults(string record_path)
     gpsaccsample.open(record_path + "/gps_acc_sample_data.csv");
     visionEstimatePositionLog.open(record_path + "/visionEstimatePositionLog.csv");
     visionEstimate2IMULog.open(record_path + "/visionEstimate2IMULog.csv");
+    systemTimeLog.open(record_path + "/systemTimeLog.csv");
+    IMUTimeLog.open(record_path + "/IMUTimeLog.csv");
 
     gpslog << string("ned_time")  + "," + "x" + "," + "y" + "," + "z" + "," +
               "gps_time" + "," + "lat" + "," + "lon" + "," + "alt" + "," +
@@ -66,6 +68,10 @@ void System_Log::initialize_defaults(string record_path)
                     "xgyro" + "," + "ygyro" + "," + "zgyro" + "," +
                     "\n";
     visionEstimatePositionLog << string("x") + "," + "y" + "," + "z" + "," + "scaled_x" + "," + "scaled_y" + "," + "scaled_z" + "\n";
+    visionEstimate2IMULog << string("x") + "," + "y" + "," + "z" + "," + "scaled_x" + "," + "scaled_y" + "," + "scaled_z" + "\n";
+    systemTimeLog << "pixhawk_time_unix_usec" << "," << "pixhawk_time_boot_ms" << "," << "current_unix_time" << "\n";
+    IMUTimeLog << "highres_imu_time_usec" << "," << "timestampunix_ms" << "," << "timestampunix_ns" << "," << "timestampunix_s" << "," << "current_unix_time" << "\n";
+
 }
 
 // write log to text file
@@ -105,16 +111,15 @@ void System_Log::write2csv(string text, mavlink_local_position_ned_t local_posit
 }
 void System_Log::write2csv(string text, mavlink_highres_imu_t highres_imu)
 {
-    csvlog << text + string("(highres_imu)") + "," + to_string(highres_imu.time_usec) + "," + to_string(highres_imu.xacc) + "," + to_string(highres_imu.yacc) + "," + to_string(highres_imu.zacc) + "," + "\n";
+    csvlog << std::setprecision(10) << text << "(highres_imu)" << "," << highres_imu.time_usec << "," << highres_imu.xacc << "," << highres_imu.yacc << "," << highres_imu.zacc << "," << highres_imu.xgyro << "," << highres_imu.ygyro << "," << highres_imu.zgyro << "," << "\n";
 }
 void System_Log::write2csv(string text, mavlink_raw_imu_t raw_imu)
 {
-    csvlog << text + string("(raw_imu)") + "," + to_string(raw_imu.xacc) + "," + to_string(raw_imu.yacc) + "," + to_string(raw_imu.zacc) + "," + "\n";
+//    csvlog << text + string("(raw_imu)") + "," + raw_imu.xacc + "," + raw_imu.yacc + "," + raw_imu.zacc + "," + "\n";
 }
 void System_Log::write2csv(string text, mavlink_gps_raw_int_t gps_raw)
 {
-    csvlog << text + string("(gps_raw_int)") + "," + to_string(gps_raw.time_usec) + "," + to_string(gps_raw.satellites_visible) + "," + to_string(gps_raw.eph)
-              + "," + to_string(gps_raw.lat)+ "," + to_string(gps_raw.lon)+ "," + to_string(gps_raw.alt) + "," + "\n";
+//    csvlog << text + string("(gps_raw_int)") + "," + to_string(gps_raw.time_usec) + "," + to_string(gps_raw.satellites_visible) + "," + to_string(gps_raw.eph) + "," + to_string(gps_raw.lat)+ "," + to_string(gps_raw.lon)+ "," + to_string(gps_raw.alt) + "," + "\n";
 }
 void System_Log::write2csv(string text, mavlink_attitude_t attitude)
 {
@@ -174,4 +179,13 @@ void System_Log::write2visionEstimate2IMULog(double x, double y, double z, doubl
     visionEstimate2IMULog << x << ',' << y << ',' << z << ',' << xs << ',' << ys << ',' << zs <<  '\n';
 }
 
+void System_Log::write2systemTimeLog(mavlink_system_time_t system_time, uint64_t current_unix_time)
+{
+    systemTimeLog << std::fixed << system_time.time_unix_usec << "," << system_time.time_boot_ms << "," << current_unix_time << "\n";
+}
+
+void System_Log::write2IMUTimeLog(float highres_imu_time_usec, uint64_t timestampunix_ms, uint64_t timestampunix_ns, double timestampunix_s, uint64_t current_unix_time)
+{
+    IMUTimeLog << std::fixed << highres_imu_time_usec << "," << timestampunix_ms << "," << timestampunix_ns << "," << timestampunix_s << "," << current_unix_time << "\n";
+}
 

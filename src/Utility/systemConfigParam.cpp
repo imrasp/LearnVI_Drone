@@ -19,11 +19,12 @@ string SystemConfigParam::mode;
 string SystemConfigParam::gui;
 string SystemConfigParam::record_path;
 string SystemConfigParam::mission_route;
-
+bool SystemConfigParam::bCamera;
 bool SystemConfigParam::bRecord;
 bool SystemConfigParam::bLive;
 bool SystemConfigParam::bMAVonly;
 bool SystemConfigParam::bOffline;
+bool SystemConfigParam::bMAVIMURecord;
 
 SystemConfigParam::SystemConfigParam()
 {
@@ -76,26 +77,43 @@ void SystemConfigParam::configMode(string mode_){
         bRecord = true;
         bMAVonly = false;
         bOffline = false;
+        bMAVIMURecord = false;
+        bCamera = true;
     } else if(string(mode_) == "LIVE"){
         bLive = true;
         bRecord = false;
         bMAVonly = false;
         bOffline = false;
+        bMAVIMURecord = false;
+        bCamera = true;
     } else if(string(mode_) == "MAVONLY"){
         bLive = false;
         bRecord = false;
         bMAVonly = true;
         bOffline = false;
+        bMAVIMURecord = false;
+        bCamera = false;
     } else if(string(mode_) == "OFFLINE"){
         bLive = false;
         bRecord = false;
         bMAVonly = false;
         bOffline = true;
+        bMAVIMURecord = false;
+        bCamera = false;
     } else if(string(mode_) == "MAVRECORD"){
         bLive = false;
         bRecord = true;
         bMAVonly = true;
         bOffline = false;
+        bMAVIMURecord = false;
+        bCamera = true;
+    } else if (string(mode_) == "MAVIMURECORD"){
+        bMAVIMURecord = true;
+        bLive = false;
+        bRecord = true;
+        bMAVonly = false;
+        bOffline = false;
+        bCamera = false;
     } else {
         cout << mode_ << "is not implemented (option : LIVERECORD, LIVE, MAVONLY, OFFLINE, MAVRECORD)" << endl;
         throw 1;

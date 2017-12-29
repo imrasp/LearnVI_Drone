@@ -8,7 +8,11 @@
 #include <boost/thread.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include <stdio.h>
+#include <iomanip>
+#include <pthread.h>
 
 #include "Utility/system_log.h"
 //#include "Utility/location_manager.h"
@@ -22,7 +26,8 @@
 class Location_Manager;
 
 typedef struct posedata {
-    double timestampunix, timestampms, timestampns;
+    double timestampunix_s,timestampms, timestampns;
+    uint64_t timestampunix_ms, timestampunix_ns;
     float gpstime, nedtime, highres_imu_time, attitude_time;
     float x, y, z;
     double gpsx, gpsy, gpsz;
@@ -44,6 +49,7 @@ public:
     Mono_Live_VIORB(System_Log *system_log_, SystemConfigParam *configParam_);
     ~Mono_Live_VIORB();
 
+    void initializeCamera();
     void start();
     void stop();
     void grabFrameData();
@@ -60,15 +66,18 @@ public:
     double xc,yc,zc;
     double rollc,pitchc,yawc;
     double timestampc, firstTimestamp, timestampcamera;
+    uint64_t timestampcamera_ns;
     double ax, ay, az;
     posedata current_pose, slam_last_pose, gps_pose, slam_gps_pose;
+
+    int max_width, max_height;
 
 private:
     SystemConfigParam *configParam;
     System_Log *system_log;
     VideoCapture stream1, stream2;
     Location_Manager *location_manager;
-    ofstream limu, lgps, lframe;
+    ofstream limu, lgps, lframe, ldatasetimu;
 
     bool time_to_exit;
 
@@ -79,6 +88,7 @@ private:
     double frameDiff;
     int iFrame, imu_counter;
 
+    void query_maximum_resolution(cv::VideoCapture* camera, int& max_width, int& max_height);
     double frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious);
 
     ORB_SLAM2::IMUData::vector_t vimuData;
@@ -99,6 +109,11 @@ private:
     const double ms2Tog = 0.101972;
 
     string sep = ",";
+
+    boost::thread threadCamera, threadRecord;
+    pthread_mutex_t _pmutexFrameCam1Last, _pmutexFrameCam2Last;
+    boost::mutex _mutexFrameCam1Last, _mutexFrameCam2Last;
+
 };
 
 #endif //LEARNVI_DRONE_MONO_LIVE_VIORB_H

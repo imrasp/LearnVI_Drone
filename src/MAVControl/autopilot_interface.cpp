@@ -352,6 +352,7 @@ read_messages()
                     this_timestamps.highres_imu = current_messages.time_stamps.highres_imu;
 
                     location_manager->setPose(current_messages.highres_imu);
+//                    cout << "highres_imu::time_usec = " << current_messages.highres_imu.time_usec << endl;
 
                     break;
                 }
@@ -386,6 +387,30 @@ read_messages()
                     break;
                 }
 
+                case MAVLINK_MSG_ID_SYSTEM_TIME:
+                {
+                    //printf("MAVLINK_MSG_ID_HOME_POSITION\n");
+                    mavlink_msg_system_time_decode(&message, &(current_messages.system_time));
+                    current_messages.time_stamps.system_time = get_time_usec();
+                    this_timestamps.gps_raw_int = current_messages.time_stamps.system_time;
+
+                    location_manager->setPixhawkTimeReference(current_messages.system_time);
+
+//                    uint64_t current_unix_time = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+//                    uint64_t diff_time_ms = current_unix_time - current_messages.system_time.time_unix_usec;
+//                    if (max_delay_ms < diff_time_ms)
+//                        max_delay_ms = diff_time_ms;
+//
+//                    cout << std::fixed << "time_unix_usec = " << current_messages.system_time.time_unix_usec
+//                         << " and time_boot_ms = " << current_messages.system_time.time_boot_ms
+//                         << " current time = " << current_unix_time
+//                         << " the different = " << diff_time_ms
+//                         << " (maximum = " << static_cast<double>(max_delay_ms / 1000000) << " s.)"
+//                         << endl;
+
+                    break;
+                }
+
                 default:
                 {
                     // printf("Warning, did not handle message id %i\n",message.msgid);
@@ -414,7 +439,7 @@ read_messages()
         // give the write thread time to use the port
         if ( writing_status > false ) {
             //usleep(100); // look for components of batches at 10kHz
-            usleep(1);
+            //usleep(1);
         }
 
     } // end: while not received all
@@ -937,7 +962,7 @@ void Autopilot_Interface::arm_control()
 //            sleep(0.1);
 //        }
 
-
+        enable_idle(1);
         printf("\n");
 
     } // end: if arm
@@ -1071,6 +1096,20 @@ void Autopilot_Interface::enable_hold(double sec)
     }
     sleep(sec);
     cout << "Time up for holding!\n";
+}
+
+void Autopilot_Interface::enable_idle(double sec)
+{
+    printf("Mode Hold Position\n");
+    mavlink_set_position_target_local_ned_t setpoint;
+    setpoint.vx = 0;
+    setpoint.vy = 0;
+    setpoint.vz = 0;
+    setpoint.type_mask = MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_IDLE;
+    setpoint.coordinate_frame = MAV_FRAME_LOCAL_NED;
+
+    update_setpoint(setpoint);
+    sleep(sec);
 }
 
 void Autopilot_Interface::goto_positon_ned(float x, float y, float z){
