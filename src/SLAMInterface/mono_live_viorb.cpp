@@ -235,20 +235,16 @@ void Mono_Live_VIORB::cameraLoop() {
 //    cout << "get image width is " << stream1.get(CV_CAP_PROP_FRAME_WIDTH) << endl;
 //    cout << "get image height is " << stream1.get(CV_CAP_PROP_FRAME_HEIGHT) << endl;
 
-    cout << " time_to_exit is " << time_to_exit << endl;
     while (!time_to_exit) {
-        cout << "in the loop!" << endl;
+
         timestampcamera_ns = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
         cout << "timestampcamera_ns = " <<timestampcamera_ns << endl;
         timestampcamera = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
         cout << "timestampcamera_ms = " <<timestampcamera << endl;
 
-//        pthread_mutex_lock(&_pmutexFrameCam1Last);
         _mutexFrameCam1Last.lock();
-        cout << "grab frame \n";
         stream1 >> matFrameForward;
         _mutexFrameCam1Last.unlock();
-//        pthread_mutex_unlock(&_pmutexFrameCam1Last);
         std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
 
         if(configParam->camera2 > 0) {
@@ -271,17 +267,12 @@ void Mono_Live_VIORB::recordData() {
     cv::Mat recFrameForward, recFrameDownward;
 
     while(!time_to_exit){
-//        cout << "in the record loop \n";
-        cout << "matFrameForward.cols is " << matFrameForward.cols << endl;
+//        cout << "matFrameForward.cols is " << matFrameForward.cols << endl;
         if(matFrameForward.cols != max_width) continue;
 
-        cout << "in the record loop 2 \n";
-//        pthread_mutex_lock(&_pmutexFrameCam1Last);
         _mutexFrameCam1Last.lock();
-        cout << "copy frame \n";
         matFrameForward.copyTo(recFrameForward);
         _mutexFrameCam1Last.unlock();
-//        pthread_mutex_unlock(&_pmutexFrameCam1Last);
         if (configParam->camera2 > 0) {
             pthread_mutex_lock(&_pmutexFrameCam2Last);
             matFrameDownward.copyTo(recFrameDownward);
