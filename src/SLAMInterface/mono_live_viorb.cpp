@@ -255,16 +255,14 @@ void Mono_Live_VIORB::cameraLoop() {
     while (!time_to_exit) {
 
         timestampcamera_ns = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-        cout << "timestampcamera_ns = " <<timestampcamera_ns << endl;
         timestampcamera = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-        cout << "timestampcamera_ms = " <<timestampcamera << endl;
 
         _mutexFrameCam1Last.lock();
         stream1 >> matFrameForward;
         matFrameForward.convertTo(matFrameForward, CV_8U);
         cv::cvtColor(matFrameForward, matFrameForward, CV_BGR2GRAY);
         _mutexFrameCam1Last.unlock();
-        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
+//        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
 
         if(configParam->camera2 > 0) {
             pthread_mutex_lock(&_pmutexFrameCam2Last);
@@ -277,7 +275,6 @@ void Mono_Live_VIORB::cameraLoop() {
         usleep(8000);
         iFrame++;
     }
-    cout << "out the loop!" << endl;
 }
 
 void Mono_Live_VIORB::recordData() {
@@ -360,8 +357,8 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     ORB_SLAM2::IMUData imudata(current_pose.xgyro, current_pose.ygyro, current_pose.zgyro, ax, ay, az, current_pose.timestampunix_s);
     vimuData.push_back(imudata);
 
-
-    if ((configParam->bRecord) && iFrame > 0) {
+    if (configParam->bRecord){
+        std::cout << "write imu to imu0.csv \n";
         ldatasetimu << std::setprecision(10)<< current_pose.timestampunix_ns
                     << sep << current_pose.xgyro << sep << current_pose.ygyro << sep << current_pose.zgyro
                     << sep << current_pose.xacc << sep << current_pose.yacc << sep << current_pose.zacc << "\n";
