@@ -337,8 +337,8 @@ void Mono_Live_VIORB::calAvgProcessingTime(double time) {
 void Mono_Live_VIORB::getGPSdata(posedata current_pose_){
 
     gps_pose = current_pose_;
-    if (configParam->bRecord && iRecordedFrame > 0) {
-        lgps << iRecordedFrame << sep << to_string(gps_pose.timestampunix_ns) << sep << current_pose.gpstime << sep
+    if (configParam->bRecord && iFrame > 0) {
+        lgps << std::setprecision(10) << gps_pose.timestampunix_ns << sep << current_pose.gpstime << sep
              << current_pose.lat
              << sep << current_pose.lon << sep << current_pose.alt << sep << current_pose.gpsx << sep
              << current_pose.gpsy << sep << current_pose.gpsz << "\n";
@@ -361,7 +361,7 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     vimuData.push_back(imudata);
 
 
-    if ((configParam->bRecord) && iRecordedFrame > 0) {
+    if ((configParam->bRecord) && iFrame > 0) {
         ldatasetimu << std::setprecision(10)<< current_pose.timestampunix_ns
                     << sep << current_pose.xgyro << sep << current_pose.ygyro << sep << current_pose.zgyro
                     << sep << current_pose.xacc << sep << current_pose.yacc << sep << current_pose.zacc << "\n";
