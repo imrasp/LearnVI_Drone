@@ -28,10 +28,10 @@ void Mono_Live_VIORB::initializeCamera(){
         stream2 = VideoCapture(configParam->camera2);
         cout << "open a Downward camera \n";
     }
-    query_maximum_resolution(&stream1, max_width, max_height);
+//    query_maximum_resolution(&stream1, max_width, max_height);
 //    max_width = 1280; max_height = 720;
 //    max_width = 640; max_height = 480;
-//    max_width = 848; max_height = 480;
+    max_width = 848; max_height = 480;
 
     //initialize Record folder
     boost::filesystem::path dir(configParam->record_path);
@@ -186,23 +186,40 @@ void Mono_Live_VIORB::grabFrameData() {
 
 }
 
-double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious) {
+//double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, Mat &matFramePrevious) {
+//    double diff = 0.0;
+////     cout << "matFrameCurrent size : " << matFrameCurrent.size() <<  " matFramePrevious : " << matFramePrevious.size() << endl;
+//    assert(matFrameCurrent.rows > 0 && matFrameCurrent.cols > 0);
+//    assert(
+//            matFrameCurrent.rows == matFramePrevious.rows
+//            && matFrameCurrent.cols == matFramePrevious.cols);
+//    assert(
+//            matFrameCurrent.type() == CV_8UC3 && matFramePrevious.type() == CV_8UC3);
+//    for (int i = 0; i < matFrameCurrent.rows; i++) {
+//        for (int j = 0; j < matFrameCurrent.cols; j++) {
+//            cv::Vec3b cur;
+//            cv::Vec3b prev;
+//            cur = matFrameCurrent.at<cv::Vec3b>(i, j);
+//            prev = matFramePrevious.at<cv::Vec3b>(i, j);
+//            for (int k = 0; k < 3; k++)
+//                diff += fabs(cur[k] - prev[k]);
+//        }
+//    }
+//    return diff;
+//}
+
+// check is 2 frames is difference or not
+double Mono_Live_VIORB::frameDifference(cv::Mat &matFrameCurrent, cv::Mat &matFramePrevious) {
     double diff = 0.0;
-//     cout << "matFrameCurrent size : " << matFrameCurrent.size() <<  " matFramePrevious : " << matFramePrevious.size() << endl;
     assert(matFrameCurrent.rows > 0 && matFrameCurrent.cols > 0);
     assert(
             matFrameCurrent.rows == matFramePrevious.rows
             && matFrameCurrent.cols == matFramePrevious.cols);
     assert(
-            matFrameCurrent.type() == CV_8UC3 && matFramePrevious.type() == CV_8UC3);
+            matFrameCurrent.type() == CV_8U && matFramePrevious.type() == CV_8U);
     for (int i = 0; i < matFrameCurrent.rows; i++) {
         for (int j = 0; j < matFrameCurrent.cols; j++) {
-            cv::Vec3b cur;
-            cv::Vec3b prev;
-            cur = matFrameCurrent.at<cv::Vec3b>(i, j);
-            prev = matFramePrevious.at<cv::Vec3b>(i, j);
-            for (int k = 0; k < 3; k++)
-                diff += fabs(cur[k] - prev[k]);
+            diff += matFrameCurrent.at<uchar>(i,j) - matFramePrevious.at<uchar>(i,j);
         }
     }
     return diff;
@@ -244,6 +261,8 @@ void Mono_Live_VIORB::cameraLoop() {
 
         _mutexFrameCam1Last.lock();
         stream1 >> matFrameForward;
+        matFrameForward.convertTo(matFrameForward, CV_8U);
+        cv::cvtColor(matFrameForward, matFrameForward, CV_BGR2GRAY);
         _mutexFrameCam1Last.unlock();
         std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
 
@@ -266,6 +285,11 @@ void Mono_Live_VIORB::recordData() {
     int totalRecord = 0;
     cv::Mat recFrameForward, recFrameDownward;
 
+
+    std::vector<int> compression_params;
+    compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+    compression_params.push_back(0);
+
     while(!time_to_exit){
 //        cout << "matFrameForward.cols is " << matFrameForward.cols << endl;
         if(matFrameForward.cols != max_width) continue;
@@ -280,9 +304,9 @@ void Mono_Live_VIORB::recordData() {
         }
 
         if(totalRecord > 0) {
-                imwrite(configParam->record_path + "/dataset-dir/cam0/" + std::to_string(timestampcamera_ns) + ".png", recFrameForward);
+                imwrite(configParam->record_path + "/dataset-dir/cam0/" + std::to_string(timestampcamera_ns) + ".png", recFrameForward, compression_params);
                 if (configParam->camera2 > 0) {
-                    imwrite(configParam->record_path + "/dataset-dir/cam1/" +to_string(timestampcamera_ns) + ".png", recFrameDownward);
+                    imwrite(configParam->record_path + "/dataset-dir/cam1/" +to_string(timestampcamera_ns) + ".png", recFrameDownward, compression_params);
                 }
                 lframe << timestampcamera_ns << "\n";
                 totalRecord++;
