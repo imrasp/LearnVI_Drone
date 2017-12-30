@@ -347,14 +347,6 @@ void Mono_Live_VIORB::getGPSdata(posedata current_pose_){
 void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     current_pose = current_pose_;
 
-//    int timestamp;
-//    if (firstTimestamp == 0) firstTimestamp = current_pose.timestampunix;
-//    timestamp = (current_pose.timestampunix - firstTimestamp) / 1000;
-
-    rollc = current_pose.xgyro;
-    pitchc = current_pose.ygyro;
-    yawc = current_pose.zgyro;
-
     ax = current_pose.xacc;
     ay = current_pose.yacc;
     az = current_pose.zacc;
@@ -365,16 +357,11 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
         az *= g3dm;
     }
     // angular_velocity.x, angular_velocity.y, angular_velocity.z, linear_acceleration ax, ay, az, timestamp
-    ORB_SLAM2::IMUData imudata(rollc, pitchc, yawc, ax, ay, az, current_pose.timestampunix_s);
+    ORB_SLAM2::IMUData imudata(current_pose.xgyro, current_pose.ygyro, current_pose.zgyro, ax, ay, az, current_pose.timestampunix_s);
     vimuData.push_back(imudata);
 
 
     if ((configParam->bRecord) && iRecordedFrame > 0) {
-
-        limu << std::setprecision(10) << iRecordedFrame << sep << current_pose.timestampunix_ns << sep << current_pose.timebootms
-             << sep << current_pose.xgyro << sep << current_pose.ygyro << sep << current_pose.zgyro
-             << sep << current_pose.xacc << sep << current_pose.yacc << sep << current_pose.zacc << "\n";
-
         ldatasetimu << std::setprecision(10)<< current_pose.timestampunix_ns
                     << sep << current_pose.xgyro << sep << current_pose.ygyro << sep << current_pose.zgyro
                     << sep << current_pose.xacc << sep << current_pose.yacc << sep << current_pose.zacc << "\n";
