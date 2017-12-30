@@ -262,7 +262,7 @@ void Mono_Live_VIORB::cameraLoop() {
         matFrameForward.convertTo(matFrameForward, CV_8U);
         cv::cvtColor(matFrameForward, matFrameForward, CV_BGR2GRAY);
         _mutexFrameCam1Last.unlock();
-//        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
+        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
 
         if(configParam->camera2 > 0) {
             pthread_mutex_lock(&_pmutexFrameCam2Last);
@@ -288,7 +288,7 @@ void Mono_Live_VIORB::recordData() {
     compression_params.push_back(0);
 
     while(!time_to_exit){
-//        cout << "matFrameForward.cols is " << matFrameForward.cols << endl;
+        cout << "matFrameForward.cols is " << matFrameForward.cols << endl;
         if(matFrameForward.cols != max_width) continue;
 
         _mutexFrameCam1Last.lock();
@@ -358,7 +358,7 @@ void Mono_Live_VIORB::getIMUdata(posedata current_pose_) {
     vimuData.push_back(imudata);
 
     if (configParam->bRecord){
-        std::cout << "write imu to imu0.csv \n";
+//        std::cout << "write imu to imu0.csv \n";
         ldatasetimu << std::setprecision(10)<< current_pose.timestampunix_ns
                     << sep << current_pose.xgyro << sep << current_pose.ygyro << sep << current_pose.zgyro
                     << sep << current_pose.xacc << sep << current_pose.yacc << sep << current_pose.zacc << "\n";
