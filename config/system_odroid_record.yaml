@@ -7,7 +7,7 @@ system.setting: /home/odroid/workspace/VIDrone/config/mobius.yaml
 system.mode: MAVRECORD
 system.gui: DISABLE
 system.record_path: /home/odroid/workspace/VIDrone/Recorded_Datasets
-system.fps: 10
+system.fps: 8
 system.mission_route: /home/odroid/workspace/VIDrone/mission_route2.txt
 system.camera1: 0
 system.camera2: -1

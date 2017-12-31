@@ -121,8 +121,8 @@ void Mono_Live_VIORB::stop() {
 
     time_to_exit = true;
 
-    threadCamera.join();
     threadRecord.join();
+    threadCamera.join();
 
     lframe.close();
     lgps.close();
@@ -262,7 +262,7 @@ void Mono_Live_VIORB::cameraLoop() {
         matFrameForward.convertTo(matFrameForward, CV_8U);
         cv::cvtColor(matFrameForward, matFrameForward, CV_BGR2GRAY);
         _mutexFrameCam1Last.unlock();
-        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
+//        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
 
         if(configParam->camera2 > 0) {
             pthread_mutex_lock(&_pmutexFrameCam2Last);
@@ -288,7 +288,7 @@ void Mono_Live_VIORB::recordData() {
     compression_params.push_back(0);
 
     while(!time_to_exit){
-        cout << "matFrameForward.cols is " << matFrameForward.cols << endl;
+//        cout << "matFrameForward.cols is " << matFrameForward.cols << endl;
         if(matFrameForward.cols != max_width) continue;
 
         _mutexFrameCam1Last.lock();
@@ -312,8 +312,8 @@ void Mono_Live_VIORB::recordData() {
             totalRecord++;
         }
         usleep(configParam->timespace); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
-        std::cout << "total record is " << totalRecord << std::endl;
     }
+    std::cout << "total record is " << totalRecord << std::endl;
 }
 
 void Mono_Live_VIORB::calAvgProcessingTime(double time) {
