@@ -246,10 +246,9 @@ void Mono_Live_VIORB::cameraLoop() {
 
     iFrame = 0;
 
-
     stream1.set(CV_CAP_PROP_FRAME_WIDTH,  max_width);
     stream1.set(CV_CAP_PROP_FRAME_HEIGHT, max_height);
-    stream1.set(CV_CAP_PROP_CONVERT_RGB , false);
+
     while (!time_to_exit) {
         timestampcamera_ns = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
@@ -260,7 +259,7 @@ void Mono_Live_VIORB::cameraLoop() {
         matFrameForward.convertTo(matFrameForward, CV_8U);
         cv::cvtColor(matFrameForward, matFrameForward, CV_BGR2GRAY);
         pthread_mutex_unlock(&_pmutexFrameCam1Last);
-//
+
 //        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
 //        cv::imshow("Camera", matFrameForward);
 //        if (cv::waitKey(1) >= 0) break;
@@ -275,7 +274,6 @@ void Mono_Live_VIORB::recordData() {
 
     int totalRecord = 0;
     cv::Mat recFrameForward, recFrameDownward, lastestFrameForward;
-
 
     std::vector<int> compression_params;
     compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
