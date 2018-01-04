@@ -13,7 +13,7 @@ Mono_Live_VIORB::Mono_Live_VIORB(System_Log *system_log_, SystemConfigParam *con
     firstTimestamp = 0;
     gps_pose.timestampunix_ns = 0;
 
-    int OldPrio = 0;
+    int OldPrio = 1;
     pthread_mutex_setprioceiling(&_pmutexFrameCam1Last, 0, &OldPrio);
 }
 
