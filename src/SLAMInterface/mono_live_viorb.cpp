@@ -245,7 +245,7 @@ void Mono_Live_VIORB::query_maximum_resolution(cv::VideoCapture* camera, int &ma
 void Mono_Live_VIORB::cameraLoop() {
 
     iFrame = 0;
-    int OldPrio = 0;
+
 
     stream1.set(CV_CAP_PROP_FRAME_WIDTH,  max_width);
     stream1.set(CV_CAP_PROP_FRAME_HEIGHT, max_height);
@@ -253,7 +253,7 @@ void Mono_Live_VIORB::cameraLoop() {
     while (!time_to_exit) {
         timestampcamera_ns = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
-
+        int OldPrio = 0;
         pthread_mutex_setprioceiling(&_pmutexFrameCam1Last, 0, &OldPrio);
         pthread_mutex_lock(&_pmutexFrameCam1Last);
         stream1 >> matFrameForward;
@@ -275,7 +275,7 @@ void Mono_Live_VIORB::recordData() {
 
     int totalRecord = 0;
     cv::Mat recFrameForward, recFrameDownward, lastestFrameForward;
-    int OldPrio = 0;
+
 
     std::vector<int> compression_params;
     compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
@@ -283,7 +283,7 @@ void Mono_Live_VIORB::recordData() {
     while(!time_to_exit) {
         if (matFrameForward.cols != max_width) continue;
 
-
+        int OldPrio = 0;
         pthread_mutex_setprioceiling(&_pmutexFrameCam1Last, 0, &OldPrio);
         pthread_mutex_lock(&_pmutexFrameCam1Last);
         matFrameForward.copyTo(recFrameForward);
