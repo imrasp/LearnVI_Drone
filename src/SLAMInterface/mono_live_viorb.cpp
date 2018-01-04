@@ -255,7 +255,7 @@ void Mono_Live_VIORB::cameraLoop() {
     while (!time_to_exit) {
         timestampcamera_ns = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
-        cout << "check point 1 \n";
+//        cout << "check point 1 \n";
 //        int OldPrio = 0;
 //        pthread_mutex_setprioceiling(&_pmutexFrameCam1Last, 0, &OldPrio);
         pthread_mutex_lock(&_pmutexFrameCam1Last);
