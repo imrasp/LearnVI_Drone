@@ -52,7 +52,7 @@ void Mono_Offline_VIORB::start() {
     size_t count = fn.size(); //number of png files in images folder
     for (size_t i=0; i<count; i++) {
         std::string stimestamp = fn[i].substr(fn[i].find_last_of("/")+1, 19);
-        double timestamp_camera = std::stod(stimestamp) / 10e8;
+        double timestamp_camera = std::stod(stimestamp) / 1e9;
         image = cv::imread(fn[i]);
 //        cv::imshow("Image", images.back());
 //        if (cv::waitKey(1) >= 0) break;
@@ -61,7 +61,7 @@ void Mono_Offline_VIORB::start() {
         //load IMU data of this frame
         while (imu.good()) {
             getline(imu, getval, ',');
-            timestamp = atof(getval.c_str())  / 10e8; //cout << " timestamp : " << timestamp << endl;
+            timestamp = atof(getval.c_str())  / 1e9; //cout << " timestamp : " << timestamp << endl;
             getline(imu, getval, ',');
             xgyro = atof(getval.c_str()); // cout << " xgyro : " << xgyro << endl;
             getline(imu, getval, ',');
