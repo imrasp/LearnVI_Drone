@@ -248,78 +248,52 @@ void Mono_Live_VIORB::cameraLoop() {
 
     stream1.set(CV_CAP_PROP_FRAME_WIDTH,  max_width);
     stream1.set(CV_CAP_PROP_FRAME_HEIGHT, max_height);
-//    cout << "max_width is " << max_width << ", max_height is " << max_height << endl;
-//    cout << "get image width is " << stream1.get(CV_CAP_PROP_FRAME_WIDTH) << endl;
-//    cout << "get image height is " << stream1.get(CV_CAP_PROP_FRAME_HEIGHT) << endl;
-
+    stream1.set(CV_CAP_PROP_CONVERT_RGB , false);
     while (!time_to_exit) {
-
         timestampcamera_ns = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-        timestampcamera = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
-//        _mutexFrameCam1Last.lock();
-//        stream1 >> matFrameForward;
-//        matFrameForward.convertTo(matFrameForward, CV_8U);
-//        cv::cvtColor(matFrameForward, matFrameForward, CV_BGR2GRAY);
-//        _mutexFrameCam1Last.unlock();
         pthread_mutex_lock(&_pmutexFrameCam1Last);
         stream1 >> matFrameForward;
         matFrameForward.convertTo(matFrameForward, CV_8U);
         cv::cvtColor(matFrameForward, matFrameForward, CV_BGR2GRAY);
         pthread_mutex_unlock(&_pmutexFrameCam1Last);
+//
 //        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
-
-        if(configParam->camera2 > 0) {
-            pthread_mutex_lock(&_pmutexFrameCam2Last);
-            stream2 >> matFrameDownward;
-            pthread_mutex_unlock(&_pmutexFrameCam2Last);
-        }
-
 //        cv::imshow("Camera", matFrameForward);
 //        if (cv::waitKey(1) >= 0) break;
-        usleep(8000);
+
         iFrame++;
+        usleep(8000);
     }
+    std::cout << "#Frame = " << iFrame << std::endl;
 }
 
 void Mono_Live_VIORB::recordData() {
 
     int totalRecord = 0;
-    cv::Mat recFrameForward, recFrameDownward;
+    cv::Mat recFrameForward, recFrameDownward, lastestFrameForward;
 
 
     std::vector<int> compression_params;
     compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
     compression_params.push_back(0);
+    while(!time_to_exit) {
+        if (matFrameForward.cols != max_width) continue;
 
-    while(!time_to_exit){
-//        cout << "matFrameForward.cols is " << matFrameForward.cols << endl;
-        if(matFrameForward.cols != max_width) continue;
-
-//        _mutexFrameCam1Last.lock();
-//        matFrameForward.copyTo(recFrameForward);
-//        _mutexFrameCam1Last.unlock();
         pthread_mutex_lock(&_pmutexFrameCam1Last);
         matFrameForward.copyTo(recFrameForward);
         pthread_mutex_unlock(&_pmutexFrameCam1Last);
-        if (configParam->camera2 > 0) {
-            pthread_mutex_lock(&_pmutexFrameCam2Last);
-            matFrameDownward.copyTo(recFrameDownward);
-            pthread_mutex_unlock(&_pmutexFrameCam2Last);
-        }
-
-        if(totalRecord > 0) {
-                imwrite(configParam->record_path + "/dataset-dir/cam0/" + std::to_string(timestampcamera_ns) + ".png", recFrameForward, compression_params);
-                if (configParam->camera2 > 0) {
-                    imwrite(configParam->record_path + "/dataset-dir/cam1/" +to_string(timestampcamera_ns) + ".png", recFrameDownward, compression_params);
-                }
+        if (totalRecord > 0) {
+            double diff = frameDifference(recFrameForward, lastestFrameForward);
+            if (diff > 0.0) {
+                imwrite("./record_data/cam0/" + std::to_string(timestampcamera_ns) + ".png", recFrameForward);
                 lframe << timestampcamera_ns << "\n";
                 totalRecord++;
-        }
-        else{
+            }
+        } else {
             totalRecord++;
         }
-        usleep(configParam->timespace); // 1 sec = 1000000 microsec. ==> 10frame/sec = 100000 microsec
+        recFrameForward.copyTo(lastestFrameForward);
     }
     std::cout << "total record is " << totalRecord << std::endl;
 }
