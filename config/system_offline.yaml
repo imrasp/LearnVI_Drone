@@ -6,11 +6,11 @@ system.mode: OFFLINE
 system.gui: ENABLE
 system.vocabulary: /home/rasp/CLionProjects/LearnVI_Drone/Vocabulary/ORBvoc.txt
 
-#system.setting: /home/rasp/CLionProjects/LearnVI_Drone/config/euroc.yaml
-system.setting: /home/rasp/CLionProjects/LearnVI_Drone/config/mobius.yaml
+system.setting: /home/rasp/CLionProjects/LearnVI_Drone/config/euroc.yaml
+#system.setting: /home/rasp/CLionProjects/LearnVI_Drone/config/mobius.yaml
 
 #system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/MH_01_easy_extract
-#system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/MH_02_easy_extract
+system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/MH_02_easy_extract
 #system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/MH_03_medium_extract
 #system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/MH_04_difficult_extract
 #system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/V1_01_easy
@@ -19,7 +19,7 @@ system.setting: /home/rasp/CLionProjects/LearnVI_Drone/config/mobius.yaml
 #system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/offline
 #system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/set1-livingroom
 #system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/set2-livingroom
-system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/set3-roadwithshadow
+#system.record_path: /home/rasp/CLionProjects/LearnVI_Drone/download_result/set3-roadwithshadow
 
 system.fps: 10
 system.mission_route: /home/rasp/CLionProjects/LearnVI_Drone/mission_route2.txt

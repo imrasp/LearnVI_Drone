@@ -286,7 +286,7 @@ void Mono_Live_VIORB::recordData() {
         if (totalRecord > 0) {
             double diff = frameDifference(recFrameForward, lastestFrameForward);
             if (diff > 0.0) {
-                imwrite("./record_data/cam0/" + std::to_string(timestampcamera_ns) + ".png", recFrameForward);
+                imwrite(configParam->record_path + "/dataset-dir/cam0/" + std::to_string(timestampcamera_ns) + ".png", recFrameForward);
                 lframe << timestampcamera_ns << "\n";
                 totalRecord++;
             }
