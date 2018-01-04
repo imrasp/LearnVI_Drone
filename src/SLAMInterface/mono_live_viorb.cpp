@@ -259,12 +259,12 @@ void Mono_Live_VIORB::cameraLoop() {
 //        int OldPrio = 0;
 //        pthread_mutex_setprioceiling(&_pmutexFrameCam1Last, 0, &OldPrio);
         pthread_mutex_lock(&_pmutexFrameCam1Last);
-        cout << "check point 2 \n";
+//        cout << "check point 2 \n";
         stream1 >> matFrameForward;
         matFrameForward.convertTo(matFrameForward, CV_8U);
         cv::cvtColor(matFrameForward, matFrameForward, CV_BGR2GRAY);
         pthread_mutex_unlock(&_pmutexFrameCam1Last);
-        cout << "check point 3 \n";
+//        cout << "check point 3 \n";
 //        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
 //        cv::imshow("Camera", matFrameForward);
 //        if (cv::waitKey(1) >= 0) break;
@@ -286,14 +286,14 @@ void Mono_Live_VIORB::recordData() {
     while(!time_to_exit) {
         if (matFrameForward.cols != max_width) continue;
 
-        cout << "check point 4 \n";
+//        cout << "check point 4 \n";
         int OldPrio = 0;
         pthread_mutex_setprioceiling(&_pmutexFrameCam1Last, 0, &OldPrio);
         pthread_mutex_lock(&_pmutexFrameCam1Last);
-        cout << "check point 5 \n";
+//        cout << "check point 5 \n";
         matFrameForward.copyTo(recFrameForward);
         pthread_mutex_unlock(&_pmutexFrameCam1Last);
-        cout << "check point 6 \n";
+//        cout << "check point 6 \n";
         if (totalRecord > 0) {
             double diff = frameDifference(recFrameForward, lastestFrameForward);
             if (diff > 0.0) {
