@@ -257,11 +257,16 @@ void Mono_Live_VIORB::cameraLoop() {
         timestampcamera_ns = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
         timestampcamera = boost::lexical_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
-        _mutexFrameCam1Last.lock();
+//        _mutexFrameCam1Last.lock();
+//        stream1 >> matFrameForward;
+//        matFrameForward.convertTo(matFrameForward, CV_8U);
+//        cv::cvtColor(matFrameForward, matFrameForward, CV_BGR2GRAY);
+//        _mutexFrameCam1Last.unlock();
+        pthread_mutex_lock(&_pmutexFrameCam1Last);
         stream1 >> matFrameForward;
         matFrameForward.convertTo(matFrameForward, CV_8U);
         cv::cvtColor(matFrameForward, matFrameForward, CV_BGR2GRAY);
-        _mutexFrameCam1Last.unlock();
+        pthread_mutex_unlock(&_pmutexFrameCam1Last);
 //        std::cout << "read matFrameForward size : " << matFrameForward.size() << std::endl;
 
         if(configParam->camera2 > 0) {
@@ -291,9 +296,12 @@ void Mono_Live_VIORB::recordData() {
 //        cout << "matFrameForward.cols is " << matFrameForward.cols << endl;
         if(matFrameForward.cols != max_width) continue;
 
-        _mutexFrameCam1Last.lock();
+//        _mutexFrameCam1Last.lock();
+//        matFrameForward.copyTo(recFrameForward);
+//        _mutexFrameCam1Last.unlock();
+        pthread_mutex_lock(&_pmutexFrameCam1Last);
         matFrameForward.copyTo(recFrameForward);
-        _mutexFrameCam1Last.unlock();
+        pthread_mutex_unlock(&_pmutexFrameCam1Last);
         if (configParam->camera2 > 0) {
             pthread_mutex_lock(&_pmutexFrameCam2Last);
             matFrameDownward.copyTo(recFrameDownward);

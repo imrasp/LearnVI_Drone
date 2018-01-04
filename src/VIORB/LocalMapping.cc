@@ -870,7 +870,7 @@ void LocalMapping::AddToLocalWindow(KeyFrame* pKF)
         {
             cout << "Checkpoint from localmapping.cc::867";
             pKF0 = pKF0->GetPrevKeyFrame();
-            if(pKF0->mnId != 0) //newly added
+//            if(pKF0->mnId != 0) //newly added
             mlLocalKeyFrames.push_front(pKF0);
 //            pKF0 = pKF0->GetPrevKeyFrame();
         }

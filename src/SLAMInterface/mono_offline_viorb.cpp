@@ -52,15 +52,16 @@ void Mono_Offline_VIORB::start() {
     size_t count = fn.size(); //number of png files in images folder
     for (size_t i=0; i<count; i++) {
         std::string stimestamp = fn[i].substr(fn[i].find_last_of("/")+1, 19);
-        double timestamp_camera = std::stod(stimestamp);
+        double timestamp_camera = std::stod(stimestamp) / 10e8;
         image = cv::imread(fn[i]);
 //        cv::imshow("Image", images.back());
 //        if (cv::waitKey(1) >= 0) break;
 
+        cout << "grab frame : " << fn[i] << endl;
         //load IMU data of this frame
         while (imu.good()) {
             getline(imu, getval, ',');
-            timestamp = atoi(getval.c_str()); //cout << " timestamp : " << timestamp << endl;
+            timestamp = atof(getval.c_str())  / 10e8; //cout << " timestamp : " << timestamp << endl;
             getline(imu, getval, ',');
             xgyro = atof(getval.c_str()); // cout << " xgyro : " << xgyro << endl;
             getline(imu, getval, ',');
@@ -80,10 +81,11 @@ void Mono_Offline_VIORB::start() {
                 az *= g3dm;
             }
 
-            if (timestamp > timestamp_camera) {
-//                std::cout << "-------------------" << '\n';
-//                std::cout << "Total Number of IMU: " << vimuData.size() << '\n';
-//                std::cout << "-------------------" << '\n';
+            if (timestamp >= timestamp_camera) {
+                std::cout << "-------------------" << '\n';
+                std::cout << std::setprecision(19) << "Lastest IMU timestamp: " << timestamp << '\n';
+                std::cout << "Total Number of IMU: " << vimuData.size() << '\n';
+                std::cout << "-------------------" << '\n';
 
                 ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
                 // Pass the image to the SLAM system
