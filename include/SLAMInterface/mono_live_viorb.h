@@ -114,6 +114,8 @@ private:
     pthread_mutex_t _pmutexFrameCam1Last, _pmutexFrameCam2Last;
     boost::mutex _mutexFrameCam1Last, _mutexFrameCam2Last;
 
+    pthread_mutexattr_t attr;
+
 };
 
 #endif //LEARNVI_DRONE_MONO_LIVE_VIORB_H

@@ -12,6 +12,9 @@ Mono_Live_VIORB::Mono_Live_VIORB(System_Log *system_log_, SystemConfigParam *con
     frameNo = 0;
     firstTimestamp = 0;
     gps_pose.timestampunix_ns = 0;
+
+//    pthread_mutexattr_init(&attr);
+    pthread_mutex_init(&_pmutexFrameCam1Last, NULL);
 }
 
 Mono_Live_VIORB::~Mono_Live_VIORB() {}
@@ -253,8 +256,8 @@ void Mono_Live_VIORB::cameraLoop() {
         timestampcamera_ns = boost::lexical_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
         cout << "check point 1 \n";
-        int OldPrio = 0;
-        pthread_mutex_setprioceiling(&_pmutexFrameCam1Last, 0, &OldPrio);
+//        int OldPrio = 0;
+//        pthread_mutex_setprioceiling(&_pmutexFrameCam1Last, 0, &OldPrio);
         pthread_mutex_lock(&_pmutexFrameCam1Last);
         cout << "check point 2 \n";
         stream1 >> matFrameForward;
