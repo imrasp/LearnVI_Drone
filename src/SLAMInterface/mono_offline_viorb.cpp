@@ -82,10 +82,10 @@ void Mono_Offline_VIORB::start() {
             }
 
             if (timestamp >= timestamp_camera) {
-                std::cout << "-------------------" << '\n';
-                std::cout << std::setprecision(19) << "Lastest IMU timestamp: " << timestamp << '\n';
-                std::cout << "Total Number of IMU: " << vimuData.size() << '\n';
-                std::cout << "-------------------" << '\n';
+//                std::cout << "-------------------" << '\n';
+//                std::cout << std::setprecision(19) << "Lastest IMU timestamp: " << timestamp << '\n';
+//                std::cout << "Total Number of IMU: " << vimuData.size() << '\n';
+//                std::cout << "-------------------" << '\n';
 
                 ORB_SLAM2::GPSData gpsdata(0, 0, 0, 0, 0, 0, 0);
                 // Pass the image to the SLAM system
@@ -104,10 +104,15 @@ void Mono_Offline_VIORB::start() {
             }
         }
     }
+
+
     std::cout << "Save camera trajectory..." << std::endl;
     // Save camera trajectory
     SLAM.SaveKeyFrameTrajectoryTUM(configParam->record_path + "/KeyFrameTrajectory.txt");
     SLAM.SaveKeyFrameTrajectoryNavState(configParam->record_path + "/KeyFrameNavStateTrajectory.txt");
+
+    cout<<endl<<endl<<"press any key to shutdown"<<endl;
+    getchar();
 
     // Stop all threads
     SLAM.Shutdown();
